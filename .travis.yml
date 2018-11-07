@@ -1,13 +1,17 @@
+dist: trusty
+sudo: false
 language: csharp
-solution: ./PhurmanAndTheBoiz/PhurmanAndTheBoiz.sln
-sudo: enabled
+mono: none
+dotnet: 2.1.300
 install:
-  - sudo apt-get install -y gtk-sharp2
+  - dotnet restore
+  - nvm install 10.13.0
+  - nvm use 10.13.0
+  - npm install
 script:
-  - xbuild /p:Configuration=Release ./PhurmanAndTheBoiz/PhurmanAndTheBoiz.sln
-matrix:
-  include:
-    - dotnet: 2.1.300
-      mono: none
-      env: DOTNETCORE=2 # optional, can be used to take different code paths in your script
-    - mono: latest
+  - dotnet test
+  - npm test
+after_success:
+  - echo dotnet test and npm test succeeded
+after_failure:
+  - echo dotnet test or npm test failed
