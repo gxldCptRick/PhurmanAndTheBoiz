@@ -2,7 +2,7 @@ dist: trusty
 sudo: false
 language: csharp
 mono: none
-dotnet: 2.1.100
+dotnet: 2.1.400
 install:
   - dotnet build './PhurmanAndTheBoiz/'
   - nvm install 10.13.0
