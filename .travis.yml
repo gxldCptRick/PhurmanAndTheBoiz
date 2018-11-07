@@ -9,8 +9,8 @@ install:
   - nvm use 10.13.0
   - npm install
 script:
-  - dotnet test
-  - npm test
+  - dotnet test './PhurmanAndTheBoiz/'
+  - cd './PhurmanAndTheBoiz/Client App/'&npm test
 after_success:
   - echo dotnet test and npm test succeeded
 after_failure:
