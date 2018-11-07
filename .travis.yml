@@ -4,7 +4,7 @@ language: csharp
 mono: none
 dotnet: 2.1.300
 install:
-  - dotnet build
+  - dotnet build './PhurmanAndTheBoiz/'
   - nvm install 10.13.0
   - nvm use 10.13.0
   - npm install
