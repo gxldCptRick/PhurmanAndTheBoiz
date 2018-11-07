@@ -10,7 +10,7 @@ install:
   - npm install
 script:
   - dotnet test './PhurmanAndTheBoiz/'
-  - cd './PhurmanAndTheBoiz/PhurmanAndTheBoiz.API/ClientApp/'&npm test
+  - cd './PhurmanAndTheBoiz/PhurmanAndTheBoiz.API/ClientApp/';npm test
 after_success:
   - echo dotnet test and npm test succeeded
 after_failure:
