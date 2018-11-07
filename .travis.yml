@@ -3,7 +3,7 @@ solution: ./PhurmanAndTheBoiz/PhurmanAndTheBoiz.sln
 sudo: enabled
 install:
   - sudo apt-get install -y gtk-sharp2
-  - ./nuget.exe restore ./PhurmanAndTheBoiz/PhurmanAndTheBoiz.sln
+  - sudo ./nuget.exe restore ./PhurmanAndTheBoiz/PhurmanAndTheBoiz.sln
 script:
   - xbuild /p:Configuration=Release ./PhurmanAndTheBoiz/PhurmanAndTheBoiz.sln
 matrix:
