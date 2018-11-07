@@ -3,6 +3,8 @@ solution: ./PhurmanAndTheBoiz/PhurmanAndTheBoiz.sln
 install:
   - sudo apt-get install -y gtk-sharp2
   - nuget restore ./PhurmanAndTheBoiz/PhurmanAndTheBoiz.sln
+script:
+  - xbuild /p:Configuration=Release ./PhurmanAndTheBoiz/PhurmanAndTheBoiz.sln
 matrix:
   include:
     - dotnet: 2.0
