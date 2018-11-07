@@ -1,5 +1,6 @@
 language: csharp
 solution: ./PhurmanAndTheBoiz/PhurmanAndTheBoiz.sln
+sudo: enabled
 install:
   - sudo apt-get install -y gtk-sharp2
   - ./nuget.exe restore ./PhurmanAndTheBoiz/PhurmanAndTheBoiz.sln
