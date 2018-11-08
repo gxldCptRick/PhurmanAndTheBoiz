@@ -7,9 +7,6 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations.Context
     {
         public DbSet<UserEntity> Users { get; set; }
 
-        public UserContext(DbContextOptions options) : base(options)
-        {
-            
-        }
+        public UserContext(DbContextOptions options) : base(options) { }
     }
 }
