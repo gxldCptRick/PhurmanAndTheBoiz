@@ -1,19 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace PhurmanAndTheBoiz.DAL.Models.Entities
 {
-    class UserEntity
+    internal class UserEntity
     {
-        public class User
-        {
-            public int Id { get; set; }
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
-            public string Username { get; set; }
-            public byte[] PasswordHash { get; set; }
-            public byte[] PasswordSalt { get; set; }
-        }
+        [Key]
+        public int Id { get; set; }
+        [Required]
+        [StringLength(maximumLength: 55, MinimumLength = 2, ErrorMessage = "We Need A Name That Is At least 2 Characters Long And Less than 55 Characters.")]
+        public string FirstName { get; set; }
+
+        [Required]
+        [StringLength(maximumLength: 55, MinimumLength = 2, ErrorMessage = "We Need A Name That Is At least 2 Characters Long And Less than 55 Characters.")]
+        public string LastName { get; set; }
+
+        [Required]
+        [StringLength(maximumLength: 55, MinimumLength = 2, ErrorMessage = "We Need A Name That Is At least 2 Characters Long And Less than 55 Characters.")]
+        public string Username { get; set; }
+
+        [Required]
+        [MaxLength(64, ErrorMessage = "Password hash is not the expected length.")]
+        [MinLength(64, ErrorMessage = "Password hash is not the expected length.")]
+        public byte[] PasswordHash { get; set; }
+
+        [Required]
+        [MaxLength(128, ErrorMessage = "Password salt is not the expected length.")]
+        [MinLength(128, ErrorMessage = "Password salt is not the expected length.")]
+        public byte[] PasswordSalt { get; set; }
+
     }
 }
