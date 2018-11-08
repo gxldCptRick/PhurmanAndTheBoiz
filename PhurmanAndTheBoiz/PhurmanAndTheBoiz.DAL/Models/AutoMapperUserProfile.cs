@@ -6,9 +6,9 @@ using System.Text;
 
 namespace PhurmanAndTheBoiz.DAL.Models
 {
-    public class AutoMapperProfile : Profile
+    public class AutoMapperUserProfile : Profile
     {
-        public AutoMapperProfile()
+        public AutoMapperUserProfile()
         {
             CreateMap<UserEntity, User>();
             CreateMap<User, UserEntity>();
