@@ -12,6 +12,12 @@ script:
   - dotnet test './PhurmanAndTheBoiz/'
   - cd './PhurmanAndTheBoiz/PhurmanAndTheBoiz.API/ClientApp/';npm test
 after_success:
+  - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
+  - chmod +x send.sh
+  - ./send.sh success $WEBHOOK_URL
   - echo dotnet test and npm test succeeded
 after_failure:
+  - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
+  - chmod +x send.sh
+  - ./send.sh failure $WEBHOOK_URL
   - echo dotnet test or npm test failed
