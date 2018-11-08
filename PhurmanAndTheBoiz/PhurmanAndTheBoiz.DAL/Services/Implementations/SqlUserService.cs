@@ -14,7 +14,13 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
     {
         private readonly DbContextOptions _options;
 
-        public SqlUserService(string connectionString = @"Data Source=DESKTOP-KAB0VGA\MILOISGREAT;initial catalog=DnDUsers;Integrated Security=True; MultipleActiveResultSets=True")
+        static SqlUserService()
+        {
+            Mapper.Initialize((config) =>
+            config.AddProfile<AutoMapperUserProfile>());
+        }
+
+        public SqlUserService(string connectionString = @"Server=DESKTOP-KAB0VGA\MILOISGREAT;Database=DnDUsers;Trusted_Connection=True;MultipleActiveResultSets=True")
         {
             var builder = new DbContextOptionsBuilder<UserContext>();
             builder.UseSqlServer(connectionString);
