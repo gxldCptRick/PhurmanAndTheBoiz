@@ -13,6 +13,7 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
     public class SqlUserService : IUserService
     {
         private readonly DbContextOptions _options;
+
         public SqlUserService(string connectionString = @"Data Source=DESKTOP-KAB0VGA\MILOISGREAT;initial catalog=DnDUsers;Integrated Security=True; MultipleActiveResultSets=True")
         {
             var builder = new DbContextOptionsBuilder<UserContext>();
@@ -60,7 +61,15 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            WorkWithConnection((context) =>
+            {
+                var user = context.Users.FirstOrDefault((u) => u.Id == id);
+                if (user != null)
+                {
+                    context.Users.Remove(user);
+                    context.SaveChanges();
+                }
+            });
         }
 
         public IEnumerable<User> GetAll()
@@ -82,14 +91,49 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
 
         public User GetById(int id)
         {
-            throw new NotImplementedException();
+            User user = null;
+            WorkWithConnection((context) =>
+            {
+                var userEntity = context.Users.FirstOrDefault((u) => u.Id == id);
+                user = Mapper.Map<User>(userEntity);
+            });
+            return user;
         }
 
         public void Update(User user, string password = null)
         {
-            throw new NotImplementedException();
+            WorkWithConnection((context) =>
+            {
+                var userEntity = context.Users.FirstOrDefault(u => u.Id == user.Id);
+                if (userEntity == null)
+                {
+                    throw new AppException("User not found");
+                }
+                else
+                {
+                    if (user.Username != userEntity.Username && context.Users.Any(u => u.Username == user.Username))
+                    {
+                        throw new AppException("Username " + user.Username + " is already taken");
+                    }
+
+                    userEntity.FirstName = user.FirstName;
+                    userEntity.LastName = user.LastName;
+                    userEntity.Username = user.Username;
+
+                    if (!string.IsNullOrWhiteSpace(password))
+                    {
+                        PasswordHasher.CreatePasswordHash(password, out var passwordHash, out var passwordSalt);
+                        userEntity.PasswordHash = passwordHash;
+                        userEntity.PasswordSalt = passwordSalt;
+                    }
+                    context.Users.Update(userEntity);
+                    context.SaveChanges();
+                }
+            });
+
         }
 
+        #region Private Implementations
         private void CheckIfUsernameIsValid(UserContext context, string username)
         {
             if (context.Users.Any(u => u.Username == username)) throw new AppException($"The username {username} is already taken.");
@@ -112,5 +156,6 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
                 unitOfWork(context);
             }
         }
+        #endregion
     }
 }
