@@ -1,0 +1,17 @@
+dist: trusty
+sudo: false
+language: csharp
+mono: none
+dotnet: 2.1.400
+install:
+  - dotnet build './PhurmanAndTheBoiz/'
+  - nvm install 10.13.0
+  - nvm use 10.13.0
+  - npm install
+script:
+  - dotnet test './PhurmanAndTheBoiz/'
+  - cd './PhurmanAndTheBoiz/PhurmanAndTheBoiz.API/ClientApp/';npm test
+after_success:
+  - echo dotnet test and npm test succeeded
+after_failure:
+  - echo dotnet test or npm test failed
