@@ -1,0 +1,13 @@
+{
+  "mapId": 1,
+  "mapName": "Forge",
+  "tags": ["ogshit", "gitgudscrub"],
+  "userId": 1,
+  "createdBy": username ex. "The Batman",
+  "lines": [
+    {
+      "color": "black",
+      "points": [points.json]
+    }
+  ]
+}
