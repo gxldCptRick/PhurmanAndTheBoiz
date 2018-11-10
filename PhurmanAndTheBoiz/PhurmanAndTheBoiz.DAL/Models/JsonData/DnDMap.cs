@@ -5,7 +5,6 @@ using System.Globalization;
 
 namespace PhurmanAndTheBoiz.DAL.Models.JsonData
 {
-
     public partial class DnDMap
     {
         [JsonProperty("mapId", NullValueHandling = NullValueHandling.Ignore)]
@@ -25,23 +24,5 @@ namespace PhurmanAndTheBoiz.DAL.Models.JsonData
 
         [JsonProperty("lines", NullValueHandling = NullValueHandling.Ignore)]
         public List<Line> Lines { get; set; }
-    }
-
-    public partial class Line
-    {
-        [JsonProperty("color", NullValueHandling = NullValueHandling.Ignore)]
-        public string Color { get; set; }
-
-        [JsonProperty("points", NullValueHandling = NullValueHandling.Ignore)]
-        public List<Point> Points { get; set; }
-    }
-
-    public partial class Point
-    {
-        [JsonProperty("x", NullValueHandling = NullValueHandling.Ignore)]
-        public int? X { get; set; }
-
-        [JsonProperty("y", NullValueHandling = NullValueHandling.Ignore)]
-        public int? Y { get; set; }
     }
 }
