@@ -1,0 +1,9 @@
+{
+  "itemId": 1,
+  "itemType": "equip" || "consumable",
+  "itemName": "random string",
+  "stats": {
+    "damageRoll": "2d6",
+    "attackBonus": 2
+  }
+}
