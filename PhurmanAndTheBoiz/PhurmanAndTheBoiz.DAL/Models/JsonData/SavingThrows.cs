@@ -21,5 +21,15 @@ namespace PhurmanAndTheBoiz.DAL.Models.JsonData
 
         [JsonProperty("charisma", NullValueHandling = NullValueHandling.Ignore)]
         public long? Charisma { get; set; }
+
+        public Stats(int defaultStatSpawn=0)
+        {
+            Strength = defaultStatSpawn;
+            Dexterity = defaultStatSpawn;
+            Constitution = defaultStatSpawn;
+            Intelligence = defaultStatSpawn;
+            Wisdom = defaultStatSpawn;
+            Charisma = defaultStatSpawn;
+        }
     }
 }

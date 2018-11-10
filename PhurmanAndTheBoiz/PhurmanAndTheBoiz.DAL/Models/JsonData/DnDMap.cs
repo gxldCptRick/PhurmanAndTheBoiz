@@ -1,14 +1,15 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.IdGenerators;
+using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Globalization;
 
 namespace PhurmanAndTheBoiz.DAL.Models.JsonData
 {
     public partial class DnDMap
     {
+        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
         [JsonProperty("mapId", NullValueHandling = NullValueHandling.Ignore)]
-        public int? MapId { get; set; }
+        public string MapId { get; set; }
 
         [JsonProperty("mapName", NullValueHandling = NullValueHandling.Ignore)]
         public string MapName { get; set; }

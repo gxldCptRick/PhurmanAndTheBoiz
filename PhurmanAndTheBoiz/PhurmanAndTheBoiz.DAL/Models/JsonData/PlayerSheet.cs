@@ -1,12 +1,15 @@
-﻿using Newtonsoft.Json;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.IdGenerators;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace PhurmanAndTheBoiz.DAL.Models.JsonData
 {
     public partial class CharacterSheet
     {
+        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
         [JsonProperty("characterId", NullValueHandling = NullValueHandling.Ignore)]
-        public int? CharacterId { get; set; }
+        public string CharacterId { get; set; }
 
         [JsonProperty("userId", NullValueHandling = NullValueHandling.Ignore)]
         public int? UserId { get; set; }
