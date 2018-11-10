@@ -3,11 +3,16 @@
   "mapName": "Forge",
   "tags": ["ogshit", "gitgudscrub"],
   "userId": 1,
-  "createdBy": username ex. "The Batman",
+  "createdBy": "The Batman",
   "lines": [
     {
       "color": "black",
-      "points": [points.json]
+      "points": [
+        {
+          "x": 1,
+          "y": 2
+        }
+      ]
     }
   ]
 }

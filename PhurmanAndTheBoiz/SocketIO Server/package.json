@@ -1,0 +1,29 @@
+{
+  "name": "socketio-server",
+  "version": "1.0.0",
+  "description": "this is a simple server for the chat features of the dnd website",
+  "main": "index.js",
+  "scripts": {
+    "start": "babel-node index",
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "no"
+  },
+  "keywords": [
+    "dnd",
+    "chat"
+  ],
+  "author": "andres, fermin, aj, luis",
+  "license": "ISC",
+  "dependencies": {
+    "socket.io": "^2.1.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-preset-latest": "^6.24.1",
+    "babel-register": "^6.26.0"
+  }
+}
