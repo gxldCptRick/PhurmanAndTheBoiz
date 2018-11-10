@@ -25,7 +25,7 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
             var client = new MongoClient(_mongoConnectionString);
             var database = client.GetDatabase("DnD");
             var items = database.GetCollection<Item>("Items");
-            items.DeleteOne(i =>  i.ItemId == itemId);
+            items.DeleteOne(i => i.ItemId == itemId);
         }
 
         public void DeleteMap(int userId, int mapId)
@@ -59,7 +59,7 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
             var client = new MongoClient(_mongoConnectionString);
             var database = client.GetDatabase("DnD");
             var items = database.GetCollection<Item>("Items");
-            var itemsList = items.Find(_=> true).ToList();
+            var itemsList = items.Find(_ => true).ToList();
             return itemsList;
         }
 
@@ -81,34 +81,52 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
             return itemForId;
         }
 
-        public CharacterSheet SaveCharacter(int userId, CharacterSheet newCharacter)
+        public void SaveCharacter(CharacterSheet newCharacter)
         {
-            throw new System.NotImplementedException();
+            var client = new MongoClient(_mongoConnectionString);
+            var database = client.GetDatabase("DnD");
+            var characterSheets = database.GetCollection<CharacterSheet>("CharacterSheets");
+            characterSheets.InsertOne(newCharacter);
         }
 
-        public Item SaveItem(Item newItem)
+        public void SaveItem(Item newItem)
         {
-            throw new System.NotImplementedException();
+            var client = new MongoClient(_mongoConnectionString);
+            var database = client.GetDatabase("DnD");
+            var Items = database.GetCollection<Item>("Items");
+            Items.InsertOne(newItem);
         }
 
-        public DnDMap SaveMap(int userId, DnDMap newMap)
+        public void SaveMap(DnDMap newMap)
         {
-            throw new System.NotImplementedException();
+            var client = new MongoClient(_mongoConnectionString);
+            var database = client.GetDatabase("DnD");
+            var Maps = database.GetCollection<DnDMap>("Maps");
+            Maps.InsertOne(newMap);
         }
 
         public void UpdateCharacter(CharacterSheet updatedCharacter)
         {
-            throw new System.NotImplementedException();
+            var client = new MongoClient(_mongoConnectionString);
+            var database = client.GetDatabase("DnD");
+            var characterSheets = database.GetCollection<CharacterSheet>("CharacterSheet");
+            characterSheets.ReplaceOne((cs) => cs.CharacterId == updatedCharacter.CharacterId, updatedCharacter);
         }
 
         public void UpdateItem(Item updatedItem)
         {
-            throw new System.NotImplementedException();
+            var client = new MongoClient(_mongoConnectionString);
+            var database = client.GetDatabase("DnD");
+            var items = database.GetCollection<Item>("Items");
+            items.ReplaceOne(i => i.ItemId == updatedItem.ItemId, updatedItem);
         }
 
         public void UpdateMap(DnDMap updatedMap)
         {
-            throw new System.NotImplementedException();
+            var client = new MongoClient(_mongoConnectionString);
+            var database = client.GetDatabase("DnD");
+            var maps = database.GetCollection<DnDMap>("Maps");
+            maps.ReplaceOne(m => m.MapId == updatedMap.MapId, updatedMap);
         }
     }
 }
