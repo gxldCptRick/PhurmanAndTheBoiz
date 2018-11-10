@@ -7,31 +7,33 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
     public class MongoDnDService : IDnDService
     {
         private readonly string _mongoConnectionString;
-        public MongoDnDService(string mongoConnectionString)
+        private readonly string _database;
+        public MongoDnDService(string mongoConnectionString= "mongodb://73.20.98.246:27017", string database = "dnd")
         {
             _mongoConnectionString = mongoConnectionString;
+            _database = database;
         }
 
-        public void DeleteCharacter(int userId, int characterId)
+        public void DeleteCharacter(int userId, string characterId)
         {
             var client = new MongoClient(_mongoConnectionString);
-            var database = client.GetDatabase("DnD");
+            var database = client.GetDatabase(_database);
             var items = database.GetCollection<CharacterSheet>("CharacterSheets");
             items.DeleteOne(cs => cs.CharacterId == characterId && cs.UserId == userId);
         }
 
-        public void DeleteItem(int itemId)
+        public void DeleteItem(string itemId)
         {
             var client = new MongoClient(_mongoConnectionString);
-            var database = client.GetDatabase("DnD");
+            var database = client.GetDatabase(_database);
             var items = database.GetCollection<Item>("Items");
             items.DeleteOne(i => i.ItemId == itemId);
         }
 
-        public void DeleteMap(int userId, int mapId)
+        public void DeleteMap(int userId, string mapId)
         {
             var client = new MongoClient(_mongoConnectionString);
-            var database = client.GetDatabase("DnD");
+            var database = client.GetDatabase(_database);
             var maps = database.GetCollection<DnDMap>("Maps");
             maps.DeleteOne(m => m.MapId == mapId && m.UserId == userId);
         }
@@ -39,7 +41,7 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
         public IEnumerable<CharacterSheet> GetAllCharacterSheetsForUser(int userId)
         {
             var client = new MongoClient(_mongoConnectionString);
-            var database = client.GetDatabase("DnD");
+            var database = client.GetDatabase(_database);
             var characterSheets = database.GetCollection<CharacterSheet>("CharacterSheets");
             var characterSheetList = characterSheets.Find((s) => s.UserId == userId).ToList();
             return characterSheetList;
@@ -48,7 +50,7 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
         public IEnumerable<DnDMap> GetAllDnDMaps()
         {
             var client = new MongoClient(_mongoConnectionString);
-            var database = client.GetDatabase("DnD");
+            var database = client.GetDatabase(_database);
             var maps = database.GetCollection<DnDMap>("Maps");
             var mapsList = maps.Find(_ => true).ToList();
             return mapsList;
@@ -57,7 +59,7 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
         public IEnumerable<Item> GetAllItems()
         {
             var client = new MongoClient(_mongoConnectionString);
-            var database = client.GetDatabase("DnD");
+            var database = client.GetDatabase(_database);
             var items = database.GetCollection<Item>("Items");
             var itemsList = items.Find(_ => true).ToList();
             return itemsList;
@@ -66,16 +68,16 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
         public IEnumerable<DnDMap> GetAllMapsForUser(int userId)
         {
             var client = new MongoClient(_mongoConnectionString);
-            var database = client.GetDatabase("DnD");
+            var database = client.GetDatabase(_database);
             var allMaps = database.GetCollection<DnDMap>("Maps");
             var mapsForUser = allMaps.Find(m => m.UserId == userId).ToList();
             return mapsForUser;
         }
 
-        public Item GetItemById(int itemId)
+        public Item GetItemById(string itemId)
         {
             var client = new MongoClient(_mongoConnectionString);
-            var database = client.GetDatabase("DnD");
+            var database = client.GetDatabase(_database);
             var allItems = database.GetCollection<Item>("Maps");
             var itemForId = allItems.Find(i => i.ItemId == itemId).SingleOrDefault();
             return itemForId;
@@ -84,7 +86,7 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
         public void SaveCharacter(CharacterSheet newCharacter)
         {
             var client = new MongoClient(_mongoConnectionString);
-            var database = client.GetDatabase("DnD");
+            var database = client.GetDatabase(_database);
             var characterSheets = database.GetCollection<CharacterSheet>("CharacterSheets");
             characterSheets.InsertOne(newCharacter);
         }
@@ -92,7 +94,7 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
         public void SaveItem(Item newItem)
         {
             var client = new MongoClient(_mongoConnectionString);
-            var database = client.GetDatabase("DnD");
+            var database = client.GetDatabase(_database);
             var Items = database.GetCollection<Item>("Items");
             Items.InsertOne(newItem);
         }
@@ -100,7 +102,7 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
         public void SaveMap(DnDMap newMap)
         {
             var client = new MongoClient(_mongoConnectionString);
-            var database = client.GetDatabase("DnD");
+            var database = client.GetDatabase(_database);
             var Maps = database.GetCollection<DnDMap>("Maps");
             Maps.InsertOne(newMap);
         }
@@ -108,15 +110,15 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
         public void UpdateCharacter(CharacterSheet updatedCharacter)
         {
             var client = new MongoClient(_mongoConnectionString);
-            var database = client.GetDatabase("DnD");
-            var characterSheets = database.GetCollection<CharacterSheet>("CharacterSheet");
+            var database = client.GetDatabase(_database);
+            var characterSheets = database.GetCollection<CharacterSheet>("CharacterSheets");
             characterSheets.ReplaceOne((cs) => cs.CharacterId == updatedCharacter.CharacterId, updatedCharacter);
         }
 
         public void UpdateItem(Item updatedItem)
         {
             var client = new MongoClient(_mongoConnectionString);
-            var database = client.GetDatabase("DnD");
+            var database = client.GetDatabase(_database);
             var items = database.GetCollection<Item>("Items");
             items.ReplaceOne(i => i.ItemId == updatedItem.ItemId, updatedItem);
         }
@@ -124,7 +126,7 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
         public void UpdateMap(DnDMap updatedMap)
         {
             var client = new MongoClient(_mongoConnectionString);
-            var database = client.GetDatabase("DnD");
+            var database = client.GetDatabase(_database);
             var maps = database.GetCollection<DnDMap>("Maps");
             maps.ReplaceOne(m => m.MapId == updatedMap.MapId, updatedMap);
         }
