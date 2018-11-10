@@ -1,0 +1,28 @@
+{
+  "characterId": 1,
+  "userId": 1,
+  "characterName": "The Big Gey",
+  "class": "Warrior",
+  "alignment": "Chaotic Neutral",
+  "experiencePoints": number > 0,
+  "stats": {
+    "strength": 30,
+    "dexterity": 12,
+    "constitution": 12,
+    "intelligence": 2,
+    "wisdom": 2,
+    "charisma": 10
+  },
+  "inspiration": 0,
+  "savingThrows": {
+    "strength": 30,
+    "dexterity": 12,
+    "constitution": 12,
+    "intelligence": 2,
+    "wisdom": 20,
+    "charisma": 10
+  },
+  "inventory": [item.json],
+  "gold": 22,
+  "description": ""
+}
