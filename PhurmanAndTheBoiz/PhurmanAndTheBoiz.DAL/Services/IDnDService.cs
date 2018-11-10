@@ -10,7 +10,7 @@ namespace PhurmanAndTheBoiz.DAL.Services
         IEnumerable<DnDMap> GetAllDnDMaps();
         IEnumerable<CharacterSheet> GetAllCharacterSheetsForUser(int userId);
         IEnumerable<DnDMap> GetAllMapsForUser(int userId);
-        IEnumerable<Item> GetAllItems(int itemId);
+        IEnumerable<Item> GetAllItems();
         Item GetItemById(int itemId);
         void UpdateItem(Item updatedItem);
         void UpdateCharacter(CharacterSheet updatedCharacter);
