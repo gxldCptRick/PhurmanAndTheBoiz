@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using PhurmanAndTheBoiz.DAL.Models;
 using PhurmanAndTheBoiz.DAL.Services;
 using PhurmanAndTheBoiz.DAL.Services.Exceptions;
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace PhurmanAndTheBoiz.API.Controllers
 {
@@ -34,27 +31,24 @@ namespace PhurmanAndTheBoiz.API.Controllers
             }
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("Secret");
+            var key = Encoding.ASCII.GetBytes("this is my custom Secret key for authnetication");
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new System.Security.Claims.ClaimsIdentity(new Claim[]
+                Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Name, user.Id.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddHours(24),
+                Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
+            var Token = tokenHandler.WriteToken(token);
 
             return Ok(new
             {
-                Id = user.Id,
-                user.Username,
-                Firstname = user.FirstName,
-                LastName = user.LastName,
-                Token = tokenString
+                userDto,
+                Token
             });
         }
 
