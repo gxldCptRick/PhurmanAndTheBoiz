@@ -10,7 +10,7 @@ install:
   - npm install
 script:
   - dotnet test './PhurmanAndTheBoiz/'
-  - cd './PhurmanAndTheBoiz/PhurmanAndTheBoiz.API/ClientApp/';npm test
+  - cd './React App/';npm test
 after_success:
   - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
   - chmod +x send.sh
