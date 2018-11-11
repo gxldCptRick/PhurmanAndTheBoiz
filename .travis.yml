@@ -7,9 +7,9 @@ install:
   - dotnet build './PhurmanAndTheBoiz/'
   - nvm install 10.13.0
   - nvm use 10.13.0
-  - npm install
+  - cd './React App/';npm install
 script:
-  - dotnet test './PhurmanAndTheBoiz/'
+  - cd '..';dotnet test './PhurmanAndTheBoiz/'
   - cd './React App/';npm test
 after_success:
   - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
