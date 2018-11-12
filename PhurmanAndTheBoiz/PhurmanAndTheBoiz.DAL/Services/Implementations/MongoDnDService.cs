@@ -8,7 +8,7 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
     {
         private readonly string _mongoConnectionString;
         private readonly string _database;
-        public MongoDnDService(string mongoConnectionString= "mongodb://73.20.98.246:27017", string database = "dnd")
+        public MongoDnDService(string mongoConnectionString, string database)
         {
             _mongoConnectionString = mongoConnectionString;
             _database = database;

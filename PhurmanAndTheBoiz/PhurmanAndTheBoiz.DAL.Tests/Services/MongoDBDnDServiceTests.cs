@@ -218,7 +218,7 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
         #region Helper Methods
         private IDnDService CreateDnDService()
         {
-            return new MongoDnDService(database: "dnd_test");
+            return new MongoDnDService(mongoConnectionString: "mongodb://73.20.98.246:27017", database: "dnd_test");
         }
 
         private DnDMap GenerateMap()
