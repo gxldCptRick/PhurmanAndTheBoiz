@@ -20,7 +20,7 @@ namespace PhurmanAndTheBoiz.API.Controllers
         {
             _service = service;
         }
-
+        [Route("{action}")]
         public IActionResult Authenticate([FromBody]User userDto)
         {
             var user = _service.Authenticate(userDto.Username, userDto.Password);
@@ -31,7 +31,7 @@ namespace PhurmanAndTheBoiz.API.Controllers
             }
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("this is my custom Secret key for authnetication");
+            var key = Encoding.ASCII.GetBytes("okay fermin lets get super cereal this time around");
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -52,6 +52,7 @@ namespace PhurmanAndTheBoiz.API.Controllers
             });
         }
 
+        [Route("{action}")]
         public IActionResult Register([FromBody]User userDto)
         {
             try
@@ -61,7 +62,7 @@ namespace PhurmanAndTheBoiz.API.Controllers
             }
             catch (AppException e)
             {
-                return BadRequest(e.Message);
+                return BadRequest(e);
             }
         }
         // GET: api/User
