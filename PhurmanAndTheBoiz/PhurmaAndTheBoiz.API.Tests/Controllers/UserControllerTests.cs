@@ -1,57 +1,78 @@
-﻿
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using PhurmanAndTheBoiz.API.Controllers;
 using PhurmanAndTheBoiz.DAL.Models;
 using PhurmanAndTheBoiz.DAL.Services;
+using PhurmanAndTheBoiz.DAL.Services.Exceptions;
 
 namespace PhurmaAndTheBoiz.API.Tests.Controllers
 {
-    public class TestUserService : IUserService
-    {
-        public User Authenticate(string username, string password)
-        {
-            return new User
-            {
-                Id = 1
-            };
-        }
-
-        public User Create(User user, string password)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void Delete(int id)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public IEnumerable<User> GetAll()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public User GetById(int id)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void Update(User user, string password = null)
-        {
-            throw new System.NotImplementedException();
-        }
-    }
-
     [TestClass]
     public class UserControllerTests
     {
         [TestMethod]
-        public void AuthenticatMethodWorks()
+        public void AuthenticateReturnsOkWhenCredentialsPass()
         {
-            var controller = new UserController(new TestUserService());
+            var dependency = new Mock<IUserService>();
+            dependency.Setup(obj => obj.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new User());
+            var controller = new UserController(dependency.Object);
             var result = controller.Authenticate(new User());
             Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+        }
+
+        [TestMethod]
+        public void TheOkReturnedHasANonNullToken()
+        {
+            var dependency = new Mock<IUserService>();
+            dependency.Setup(obj => obj.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new User());
+            var controller = new UserController(dependency.Object);
+            var result = controller.Authenticate(new User());
+            Assert.IsNotNull(result);
+            if (result is OkObjectResult ok)
+            {
+                var value = ok.Value;
+                var t = value.GetType();
+                var member = t.GetProperty("Token");
+                var token = member.GetValue(value);
+                Assert.IsNotNull(token);
+            }
+            else
+            {
+                Assert.Fail("the result was not of type OkObjectResult.");
+            }
+        }
+
+        [TestMethod]
+        public void AuthenticationReturnsBadRequestWhenCredentialsFail()
+        {
+            var dependency = new Mock<IUserService>();
+            dependency.Setup(obj => obj.Authenticate(It.IsAny<string>(), It.IsAny<string>()));
+            var controller = new UserController(dependency.Object);
+            var result = controller.Authenticate(new User());
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
+        }
+
+        [TestMethod]
+        public void RegisterReturnsOkayWithGoodCredentials()
+        {
+            var dependency = new Mock<IUserService>();
+            dependency.Setup(obj => obj.Create(It.IsNotNull<User>(), It.IsNotNull<string>()));
+            var controller = new UserController(dependency.Object);
+            var result = controller.Register(new User() { Password = "null" });
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+        }
+
+        [TestMethod]
+        public void RegisterReturnsBadRequestWhenExceptionIsThrown()
+        {
+            var dependency = new Mock<IUserService>();
+            dependency.Setup(obj => obj.Create(It.IsNotNull<User>(), It.IsNotNull<string>())).Throws<AppException>();
+            var controller = new UserController(dependency.Object);
+            var result = controller.Register(new User() { Password = "null" });
+            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
         }
     }
 }
