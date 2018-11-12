@@ -58,7 +58,8 @@ namespace PhurmanAndTheBoiz.API
             });
             app.UseSpa(spa =>
             {
-               // spa.UseProxyToSpaDevelopmentServer(@"");
+                
+                //spa.UseProxyToSpaDevelopmentServer(@"");
             });
         }
     }

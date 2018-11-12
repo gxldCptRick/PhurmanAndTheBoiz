@@ -69,7 +69,8 @@ namespace PhurmaAndTheBoiz.API.Tests.Controllers
         public void RegisterReturnsBadRequestWhenExceptionIsThrown()
         {
             var dependency = new Mock<IUserService>();
-            dependency.Setup(obj => obj.Create(It.IsNotNull<User>(), It.IsNotNull<string>())).Throws<AppException>();
+            dependency.Setup(obj => obj.Create(It.IsNotNull<User>(), It.IsNotNull<string>()))
+                .Throws<AppException>();
             var controller = new UserController(dependency.Object);
             var result = controller.Register(new User() { Password = "null" });
             Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
