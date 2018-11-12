@@ -4,7 +4,7 @@
   "characterName": "The Big Gey",
   "class": "Warrior",
   "alignment": "Chaotic Neutral",
-  "experiencePoints": number > 0,
+  "experiencePoints": 0,
   "stats": {
     "strength": 30,
     "dexterity": 12,
@@ -22,7 +22,17 @@
     "wisdom": 20,
     "charisma": 10
   },
-  "inventory": [item.json],
+  "inventory": [
+    {
+      "itemId": 1,
+      "itemType": "equip",
+      "itemName": "random string",
+      "stats": {
+        "damageRoll": "2d6",
+        "attackBonus": 2
+      }
+    }
+  ],
   "gold": 22,
   "description": ""
 }

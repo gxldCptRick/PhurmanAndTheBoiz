@@ -1,6 +1,6 @@
 {
   "itemId": 1,
-  "itemType": "equip" || "consumable",
+  "itemType": "equip",
   "itemName": "random string",
   "stats": {
     "damageRoll": "2d6",
