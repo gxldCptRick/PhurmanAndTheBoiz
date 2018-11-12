@@ -20,7 +20,7 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
             config.AddProfile<AutoMapperUserProfile>());
         }
 
-        public SqlUserService(string connectionString = @"Server=DESKTOP-KAB0VGA\MILOISGREAT;Database=DnDUsers;Trusted_Connection=True;MultipleActiveResultSets=True")
+        public SqlUserService(string connectionString)
         {
             var builder = new DbContextOptionsBuilder<UserContext>();
             builder.UseSqlServer(connectionString);
