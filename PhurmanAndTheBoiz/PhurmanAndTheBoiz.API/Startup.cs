@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PhurmanAndTheBoiz.DAL.Services;
+using PhurmanAndTheBoiz.DAL.Services.Implementations;
 
 namespace PhurmanAndTheBoiz.API
 {
@@ -22,6 +24,8 @@ namespace PhurmanAndTheBoiz.API
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            services.AddSingleton<IUserService>(new SqlUserService(connectionString: Configuration["connections:sql_connection"]));
+            services.AddSingleton<IDnDService>(new MongoDnDService(mongoConnectionString: Configuration["connections:mongo_connection:string"], database: Configuration["connections:mongo_connection:database"]));
             // In production, the React files will be served from this directory
             //services.AddSpaStaticFiles(configuration =>
             //{
@@ -52,15 +56,10 @@ namespace PhurmanAndTheBoiz.API
                     name: "default",
                     template: "{controller}/{action=Index}/{id?}");
             });
-            //app.UseSpa(spa =>
-            //{
-            //    spa.Options.SourcePath = "ClientApp";
-
-            //    if (env.IsDevelopment())
-            //    {
-            //        spa.UseProxyToSpaDevelopmentServer("http://localhost:3000");
-            //    }
-            //});
+            app.UseSpa(spa =>
+            {
+               // spa.UseProxyToSpaDevelopmentServer(@"");
+            });
         }
     }
 }
