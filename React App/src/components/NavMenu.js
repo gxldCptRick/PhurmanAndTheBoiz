@@ -38,6 +38,11 @@ export class NavMenu extends Component {
         <Glyphicon glyph='th-list' /> Game
               </NavItem>
       </LinkContainer>
+      <LinkContainer to={'/RollDice'}>
+       <NavItem>
+        <Glyphicon glyph='th-list' /> Roll a dice
+              </NavItem>
+      </LinkContainer>
      </Nav>
     </Navbar.Collapse>
    </Navbar>
