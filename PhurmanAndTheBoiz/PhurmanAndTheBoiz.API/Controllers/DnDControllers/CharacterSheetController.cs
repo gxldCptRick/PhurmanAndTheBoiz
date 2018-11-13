@@ -19,63 +19,35 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             _service = service;
         }
 
+        // GET: api/dnd/CharacterSheet
         [HttpGet]
-        public IActionResult GetAllCharacterSheetsForUser(int userId)
-        {
-            var characterSheets = _service.GetAllCharacterSheetsForUser(userId);
-            return Ok(characterSheets);
-        }
-
-        //TODO: update charactor
-        public IActionResult UpdateCharacter()
-        {
-            throw new NotImplementedException();
-        }
-
-
-        public IActionResult SaveCharacter([FromBody] CharacterSheet characterSheet)
-        {
-            _service.SaveCharacter(characterSheet);
-            return Ok();
-        }
-
-        public IActionResult DeleteCharacter(int userId, string characterId)
-        {
-            _service.DeleteCharacter(userId, characterId);
-            return Ok();
-        }
-
-
-
-        // GET: api/CharacterSheet
-        [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult Get()
         {
             return new string[] { "value1", "value2" };
         }
 
-        // GET: api/CharacterSheet/5
+        // GET: api/dnd/CharacterSheet/5
         [HttpGet("{id}")]
-        public string Get(string id)
+        public IActionResult Get(string id)
         {
             return "value";
         }
 
-        // POST: api/CharacterSheet
+        // POST: api/dnd/CharacterSheet
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromBody] string value)
         {
         }
 
         // PUT: api/CharacterSheet/5
         [HttpPut("{id}")]
-        public void Put(string id, [FromBody] string value)
+        public IActionResult Put(string id, [FromBody] string value)
         {
         }
 
-        // DELETE: api/ApiWithActions/5
+        // DELETE: api/dnd/yeeted/5
         [HttpDelete("{id}")]
-        public void Delete(string id)
+        public IActionResult Delete(string id)
         {
         }
     }
