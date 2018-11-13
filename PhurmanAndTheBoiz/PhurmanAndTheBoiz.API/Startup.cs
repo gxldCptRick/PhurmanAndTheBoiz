@@ -58,7 +58,7 @@ namespace PhurmanAndTheBoiz.API
             });
             app.UseSpa(spa =>
             {
-                spa.UseProxyToSpaDevelopmentServer(@"73.131.209.95:3000");
+                spa.UseProxyToSpaDevelopmentServer(@"http://73.131.209.95:3000");
             });
         }
     }
