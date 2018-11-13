@@ -54,23 +54,23 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
 
         public IEnumerable<DnDMap> GetAllMapsForUser(int userId)
         {
-            return GetAllDnDMaps().Where(i => i.UserId == userId);
+            return GetAllDnDMaps().Where(m => m.UserId == userId);
         }
 
         public CharacterSheet GetCharacterSheetById(string characterSheetId)
         {
-            return GetAllCharacterSheets().Single(cs => cs.CharacterId == characterSheetId);
+            return GetAllCharacterSheets().SingleOrDefault(cs => cs.CharacterId == characterSheetId);
         }
 
 
         public Item GetItemById(string itemId)
         {
-            return GetAllItems().Single(i => i.ItemId == itemId);
+            return GetAllItems().SingleOrDefault(i => i.ItemId == itemId);
         }
 
         public DnDMap GetMapById(string mapId)
         {
-            return GetAllDnDMaps().Single(m => m.MapId == mapId);
+            return GetAllDnDMaps().SingleOrDefault(m => m.MapId == mapId);
         }
 
         public void SaveCharacter(CharacterSheet newCharacter)
@@ -126,12 +126,12 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
             maps.ReplaceOne(m => m.MapId == updatedMap.MapId, updatedMap);
         }
 
-        public void DeleteCharacter(int userId, string characterId)
+        public void DeleteCharacter(string characterId)
         {
             var client = new MongoClient(_mongoConnectionString);
             var database = client.GetDatabase(_database);
             var items = database.GetCollection<CharacterSheet>("CharacterSheets");
-            items.DeleteOne(cs => cs.CharacterId == characterId && cs.UserId == userId);
+            items.DeleteOne(cs => cs.CharacterId == characterId);
         }
 
         public void DeleteItem(string itemId)
@@ -142,12 +142,12 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
             items.DeleteOne(i => i.ItemId == itemId);
         }
 
-        public void DeleteMap(int userId, string mapId)
+        public void DeleteMap(string mapId)
         {
             var client = new MongoClient(_mongoConnectionString);
             var database = client.GetDatabase(_database);
             var maps = database.GetCollection<DnDMap>("Maps");
-            maps.DeleteOne(m => m.MapId == mapId && m.UserId == userId);
+            maps.DeleteOne(m => m.MapId == mapId);
         }
     }
 }

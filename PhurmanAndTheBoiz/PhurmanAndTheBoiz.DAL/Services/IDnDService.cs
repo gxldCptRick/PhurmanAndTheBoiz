@@ -23,8 +23,8 @@ namespace PhurmanAndTheBoiz.DAL.Services
         void SaveItem(Item newItem);
         void SaveCharacter(CharacterSheet newCharacter);
         void SaveMap(DnDMap newMap);
-        void DeleteMap(int userId, string mapId);
-        void DeleteCharacter(int userId, string characterId);
+        void DeleteMap(string mapId);
+        void DeleteCharacter(string characterId);
         void DeleteItem(string itemId);
     }
 }

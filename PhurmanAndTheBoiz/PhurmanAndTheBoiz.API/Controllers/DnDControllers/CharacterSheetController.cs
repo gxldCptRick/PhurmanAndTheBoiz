@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PhurmanAndTheBoiz.DAL.Models.JsonData;
 using PhurmanAndTheBoiz.DAL.Services;
 
@@ -19,36 +14,85 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             _service = service;
         }
 
-        // GET: api/dnd/CharacterSheet
         [HttpGet]
         public IActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            var allCharacterSheets = _service.GetAllCharacterSheets();
+            return Ok(allCharacterSheets);
         }
 
-        // GET: api/dnd/CharacterSheet/5
+        [HttpGet("user/{userId}")]
+        public IActionResult Get(int userId)
+        {
+            var characterSheets = _service.GetAllCharacterSheetsForUser(userId);
+            if (characterSheets is null)
+            {
+                return BadRequest($"There is no character sheets for user with id {userId}");
+            }
+            return Ok(characterSheets);
+        }
+
         [HttpGet("{id}")]
         public IActionResult Get(string id)
         {
-            return "value";
+            var characterSheet = _service.GetCharacterSheetById(id);
+            if (characterSheet is null)
+            {
+                return BadRequest($"There is no character sheet wtih id of {id}");
+            }
+
+            return Ok(characterSheet);
         }
 
-        // POST: api/dnd/CharacterSheet
-        [HttpPost]
-        public IActionResult Post([FromBody] string value)
-        {
-        }
-
-        // PUT: api/CharacterSheet/5
         [HttpPut("{id}")]
-        public IActionResult Put(string id, [FromBody] string value)
+        public IActionResult Put(string id, [FromBody] CharacterSheet characterSheet)
         {
+            IActionResult result = null;
+            if (_service.GetCharacterSheetById(id) is null)
+            {
+                result = BadRequest($"There is no character sheet with the id of {id}");
+            }
+            else
+            {
+                characterSheet.CharacterId = id;
+                _service.UpdateCharacter(characterSheet);
+                result = Ok();
+            }
+            return result;
         }
 
-        // DELETE: api/dnd/yeeted/5
+
+        [HttpPost]
+        public IActionResult Post([FromBody] CharacterSheet characterSheet)
+        {
+            IActionResult result = null;
+            if (characterSheet is null)
+            {
+                result = BadRequest("Character sheet could not be saved to database");
+            }
+            else
+            { 
+                _service.SaveCharacter(characterSheet);
+                result = Ok(characterSheet);
+            }
+
+            return result;
+        }
+
         [HttpDelete("{id}")]
         public IActionResult Delete(string id)
         {
+            IActionResult result = null;
+            if (_service.GetCharacterSheetById(id) is null)
+            {
+                result = BadRequest($"There is no character sheet with the id of {id}");
+            }
+            else
+            {
+                _service.DeleteItem(id);
+                result = Ok();
+            }
+            return result;
         }
     }
 }

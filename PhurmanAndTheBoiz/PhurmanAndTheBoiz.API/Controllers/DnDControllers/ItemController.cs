@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PhurmanAndTheBoiz.DAL.Models.JsonData;
 using PhurmanAndTheBoiz.DAL.Services;
-using System.Collections.Generic;
 
 namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
 {
@@ -24,6 +23,22 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             return result;
         }
 
+        [HttpGet("user/{userId}")]
+        public IActionResult Get(int userId)
+        {
+            IActionResult result = null;
+            var items = _service.GetAllItemsForUser(userId);
+            if (items is null)
+            {
+                result = BadRequest($"There is no items for user with id {userId}");
+            }
+            else
+            {
+                result = Ok(items);
+            }
+
+            return result;
+        }
         // GET: api/Item/5
         [HttpGet("{id}")]
         public IActionResult Get(string id)
