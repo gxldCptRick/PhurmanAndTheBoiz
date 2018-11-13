@@ -78,7 +78,7 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
         {
             var client = new MongoClient(_mongoConnectionString);
             var database = client.GetDatabase(_database);
-            var allItems = database.GetCollection<Item>("Maps");
+            var allItems = database.GetCollection<Item>("Items");
             var itemForId = allItems.Find(i => i.ItemId == itemId).SingleOrDefault();
             return itemForId;
         }
@@ -120,6 +120,11 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
             var client = new MongoClient(_mongoConnectionString);
             var database = client.GetDatabase(_database);
             var items = database.GetCollection<Item>("Items");
+            var item = items.Find(i => i.ItemId == updatedItem.ItemId).First();
+            updatedItem.ItemName = updatedItem.ItemName ?? item.ItemName;
+            updatedItem.ItemType = updatedItem.ItemType ?? item.ItemType;
+            updatedItem.Stats = updatedItem.Stats ?? item.Stats;
+            updatedItem.UserId = updatedItem.UserId == 0 ? item.UserId: updatedItem.UserId;
             items.ReplaceOne(i => i.ItemId == updatedItem.ItemId, updatedItem);
         }
 

@@ -1,9 +1,9 @@
 {
-  "itemId": 1,
-  "itemType": "equip",
-  "itemName": "random string",
+  "userId": 1,
+  "itemType": "Equip",
+  "itemName": "The Sword of a thousand truths",
   "stats": {
-    "damageRoll": "2d6",
-    "attackBonus": 2
+    "DamageRoll": "2d6",
+    "AttackBonus": 5
   }
 }
