@@ -20,7 +20,8 @@ namespace PhurmanAndTheBoiz.API.Controllers
         {
             _service = service;
         }
-        [Route("{action}")]
+
+        [HttpPost]
         public IActionResult Authenticate([FromBody]User userDto)
         {
             var user = _service.Authenticate(userDto.Username, userDto.Password);
@@ -52,7 +53,7 @@ namespace PhurmanAndTheBoiz.API.Controllers
             });
         }
 
-        [Route("{action}")]
+        [HttpPost]
         public IActionResult Register([FromBody]User userDto)
         {
             try
@@ -65,6 +66,7 @@ namespace PhurmanAndTheBoiz.API.Controllers
                 return BadRequest(e);
             }
         }
+
         // GET: api/User
         [HttpGet]
         public IActionResult GetAll()
