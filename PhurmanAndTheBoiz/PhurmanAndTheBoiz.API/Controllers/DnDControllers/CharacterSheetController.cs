@@ -19,22 +19,56 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             _service = service;
         }
 
+        [HttpGet]
+        public IActionResult Get()
+        {
+            var allCharacterSheets = _service.GetAllCharacterSheets();
+            return Ok(allCharacterSheets);
+        }
+
         [HttpGet("{userId}")]
-        public IActionResult GetAllCharacterSheetsForUser(int userId)
+        public IActionResult Get(int userId)
         {
             var characterSheets = _service.GetAllCharacterSheetsForUser(userId);
+            if (characterSheets is null)
+            {
+                return BadRequest($"There is no character sheets for user with id {userId}");
+            }
             return Ok(characterSheets);
         }
 
-        //TODO: update charactor
-        public IActionResult UpdateCharacter()
+        [HttpGet("{id}")]
+        public IActionResult Get(string id)
         {
-            throw new NotImplementedException();
+            var characterSheet = _service.GetCharacterSheetById(id);
+            if (characterSheet is null)
+            {
+                return BadRequest($"There is no character sheet wtih id of {id}");
+            }
+
+            return Ok(characterSheet);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Put(string id, [FromBody] CharacterSheet characterSheet)
+        {
+            IActionResult result = null;
+            if (_service.GetCharacterSheetById(id) is null)
+            {
+                result = BadRequest($"There is no character sheet with the id of {id}");
+            }
+            else
+            {
+                characterSheet.CharacterId = id;
+                _service.UpdateCharacter(characterSheet);
+                result = Ok();
+            }
+            return result;
         }
 
 
         [HttpPost]
-        public IActionResult CreateCharacterSheet([FromBody] CharacterSheet characterSheet)
+        public IActionResult Post([FromBody] CharacterSheet characterSheet)
         {
             IActionResult result = null;
             if (characterSheet is null)
@@ -53,53 +87,13 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
         [HttpDelete("{userId}/{characterId}")]
         public IActionResult Delete(int userId, string characterId)
         {
-            IActionResult result = null;
-            var charcterSheets = _service.GetAllCharacterSheetsForUser(userId);
-            foreach (var characterSheet in charcterSheets)
+            if (_service.GetCharacterSheetById(characterId) is null)
             {
-                if (characterSheet.CharacterId == characterId)
-                {
-                    _service.DeleteCharacter(userId, characterId);
-                    return Ok();
-                }
+                return BadRequest($"There is no character sheet with the id of {characterId}");
             }
-            return BadRequest($"There is no character sheet with characterId {characterId}");
-        }
 
-
-
-
-
-        // GET: api/CharacterSheet
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET: api/CharacterSheet/5
-        [HttpGet("{id}")]
-        public string Get(string id)
-        {
-            return "value";
-        }
-
-        // POST: api/CharacterSheet
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT: api/CharacterSheet/5
-        [HttpPut("{id}")]
-        public void Put(string id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(string id)
-        {
+            _service.DeleteItem(characterId);
+            return Ok();
         }
     }
 }

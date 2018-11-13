@@ -24,6 +24,17 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             return result;
         }
 
+        [HttpGet("{userId}")]
+        public IActionResult Get(int userId)
+        {
+            var items = _service.GetAllItemsForUser(userId);
+            if (items is null)
+            {
+                return BadRequest($"There is no items for user with id {userId}");
+            }
+
+            return Ok(items);
+        }
         // GET: api/Item/5
         [HttpGet("{id}")]
         public IActionResult Get(string id)
