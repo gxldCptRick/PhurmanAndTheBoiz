@@ -67,34 +67,42 @@ namespace PhurmanAndTheBoiz.API.Controllers
         }
         // GET: api/User
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult GetAll()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(_service.GetAll());
         }
 
         // GET: api/User/5
         [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        public IActionResult GetById(int id)
         {
-            return "value";
-        }
-
-        // POST: api/User
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
+            var user = _service.GetById(id);
+            return Ok(user);
         }
 
         // PUT: api/User/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult Put(int id, [FromBody] User userDto)
         {
+            try
+            {
+                var user = _service.GetById(id);
+                _service.Update(user, user.Password);
+                return Ok();
+            }
+            catch (AppException appException)
+            {
+                return BadRequest(appException);
+            }
+            
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            _service.Delete(id);
+            return Ok();
         }
     }
 }
