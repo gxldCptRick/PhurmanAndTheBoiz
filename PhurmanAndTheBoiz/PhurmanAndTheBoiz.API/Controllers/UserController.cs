@@ -82,7 +82,7 @@ namespace PhurmanAndTheBoiz.API.Controllers
 
         // PUT: api/User/5
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] User userDto)
+        public IActionResult UpdateUser(int id, [FromBody] User userDto)
         {
             try
             {
