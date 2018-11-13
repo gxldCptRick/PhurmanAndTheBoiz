@@ -16,10 +16,10 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
         {
             // arrange
             var service = GenerateService();
-            var oldUserPossibly = service.Authenticate(_username, _password);
+            var oldUserPossibly = service.AuthenticateUser(_username, _password);
             if (oldUserPossibly != null)
             {
-                service.Delete(oldUserPossibly.Id);
+                service.DeleteUser(oldUserPossibly.Id);
             }
             var newUser = new User()
             {
@@ -30,7 +30,7 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
             };
 
             //act
-            var userCreated = service.Create(newUser, newUser.Password);
+            var userCreated = service.CreateUser(newUser, newUser.Password);
 
             //assert
             Assert.IsNotNull(userCreated);
@@ -46,14 +46,14 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
         {
             //arrange 
             var service = GenerateService();
-            var userToUpdate = service.Authenticate(_username, _password);
+            var userToUpdate = service.AuthenticateUser(_username, _password);
             var expected = "Carmelo";
             string actual = null;
 
             //act
             userToUpdate.FirstName = expected;
-            service.Update(userToUpdate);
-            var freshlyGrabbedUser = service.Authenticate(_username, _password);
+            service.UpdateUser(userToUpdate);
+            var freshlyGrabbedUser = service.AuthenticateUser(_username, _password);
             actual = freshlyGrabbedUser.FirstName;
 
             //assert
@@ -66,11 +66,11 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
 
             //arrange 
             var service = GenerateService();
-            var userReading = service.Authenticate(_username, _password);
+            var userReading = service.AuthenticateUser(_username, _password);
             User actual = null;
 
             //act
-            actual = service.GetById(userReading.Id);
+            actual = service.GetUserById(userReading.Id);
 
             //assert
             Assert.IsNotNull(actual);
@@ -84,7 +84,7 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
             User actual = null;
             
             //act
-            actual = service.GetById(0);
+            actual = service.GetUserById(0);
 
             //assert
             Assert.IsNull(actual);

@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PhurmanAndTheBoiz.DAL.Models.JsonData;
 using PhurmanAndTheBoiz.DAL.Services;
+using System.Collections.Generic;
 
 namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
 {
-    [Route("api/DnDControllers/[controller]")]
+    [Route("api/dnd/[controller]")]
     [ApiController]
     public class ItemController : ControllerBase
     {
@@ -19,38 +15,47 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             _service = service;
         }
 
+        // GET: api/Item
         [HttpGet]
-        public IActionResult GetAllItems()
+        public IEnumerable<Item> Get()
         {
-            var items = _service.GetAllItems();
-            return Ok(items);
+            return _service.GetAllItems();
         }
 
-        [HttpGet("{id}", Name = "Get")]
-        public IActionResult GetItemById(string id)
+        // GET: api/Item/5
+        [HttpGet("{id}")]
+        public Item Get(string id)
         {
-            var item = _service.GetItemById(id);
-            return Ok(item);
+            return _service.GetItemById(id);
         }
 
-        //TODO: Update Item
+        // POST: api/Item
         [HttpPost]
-        public void UpdateItem(string id, [FromBody] Item item)
+        public IActionResult Post([FromBody] Item value)
+        {
+            IActionResult result = null;
+            if (value is null)
+            {
+                result = BadRequest("Item Could not be transformed into an Item");
+            }
+            else
+            {
+                _service.SaveItem(value);
+                result = Ok(value);
+            }
+            return result;
+        }
+
+        // PUT: api/Item/5
+        [HttpPut("{id}")]
+        public void Put(string id, [FromBody] string value)
         {
         }
 
-        [HttpPost]
-        public IActionResult SaveItem([FromBody] Item item)
+        // DELETE: api/ApiWithActions/5
+        [HttpDelete("{id}")]
+        public void Delete(string id)
         {
-            _service.SaveItem(item);
-            return Ok();
-        }
-
-        [HttpPost]
-        public IActionResult DeleteItem(string itemId)
-        {
-            _service.DeleteItem(itemId);
-            return Ok();
         }
     }
 }

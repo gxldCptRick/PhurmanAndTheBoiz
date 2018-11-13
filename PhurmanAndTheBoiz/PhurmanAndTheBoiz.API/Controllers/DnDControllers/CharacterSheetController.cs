@@ -9,7 +9,7 @@ using PhurmanAndTheBoiz.DAL.Services;
 
 namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
 {
-    [Route("api/DnDControllers/[controller]")]
+    [Route("api/DnD/[controller]")]
     [ApiController]
     public class CharacterSheetController : ControllerBase
     {
@@ -55,8 +55,8 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
         }
 
         // GET: api/CharacterSheet/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        [HttpGet("{id}")]
+        public string Get(string id)
         {
             return "value";
         }
@@ -69,13 +69,13 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
 
         // PUT: api/CharacterSheet/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(string id, [FromBody] string value)
         {
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void Delete(string id)
         {
         }
     }

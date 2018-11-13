@@ -11,7 +11,7 @@ using System.Text;
 
 namespace PhurmanAndTheBoiz.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/dnd/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -20,10 +20,11 @@ namespace PhurmanAndTheBoiz.API.Controllers
         {
             _service = service;
         }
-        [Route("{action}")]
+
+        [HttpPost]
         public IActionResult Authenticate([FromBody]User userDto)
         {
-            var user = _service.Authenticate(userDto.Username, userDto.Password);
+            var user = _service.AuthenticateUser(userDto.Username, userDto.Password);
 
             if (user == null)
             {
@@ -52,12 +53,12 @@ namespace PhurmanAndTheBoiz.API.Controllers
             });
         }
 
-        [Route("{action}")]
+        [HttpPost]
         public IActionResult Register([FromBody]User userDto)
         {
             try
             {
-                _service.Create(userDto, userDto.Password);
+                _service.CreateUser(userDto, userDto.Password);
                 return Ok();
             }
             catch (AppException e)
@@ -65,18 +66,19 @@ namespace PhurmanAndTheBoiz.API.Controllers
                 return BadRequest(e);
             }
         }
+
         // GET: api/User
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult Get()
         {
-            return Ok(_service.GetAll());
+            return Ok(_service.GetAllUsers());
         }
 
         // GET: api/User/5
-        [HttpGet("{id}", Name = "Get")]
-        public IActionResult GetById(int id)
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
         {
-            var user = _service.GetById(id);
+            var user = _service.GetUserById(id);
             return Ok(user);
         }
 
@@ -86,8 +88,8 @@ namespace PhurmanAndTheBoiz.API.Controllers
         {
             try
             {
-                var user = _service.GetById(id);
-                _service.Update(user, user.Password);
+                var user = _service.GetUserById(id);
+                _service.UpdateUser(user, user.Password);
                 return Ok();
             }
             catch (AppException appException)
@@ -101,7 +103,7 @@ namespace PhurmanAndTheBoiz.API.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            _service.Delete(id);
+            _service.DeleteUser(id);
             return Ok();
         }
     }
