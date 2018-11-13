@@ -35,52 +35,61 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
         [HttpGet("{id}")]
         public IActionResult Get(string id)
         {
+            IActionResult result = null;
             var map = _service.GetMapById(id);
             if (map is null)
             {
-                return BadRequest($"There is no map wtih id of {id}");
+                result = BadRequest($"There was no by by the id {id}");
             }
-
-            return Ok(map);
-        }
-
-        [HttpPut("{id}")]
-        public IActionResult Put(string id, [FromBody] DnDMap map)
-        {
-            if (_service.GetMapById(id) is null)
+            else
             {
-                return BadRequest($"There is no map with the id of {id}");
+                result = Ok(map);
             }
-            map.MapId = id;
-            _service.UpdateMap(map);
-
-            return Ok();
+            return result;
         }
 
-
+        // POST: api/dnd/CharacterSheet
         [HttpPost]
-        public IActionResult Post([FromBody] DnDMap map)
+        public IActionResult Post([FromBody] DnDMap value)
+        {
+            value.MapId = null;
+            _service.SaveMap(value);
+            return Ok(value);
+        }
+
+        // PUT: api/CharacterSheet/5
+        [HttpPut("{id}")]
+        public IActionResult Put(string id, [FromBody] DnDMap value)
         {
             IActionResult result = null;
+            var map = _service.GetMapById(id);
             if (map is null)
             {
-                return BadRequest("Character sheet could not be saved to database");
+                result = BadRequest($"There was no by by the id {id}");
             }
-            _service.SaveMap(map);
-            return Ok(map);
+            else
+            {
+                _service.UpdateMap(value);
+                result = Ok(map);
+            }
+            return result;
         }
 
         [HttpDelete("{userId}/{mapId}")]
         public IActionResult Delete(int userId, string mapId)
         {
-            if (_service.GetMapById(mapId) is null)
+            IActionResult result = null;
+            var map = _service.GetMapById(id);
+            if (map is null)
             {
-                return BadRequest($"There is no map with id {mapId}");
+                result = BadRequest($"There was no by by the id {id}");
             }
-
-            _service.DeleteMap(userId, mapId);
-            return Ok();
-
+            else
+            {
+                _service.DeleteMap(id);
+                result = Ok(map);
+            }
+            return result;
         }
     }
 }

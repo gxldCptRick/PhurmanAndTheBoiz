@@ -54,7 +54,7 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
 
         public IEnumerable<DnDMap> GetAllMapsForUser(int userId)
         {
-            return GetAllDnDMaps().Where(i => i.UserId == userId);
+            return GetAllDnDMaps().Where(m => m.UserId == userId);
         }
 
         public CharacterSheet GetCharacterSheetById(string characterSheetId)
@@ -126,7 +126,7 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
             maps.ReplaceOne(m => m.MapId == updatedMap.MapId, updatedMap);
         }
 
-        public void DeleteCharacter(int userId, string characterId)
+        public void DeleteCharacter(string characterId)
         {
             var client = new MongoClient(_mongoConnectionString);
             var database = client.GetDatabase(_database);
@@ -142,12 +142,12 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
             items.DeleteOne(i => i.ItemId == itemId);
         }
 
-        public void DeleteMap(int userId, string mapId)
+        public void DeleteMap(string mapId)
         {
             var client = new MongoClient(_mongoConnectionString);
             var database = client.GetDatabase(_database);
             var maps = database.GetCollection<DnDMap>("Maps");
-            maps.DeleteOne(m => m.MapId == mapId && m.UserId == userId);
+            maps.DeleteOne(m => m.MapId == mapId);
         }
     }
 }
