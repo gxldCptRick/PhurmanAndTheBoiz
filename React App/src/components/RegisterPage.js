@@ -47,26 +47,22 @@ export class RegisterPage extends React.Component {
   }
   render() {
     return (
-<div className='form-horizontal'>
-      <div className='row'>
-        <div className='col-md-6'>
+
+      <form onSubmit={this.handleSubmit}>
         <label> First Name:
           <input
             value={this.state.FirstName}
             onChange={this.handleFirstNameChange}
           />
         </label>
-
-        </div>
-        <div className='col-md-6'>
+        <br />
         <label> Last Name:
         <input
             value={this.state.LastName}
             onChange={this.handleLastNameChange}
           />
         </label>
-        </div>
-      </div>
+        <br />
         <label> Username:
         <input
             value={this.state.Username}
@@ -90,8 +86,8 @@ export class RegisterPage extends React.Component {
           />
         </label>
         <br />
-        <input type="submit" value="Submit" onClick={this.handleSubmit} />
-        </div>
+        <input type="submit" value="Submit" />
+      </form>
     );
   }
 }
