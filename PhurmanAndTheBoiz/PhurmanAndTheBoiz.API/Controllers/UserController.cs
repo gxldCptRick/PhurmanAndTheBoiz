@@ -20,7 +20,6 @@ namespace PhurmanAndTheBoiz.API.Controllers
         {
             _service = service;
         }
-
         [HttpPost]
         public IActionResult Authenticate([FromBody]User userDto)
         {
@@ -52,7 +51,7 @@ namespace PhurmanAndTheBoiz.API.Controllers
                 Token
             });
         }
-
+        
         [HttpPost]
         public IActionResult Register([FromBody]User userDto)
         {
