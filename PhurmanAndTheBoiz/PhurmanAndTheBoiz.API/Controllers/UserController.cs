@@ -20,11 +20,7 @@ namespace PhurmanAndTheBoiz.API.Controllers
         {
             _service = service;
         }
-<<<<<<< HEAD
-=======
-
         [HttpPost]
->>>>>>> Backend
         public IActionResult Authenticate([FromBody]User userDto)
         {
             var user = _service.AuthenticateUser(userDto.Username, userDto.Password);
@@ -55,12 +51,8 @@ namespace PhurmanAndTheBoiz.API.Controllers
                 Token
             });
         }
-
-<<<<<<< HEAD
         
-=======
         [HttpPost]
->>>>>>> Backend
         public IActionResult Register([FromBody]User userDto)
         {
             try
