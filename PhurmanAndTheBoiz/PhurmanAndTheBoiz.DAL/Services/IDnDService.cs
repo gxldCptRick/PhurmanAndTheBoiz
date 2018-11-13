@@ -5,11 +5,18 @@ namespace PhurmanAndTheBoiz.DAL.Services
 {
     public interface IDnDService
     {
-        IEnumerable<DnDMap> GetAllDnDMaps();
-        IEnumerable<CharacterSheet> GetAllCharacterSheetsForUser(int userId);
-        IEnumerable<DnDMap> GetAllMapsForUser(int userId);
         IEnumerable<Item> GetAllItems();
+        IEnumerable<DnDMap> GetAllDnDMaps();
+        IEnumerable<CharacterSheet> GetAllCharacterSheets();
+
+        IEnumerable<Item> GetAllItemsForUser(int userId);
+        IEnumerable<DnDMap> GetAllMapsForUser(int userId);
+        IEnumerable<CharacterSheet> GetAllCharacterSheetsForUser(int userId);
+
         Item GetItemById(string itemId);
+        DnDMap GetMapById(string mapId);
+        CharacterSheet GetCharacterSheetById(string characterSheetId);
+
         void UpdateItem(Item updatedItem);
         void UpdateCharacter(CharacterSheet updatedCharacter);
         void UpdateMap(DnDMap updatedMap);

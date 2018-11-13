@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using PhurmanAndTheBoiz.DAL.Models.JsonData;
+﻿using Microsoft.AspNetCore.Mvc;
 using PhurmanAndTheBoiz.DAL.Services;
 
 namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
@@ -13,34 +7,46 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
     [ApiController]
     public class MapController : ControllerBase
     {
-        private IDnDService _service;
+        private readonly IDnDService _service;
         public MapController(IDnDService service)
         {
             _service = service;
         }
-        
-        // GET: api/DnDMap/5
+
+        // GET: api/dnd/CharacterSheet
+        [HttpGet]
+        public IActionResult Get()
+        {
+            IActionResult result = null;
+            result = Ok(_service.GetAllDnDMaps());
+            return result;
+        }
+
+        // GET: api/dnd/CharacterSheet/5
         [HttpGet("{id}")]
-        public string Get(string id)
-        { 
-            return "value";
+        public IActionResult Get(string id)
+        {
+            IActionResult result = null;
+            if (_service.)
+            { }
+            return result;
         }
 
-        // POST: api/DnDMap
+        // POST: api/dnd/CharacterSheet
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromBody] string value)
         {
         }
 
-        // PUT: api/DnDMap/5
+        // PUT: api/CharacterSheet/5
         [HttpPut("{id}")]
-        public void Put(string id, [FromBody] string value)
+        public IActionResult Put(string id, [FromBody] string value)
         {
         }
 
-        // DELETE: api/ApiWithActions/5
+        // DELETE: api/dnd/yeeted/5
         [HttpDelete("{id}")]
-        public void Delete(string id)
+        public IActionResult Delete(string id)
         {
         }
     }
