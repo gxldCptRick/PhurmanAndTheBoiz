@@ -5,6 +5,9 @@ import { Home } from './components/Home';
 import { Counter } from './components/Counter';
 import { Game } from './components/Game';
 import { RegisterPage } from './components/RegisterPage';
+import { RollDice} from './components/DiceRoll'
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/css/bootstrap-theme.css';
 
 export default class App extends Component {
   displayName = App.name
@@ -16,6 +19,7 @@ export default class App extends Component {
         <Route path='/counter' component={Counter} />
         <Route path='/Game' component={Game} />
         <Route path='/RegisterPage' component={RegisterPage} />
+        <Route path='/RollDice' component={RollDice} />
       </Layout>
     );
   }
