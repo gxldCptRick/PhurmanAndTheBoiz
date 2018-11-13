@@ -32,7 +32,7 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
             //act
             service.SaveMap(addedmap);
             var map = service.GetAllMapsForUser(2).FirstOrDefault();
-            service.DeleteMap(2, map?.MapId);
+            service.DeleteMap(map?.MapId);
             var deletedMap = service.GetAllMapsForUser(2).FirstOrDefault();
 
             //assert
@@ -100,7 +100,7 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
             //act
             service.SaveCharacter(characterToAdd);
             var characterRetrieved = service.GetAllCharacterSheetsForUser(2).FirstOrDefault();
-            service.DeleteCharacter(2, characterRetrieved.CharacterId);
+            service.DeleteCharacter(characterRetrieved.CharacterId);
             var deletedCharacter = service.GetAllCharacterSheetsForUser(2).FirstOrDefault();
 
             //assert

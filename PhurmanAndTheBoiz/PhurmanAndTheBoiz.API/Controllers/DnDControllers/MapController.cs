@@ -21,15 +21,21 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             return Ok(allMaps);
         }
 
-        [HttpGet("{userId}")]
+        [HttpGet("user/{userId}")]
         public IActionResult Get(int userId)
         {
+            IActionResult result = null;
             var maps = _service.GetAllMapsForUser(userId);
             if (maps is null)
             {
-                return BadRequest($"There is no maps for user with id {userId}");
+                result = BadRequest($"There is no maps for user with id {userId}");
             }
-            return Ok(maps);
+            else
+            {
+                result = Ok(maps);
+            }
+
+            return result;
         }
 
         [HttpGet("{id}")]
@@ -39,7 +45,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             var map = _service.GetMapById(id);
             if (map is null)
             {
-                result = BadRequest($"There was no by by the id {id}");
+                result = BadRequest($"There was no Map by the id {id}");
             }
             else
             {
@@ -75,8 +81,8 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             return result;
         }
 
-        [HttpDelete("{userId}/{mapId}")]
-        public IActionResult Delete(int userId, string mapId)
+        [HttpDelete("{id}")]
+        public IActionResult Delete(string id)
         {
             IActionResult result = null;
             var map = _service.GetMapById(id);

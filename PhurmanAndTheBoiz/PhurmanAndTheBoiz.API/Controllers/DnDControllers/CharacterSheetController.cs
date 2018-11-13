@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PhurmanAndTheBoiz.DAL.Models.JsonData;
 using PhurmanAndTheBoiz.DAL.Services;
 
@@ -26,7 +21,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             return Ok(allCharacterSheets);
         }
 
-        [HttpGet("{userId}")]
+        [HttpGet("user/{userId}")]
         public IActionResult Get(int userId)
         {
             var characterSheets = _service.GetAllCharacterSheetsForUser(userId);
@@ -76,7 +71,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
                 result = BadRequest("Character sheet could not be saved to database");
             }
             else
-            {
+            { 
                 _service.SaveCharacter(characterSheet);
                 result = Ok(characterSheet);
             }
@@ -84,16 +79,20 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             return result;
         }
 
-        [HttpDelete("{userId}/{characterId}")]
-        public IActionResult Delete(int userId, string characterId)
+        [HttpDelete("{id}")]
+        public IActionResult Delete(string id)
         {
-            if (_service.GetCharacterSheetById(characterId) is null)
+            IActionResult result = null;
+            if (_service.GetCharacterSheetById(id) is null)
             {
-                return BadRequest($"There is no character sheet with the id of {characterId}");
+                result = BadRequest($"There is no character sheet with the id of {id}");
             }
-
-            _service.DeleteItem(characterId);
-            return Ok();
+            else
+            {
+                _service.DeleteItem(id);
+                result = Ok();
+            }
+            return result;
         }
     }
 }

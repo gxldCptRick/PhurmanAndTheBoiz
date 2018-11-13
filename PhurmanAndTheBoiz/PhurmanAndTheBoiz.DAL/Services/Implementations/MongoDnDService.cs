@@ -59,18 +59,18 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
 
         public CharacterSheet GetCharacterSheetById(string characterSheetId)
         {
-            return GetAllCharacterSheets().Single(cs => cs.CharacterId == characterSheetId);
+            return GetAllCharacterSheets().SingleOrDefault(cs => cs.CharacterId == characterSheetId);
         }
 
 
         public Item GetItemById(string itemId)
         {
-            return GetAllItems().Single(i => i.ItemId == itemId);
+            return GetAllItems().SingleOrDefault(i => i.ItemId == itemId);
         }
 
         public DnDMap GetMapById(string mapId)
         {
-            return GetAllDnDMaps().Single(m => m.MapId == mapId);
+            return GetAllDnDMaps().SingleOrDefault(m => m.MapId == mapId);
         }
 
         public void SaveCharacter(CharacterSheet newCharacter)
@@ -131,7 +131,7 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
             var client = new MongoClient(_mongoConnectionString);
             var database = client.GetDatabase(_database);
             var items = database.GetCollection<CharacterSheet>("CharacterSheets");
-            items.DeleteOne(cs => cs.CharacterId == characterId && cs.UserId == userId);
+            items.DeleteOne(cs => cs.CharacterId == characterId);
         }
 
         public void DeleteItem(string itemId)
