@@ -19,7 +19,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             _service = service;
         }
 
-        [HttpGet]
+        [HttpGet("{userId}")]
         public IActionResult GetAllCharacterSheetsForUser(int userId)
         {
             var characterSheets = _service.GetAllCharacterSheetsForUser(userId);
@@ -33,17 +33,40 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
         }
 
 
-        public IActionResult SaveCharacter([FromBody] CharacterSheet characterSheet)
+        [HttpPost]
+        public IActionResult CreateCharacterSheet([FromBody] CharacterSheet characterSheet)
         {
-            _service.SaveCharacter(characterSheet);
-            return Ok();
+            IActionResult result = null;
+            if (characterSheet is null)
+            {
+                result = BadRequest("Character sheet could not be saved to database");
+            }
+            else
+            {
+                _service.SaveCharacter(characterSheet);
+                result = Ok(characterSheet);
+            }
+
+            return result;
         }
 
-        public IActionResult DeleteCharacter(int userId, string characterId)
+        [HttpDelete("{userId}/{characterId}")]
+        public IActionResult Delete(int userId, string characterId)
         {
-            _service.DeleteCharacter(userId, characterId);
-            return Ok();
+            IActionResult result = null;
+            var charcterSheets = _service.GetAllCharacterSheetsForUser(userId);
+            foreach (var characterSheet in charcterSheets)
+            {
+                if (characterSheet.CharacterId == characterId)
+                {
+                    _service.DeleteCharacter(userId, characterId);
+                    return Ok();
+                }
+            }
+            return BadRequest($"There is no character sheet with characterId {characterId}");
         }
+
+
 
 
 
