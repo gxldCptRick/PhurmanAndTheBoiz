@@ -11,7 +11,7 @@ using System.Text;
 
 namespace PhurmanAndTheBoiz.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/dnd/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -20,9 +20,10 @@ namespace PhurmanAndTheBoiz.API.Controllers
         {
             _service = service;
         }
+        [HttpPost]
         public IActionResult Authenticate([FromBody]User userDto)
         {
-            var user = _service.Authenticate(userDto.Username, userDto.Password);
+            var user = _service.AuthenticateUser(userDto.Username, userDto.Password);
 
             if (user == null)
             {
@@ -50,13 +51,13 @@ namespace PhurmanAndTheBoiz.API.Controllers
                 Token
             });
         }
-
         
+        [HttpPost]
         public IActionResult Register([FromBody]User userDto)
         {
             try
             {
-                _service.Create(userDto, userDto.Password);
+                _service.CreateUser(userDto, userDto.Password);
                 return Ok();
             }
             catch (AppException e)
@@ -64,36 +65,45 @@ namespace PhurmanAndTheBoiz.API.Controllers
                 return BadRequest(e);
             }
         }
+
         // GET: api/User
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            return Ok(_service.GetAllUsers());
         }
 
         // GET: api/User/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
         {
-            return "value";
-        }
-
-        // POST: api/User
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
+            var user = _service.GetUserById(id);
+            return Ok(user);
         }
 
         // PUT: api/User/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult UpdateUser(int id, [FromBody] User userDto)
         {
+            try
+            {
+                var user = _service.GetUserById(id);
+                _service.UpdateUser(user, user.Password);
+                return Ok();
+            }
+            catch (AppException appException)
+            {
+                return BadRequest(appException);
+            }
+            
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            _service.DeleteUser(id);
+            return Ok();
         }
     }
 }

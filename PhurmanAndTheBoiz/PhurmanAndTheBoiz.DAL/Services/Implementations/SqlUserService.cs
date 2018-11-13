@@ -27,7 +27,7 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
             _options = builder.Options;
         }
 
-        public User Authenticate(string username, string password)
+        public User AuthenticateUser(string username, string password)
         {
             User user = null;
             if (IsValidCredentials(username, password))
@@ -46,7 +46,7 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
             return user;
         }
 
-        public User Create(User user, string password)
+        public User CreateUser(User user, string password)
         {
             var createdUser = user;
             CheckIfValidPassword(password);
@@ -65,7 +65,7 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
             return createdUser;
         }
 
-        public void Delete(int id)
+        public void DeleteUser(int id)
         {
             WorkWithConnection((context) =>
             {
@@ -78,7 +78,7 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
             });
         }
 
-        public IEnumerable<User> GetAll()
+        public IEnumerable<User> GetAllUsers()
         {
             var users = new List<User>();
 
@@ -95,7 +95,7 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
             return users;
         }
 
-        public User GetById(int id)
+        public User GetUserById(int id)
         {
             User user = null;
             WorkWithConnection((context) =>
@@ -106,7 +106,7 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
             return user;
         }
 
-        public void Update(User user, string password = null)
+        public void UpdateUser(User user, string password = null)
         {
             WorkWithConnection((context) =>
             {
