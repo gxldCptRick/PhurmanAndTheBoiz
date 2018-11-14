@@ -29,8 +29,8 @@ r.connect({
     port: 28015,
     db: 'test'
 }).then((dbConnection) =>{
+    // r.table('chat_messages').delete().run(dbConnection);
     io.on('connection', (client) => {
-        console.log("client connection");
         client.on('subscribeToChatMessages', () =>{
             subscribeToChatMessages({ client, dbConnection });
         })
