@@ -4,3 +4,15 @@
         padding-top: 50px;
     }
 }
+
+.messages-container{
+    overflow-y: scroll;
+    height: 100px;
+    width: 200px;
+}
+
+.message {
+    padding: 3px;
+    background: grey;
+    margin-bottom: 3px;
+}
