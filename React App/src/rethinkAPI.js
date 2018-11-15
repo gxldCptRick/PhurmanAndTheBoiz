@@ -19,11 +19,31 @@ function subscribeToChatMessages(callback){
     socket.emit('subscribeToChatMessages');
 }
 
+function subscribeToUserTyping(callback){
+    socket.on('userIsTyping', user => callback(user));
+}
+
+function subscribeToUserDoneTyping(callback){
+    socket.on('doneTyping', user => callback(user));
+}
+
 function sendMessage({ message }){
     socket.emit('sendMessage', { message });
 }
 
+function typing({ user }){
+    socket.emit('typing', { user })
+}
+
+function doneTyping({ user }){
+    socket.emit('doneTyping', { user })
+}
+
 export {
     subscribeToChatMessages,
-    sendMessage
+    sendMessage,
+    subscribeToUserTyping,
+    typing,
+    doneTyping,
+    subscribeToUserDoneTyping
 }

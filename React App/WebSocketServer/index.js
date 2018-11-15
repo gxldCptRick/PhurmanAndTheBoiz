@@ -24,6 +24,16 @@ function sendMessage({ dbConnection, message }){
         .then(() => console.log(`${message} sent to database`));
 }
 
+function typing({ user, client }){
+    console.log(user);
+    console.log(client);
+    client.emit('userIsTyping', user);
+}
+
+function doneTyping({ user, client }){
+    client.emit('doneTyping', user);   
+}
+
 r.connect({
     host: '73.20.98.246',
     port: 28015,
@@ -37,6 +47,15 @@ r.connect({
 
         client.on('sendMessage', ({ message }) => {
             sendMessage({ message, dbConnection });
+        })
+
+        client.on('typing', ({ client, user }) => {
+            console.log(`client in client.on(typing): ${client}`)
+            typing({ client, user });
+        })
+
+        client.on('doneTyping', ({ client, user }) => {
+            doneTyping({ client, user });
         })
     });
 });

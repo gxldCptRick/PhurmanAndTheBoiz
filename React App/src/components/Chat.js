@@ -1,12 +1,19 @@
 import React,{Component} from 'react';
 import '../index.css';
-import { sendMessage, subscribeToChatMessages } from '../rethinkAPI';
+import { sendMessage, subscribeToChatMessages,
+         typing, subscribeToUserTyping,
+         doneTyping, subscribeToUserDoneTyping} from '../rethinkAPI';
 import * as ReactDOM from 'react-dom';
 
+var typingTimer;
+var listOfNames = ["Adalberto", "Leeanna", "Rico", "Barbar", "Claudette", "Tanja", "Kelly", "Gerry", "Kerri", "Chau"];
+var doneTypingInterval = 1000;
 export default class Chat extends React.Component{
     state = {
+        user: listOfNames[Math.floor(Math.random()*listOfNames.length)],
         chatMessages: [],
         message: '',
+        usersThatAreTyping: []
     };
 
     constructor(props){
@@ -18,12 +25,27 @@ export default class Chat extends React.Component{
                 chatMessages: prevState.chatMessages.concat([chatMessage])
             }));
         })
+
+        subscribeToUserTyping(({ user }) => {
+            this.setState(prevState => ({
+                usersThatAreTyping: prevState.userThatIsTyping.concat([user])
+            }))
+        })
+
+        subscribeToUserDoneTyping(({ user }) => {
+            var index = this.state.usersThatAreTyping.indexOf(user);
+            if (index !== -1){
+                this.state.usersThatAreTyping.splice(index, 1);
+            }
+        })
     }
 
     handleSendMessage = () =>{
-        sendMessage({ 
-            message: this.state.message
-        });
+        var userMessage  = this.state.message.replace(/^\s+/, '').replace(/\s+$/, '');
+        
+        if (userMessage !== ''){
+            sendMessage({ message: this.state.message });
+        }
 
         this.setState({
             message: ''
@@ -54,9 +76,17 @@ export default class Chat extends React.Component{
     }
 
     handleKeyPress = (event) => {
+        clearTimeout(typingTimer);
+        typing({ user: this.state.user });
+        this.somebodyIsTyping = true;
         if (event.key === 'Enter'){
             this.handleSendMessage();
         }
+    }
+
+    handleKeyUp = (event) => {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(doneTyping({ user: this.state.user}), doneTypingInterval);
     }
 
     componentDidUpdate(){
@@ -64,11 +94,26 @@ export default class Chat extends React.Component{
     }
 
     render(){
-        const chatMessages = this.state.chatMessages.map(chatMessage =>(
+        let chatMessages = this.state.chatMessages.map(chatMessage =>(
             <div className="message" ref="chat_message">
                 {chatMessage.message}
             </div>
         ));
+
+        let typingUser = (<p></p>);
+
+        if (this.state.usersThatAreTyping.length > 1){
+            typingUser = (
+                <p>Many users are typing...</p>
+            );
+        }
+
+        else if (this.state.usersThatAreTyping.length == 1){
+            typingUser = (
+                <p>{this.state.usersThatAreTyping[0]} is typing...</p>
+            );
+        }
+
         return (
         <div className="chat-box">
             <div 
@@ -78,6 +123,9 @@ export default class Chat extends React.Component{
             >
                 {chatMessages}
             </div>
+            <div className="user-typing">
+                {typingUser}
+            </div>
 
             <input 
                 type="text"
@@ -85,10 +133,10 @@ export default class Chat extends React.Component{
                 value={this.state.message}
                 onChange={this.handleTextChange}
                 onKeyPress={this.handleKeyPress}
+                onKeyUp={this.handleKeyUp}
             />
             <input type="button" onClick={this.handleSendMessage} value="Send"/>
         </div>
-
         )
     }
 }
