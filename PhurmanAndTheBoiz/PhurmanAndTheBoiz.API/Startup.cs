@@ -22,6 +22,8 @@ namespace PhurmanAndTheBoiz.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddCors();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddSingleton<IUserService>(new SqlUserService(connectionString: Configuration["connections:sql_connection"]));
@@ -49,6 +51,10 @@ namespace PhurmanAndTheBoiz.API
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             //app.UseSpaStaticFiles();
+
+            app.UseCors(
+                options => options.WithOrigins(@"http://73.131.209.95:3000")
+            );
 
             app.UseMvc(routes =>
             {

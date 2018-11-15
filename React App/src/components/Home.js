@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import Chat from './Chat';
+
 
 export class Home extends Component {
   displayName = Home.name
@@ -14,7 +16,10 @@ export class Home extends Component {
           <li>Luis</li>
           <li>Fermin</li>
         </ul>
+        <Chat />
       </div>
+
+      
     );
   }
 }
