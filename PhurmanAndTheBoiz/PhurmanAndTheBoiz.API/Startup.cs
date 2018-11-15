@@ -23,7 +23,14 @@ namespace PhurmanAndTheBoiz.API
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.WithOrigins(@"http://73.131.209.95:3000")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+            });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddSingleton<IUserService>(new SqlUserService(connectionString: Configuration["connections:sql_connection"]));
@@ -52,10 +59,7 @@ namespace PhurmanAndTheBoiz.API
             app.UseStaticFiles();
             //app.UseSpaStaticFiles();
 
-            app.UseCors(
-                options => options.WithOrigins(@"http://73.131.209.95:3000")
-            );
-
+            app.UseCors("CorsPolicy");
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
