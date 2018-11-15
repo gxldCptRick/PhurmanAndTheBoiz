@@ -1,5 +1,5 @@
 import openSocket from "socket.io-client";
-const socket = openSocket("http://localhost:8000");
+//const socket = openSocket("http://localhost:8000");
 // let sendMessage = (username, message) => {
 //   socket.emit("chat", {
 //     message: message,
@@ -21,4 +21,4 @@ const socket = openSocket("http://localhost:8000");
 //     feedback.innerHTML = `<p><em>${data} is typing a message.</em></p>`;
 //   });
 //export { sendMessage, typingEvent };
-export default socket;
+export default {};
