@@ -51,8 +51,8 @@ namespace PhurmanAndTheBoiz.API
             //app.UseSpaStaticFiles();
 
             app.UseCors(opts => {
-                opts.WithOrigins("http://73.131.209.95:3000");
-                opts.WithOrigins("http://73.131.209.95:5585");
+                opts.WithOrigins("http://73.131.209.95:3000").AllowAnyHeader();
+                opts.WithOrigins("http://73.131.209.95:5585").AllowAnyHeader();
             });
             app.UseMvc(routes =>
             {

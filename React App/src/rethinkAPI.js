@@ -2,6 +2,7 @@ import openSocket from "socket.io-client";
 import Rx from "rxjs/Rx";
 
 const port = 5585;
+
 const socket = openSocket(`http://73.131.209.95:${port}`);
 
 function subscribeToChatMessages(callback) {
