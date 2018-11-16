@@ -14,20 +14,20 @@ namespace PhurmanAndTheBoiz.DAL.Services
         /// <param name="username">The username for the user</param>
         /// <param name="password">The password for the user</param>
         /// <returns>The User object Associated with the given combo.</returns>
-        User Authenticate(string username, string password);
+        User AuthenticateUser(string username, string password);
 
         /// <summary>
         /// Gets all the user accounts.
         /// </summary>
         /// <returns>every user account found.</returns>
-        IEnumerable<User> GetAll();
+        IEnumerable<User> GetAllUsers();
 
         /// <summary>
         /// Gets a user with the given id.
         /// </summary>
         /// <param name="id">id for the user</param>
         /// <returns></returns>
-        User GetById(int id);
+        User GetUserById(int id);
 
         /// <summary>
         /// Creates A User with the given User configurations.
@@ -38,7 +38,7 @@ namespace PhurmanAndTheBoiz.DAL.Services
         /// <param name="user">The user object that will be added to the database.</param>
         /// <param name="password">The password that will be used to get access to the user.</param>
         /// <returns>The newly created user entry in the database with updated values for the id.</returns>
-        User Create(User user, string password);
+        User CreateUser(User user, string password);
 
         /// <summary>
         /// Updates the users data and password. 
@@ -49,12 +49,12 @@ namespace PhurmanAndTheBoiz.DAL.Services
         /// <exception>App Exception</exception>
         /// <param name="user">the user data to be updated</param>
         /// <param name="password">the new password if given</param>
-        void Update(User user, string password = null);
+        void UpdateUser(User user, string password = null);
 
         /// <summary>
         /// Deletes a user with a given id if found.
         /// </summary>
         /// <param name="id">the id of the deleted user</param>
-        void Delete(int id);
+        void DeleteUser(int id);
     }
 }

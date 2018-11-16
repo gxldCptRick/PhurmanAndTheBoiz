@@ -1,6 +1,7 @@
 ﻿using MongoDB.Driver;
 using PhurmanAndTheBoiz.DAL.Models.JsonData;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PhurmanAndTheBoiz.DAL.Services.Implementations
 {
@@ -12,39 +13,6 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
         {
             _mongoConnectionString = mongoConnectionString;
             _database = database;
-        }
-
-        public void DeleteCharacter(int userId, string characterId)
-        {
-            var client = new MongoClient(_mongoConnectionString);
-            var database = client.GetDatabase(_database);
-            var items = database.GetCollection<CharacterSheet>("CharacterSheets");
-            items.DeleteOne(cs => cs.CharacterId == characterId && cs.UserId == userId);
-        }
-
-        public void DeleteItem(string itemId)
-        {
-            var client = new MongoClient(_mongoConnectionString);
-            var database = client.GetDatabase(_database);
-            var items = database.GetCollection<Item>("Items");
-            items.DeleteOne(i => i.ItemId == itemId);
-        }
-
-        public void DeleteMap(int userId, string mapId)
-        {
-            var client = new MongoClient(_mongoConnectionString);
-            var database = client.GetDatabase(_database);
-            var maps = database.GetCollection<DnDMap>("Maps");
-            maps.DeleteOne(m => m.MapId == mapId && m.UserId == userId);
-        }
-
-        public IEnumerable<CharacterSheet> GetAllCharacterSheetsForUser(int userId)
-        {
-            var client = new MongoClient(_mongoConnectionString);
-            var database = client.GetDatabase(_database);
-            var characterSheets = database.GetCollection<CharacterSheet>("CharacterSheets");
-            var characterSheetList = characterSheets.Find((s) => s.UserId == userId).ToList();
-            return characterSheetList;
         }
 
         public IEnumerable<DnDMap> GetAllDnDMaps()
@@ -65,22 +33,44 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
             return itemsList;
         }
 
-        public IEnumerable<DnDMap> GetAllMapsForUser(int userId)
+        public IEnumerable<CharacterSheet> GetAllCharacterSheets()
         {
             var client = new MongoClient(_mongoConnectionString);
             var database = client.GetDatabase(_database);
-            var allMaps = database.GetCollection<DnDMap>("Maps");
-            var mapsForUser = allMaps.Find(m => m.UserId == userId).ToList();
-            return mapsForUser;
+            var items = database.GetCollection<CharacterSheet>("CharacterSheets");
+            var itemsList = items.Find(_ => true).ToList();
+            return itemsList;
         }
+
+        public IEnumerable<CharacterSheet> GetAllCharacterSheetsForUser(int userId)
+        {
+            return GetAllCharacterSheets().Where(cs => cs.UserId == userId);
+        }
+
+        public IEnumerable<Item> GetAllItemsForUser(int userId)
+        {
+            return GetAllItems().Where(i => i.UserId == userId);
+        }
+
+        public IEnumerable<DnDMap> GetAllMapsForUser(int userId)
+        {
+            return GetAllDnDMaps().Where(m => m.UserId == userId);
+        }
+
+        public CharacterSheet GetCharacterSheetById(string characterSheetId)
+        {
+            return GetAllCharacterSheets().SingleOrDefault(cs => cs.CharacterId == characterSheetId);
+        }
+
 
         public Item GetItemById(string itemId)
         {
-            var client = new MongoClient(_mongoConnectionString);
-            var database = client.GetDatabase(_database);
-            var allItems = database.GetCollection<Item>("Maps");
-            var itemForId = allItems.Find(i => i.ItemId == itemId).SingleOrDefault();
-            return itemForId;
+            return GetAllItems().SingleOrDefault(i => i.ItemId == itemId);
+        }
+
+        public DnDMap GetMapById(string mapId)
+        {
+            return GetAllDnDMaps().SingleOrDefault(m => m.MapId == mapId);
         }
 
         public void SaveCharacter(CharacterSheet newCharacter)
@@ -120,6 +110,11 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
             var client = new MongoClient(_mongoConnectionString);
             var database = client.GetDatabase(_database);
             var items = database.GetCollection<Item>("Items");
+            var item = items.Find(i => i.ItemId == updatedItem.ItemId).First();
+            updatedItem.ItemName = updatedItem.ItemName ?? item.ItemName;
+            updatedItem.ItemType = updatedItem.ItemType ?? item.ItemType;
+            updatedItem.Stats = updatedItem.Stats ?? item.Stats;
+            updatedItem.UserId = updatedItem.UserId == 0 ? item.UserId : updatedItem.UserId;
             items.ReplaceOne(i => i.ItemId == updatedItem.ItemId, updatedItem);
         }
 
@@ -129,6 +124,30 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
             var database = client.GetDatabase(_database);
             var maps = database.GetCollection<DnDMap>("Maps");
             maps.ReplaceOne(m => m.MapId == updatedMap.MapId, updatedMap);
+        }
+
+        public void DeleteCharacter(string characterId)
+        {
+            var client = new MongoClient(_mongoConnectionString);
+            var database = client.GetDatabase(_database);
+            var items = database.GetCollection<CharacterSheet>("CharacterSheets");
+            items.DeleteOne(cs => cs.CharacterId == characterId);
+        }
+
+        public void DeleteItem(string itemId)
+        {
+            var client = new MongoClient(_mongoConnectionString);
+            var database = client.GetDatabase(_database);
+            var items = database.GetCollection<Item>("Items");
+            items.DeleteOne(i => i.ItemId == itemId);
+        }
+
+        public void DeleteMap(string mapId)
+        {
+            var client = new MongoClient(_mongoConnectionString);
+            var database = client.GetDatabase(_database);
+            var maps = database.GetCollection<DnDMap>("Maps");
+            maps.DeleteOne(m => m.MapId == mapId);
         }
     }
 }

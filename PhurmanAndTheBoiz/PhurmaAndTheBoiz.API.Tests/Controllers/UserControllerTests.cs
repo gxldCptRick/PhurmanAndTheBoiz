@@ -15,7 +15,7 @@ namespace PhurmaAndTheBoiz.API.Tests.Controllers
         public void AuthenticateReturnsOkWhenCredentialsPass()
         {
             var dependency = new Mock<IUserService>();
-            dependency.Setup(obj => obj.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new User());
+            dependency.Setup(obj => obj.AuthenticateUser(It.IsAny<string>(), It.IsAny<string>())).Returns(new User());
             var controller = new UserController(dependency.Object);
             var result = controller.Authenticate(new User());
             Assert.IsNotNull(result);
@@ -26,7 +26,7 @@ namespace PhurmaAndTheBoiz.API.Tests.Controllers
         public void TheOkReturnedHasANonNullToken()
         {
             var dependency = new Mock<IUserService>();
-            dependency.Setup(obj => obj.Authenticate(It.IsAny<string>(), It.IsAny<string>())).Returns(new User());
+            dependency.Setup(obj => obj.AuthenticateUser(It.IsAny<string>(), It.IsAny<string>())).Returns(new User());
             var controller = new UserController(dependency.Object);
             var result = controller.Authenticate(new User());
             Assert.IsNotNull(result);
@@ -48,7 +48,7 @@ namespace PhurmaAndTheBoiz.API.Tests.Controllers
         public void AuthenticationReturnsBadRequestWhenCredentialsFail()
         {
             var dependency = new Mock<IUserService>();
-            dependency.Setup(obj => obj.Authenticate(It.IsAny<string>(), It.IsAny<string>()));
+            dependency.Setup(obj => obj.AuthenticateUser(It.IsAny<string>(), It.IsAny<string>()));
             var controller = new UserController(dependency.Object);
             var result = controller.Authenticate(new User());
             Assert.IsNotNull(result);
@@ -59,7 +59,7 @@ namespace PhurmaAndTheBoiz.API.Tests.Controllers
         public void RegisterReturnsOkayWithGoodCredentials()
         {
             var dependency = new Mock<IUserService>();
-            dependency.Setup(obj => obj.Create(It.IsNotNull<User>(), It.IsNotNull<string>()));
+            dependency.Setup(obj => obj.CreateUser(It.IsNotNull<User>(), It.IsNotNull<string>()));
             var controller = new UserController(dependency.Object);
             var result = controller.Register(new User() { Password = "null" });
             Assert.IsInstanceOfType(result, typeof(OkResult));
@@ -69,7 +69,7 @@ namespace PhurmaAndTheBoiz.API.Tests.Controllers
         public void RegisterReturnsBadRequestWhenExceptionIsThrown()
         {
             var dependency = new Mock<IUserService>();
-            dependency.Setup(obj => obj.Create(It.IsNotNull<User>(), It.IsNotNull<string>()))
+            dependency.Setup(obj => obj.CreateUser(It.IsNotNull<User>(), It.IsNotNull<string>()))
                 .Throws<AppException>();
             var controller = new UserController(dependency.Object);
             var result = controller.Register(new User() { Password = "null" });
