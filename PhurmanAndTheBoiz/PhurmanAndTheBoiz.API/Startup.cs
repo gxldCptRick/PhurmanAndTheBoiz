@@ -22,6 +22,15 @@ namespace PhurmanAndTheBoiz.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.WithOrigins(@"https://73.131.209.95:5585")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+            });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddSingleton<IUserService>(new SqlUserService(connectionString: Configuration["connections:sql_connection"]));
@@ -50,10 +59,7 @@ namespace PhurmanAndTheBoiz.API
             app.UseStaticFiles();
             //app.UseSpaStaticFiles();
 
-            app.UseCors(opts => {
-                opts.WithOrigins("http://73.131.209.95:3000").AllowAnyHeader();
-                opts.WithOrigins("http://73.131.209.95:5585").AllowAnyHeader();
-            });
+            app.UseCors("CorsPolicy");
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -62,7 +68,7 @@ namespace PhurmanAndTheBoiz.API
             });
             app.UseSpa(spa =>
             {
-                spa.UseProxyToSpaDevelopmentServer(@"http://73.131.209.95:3000");
+                spa.UseProxyToSpaDevelopmentServer(@"http://127.0.0.1:3000");
             });
         }
     }
