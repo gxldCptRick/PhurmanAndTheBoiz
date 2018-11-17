@@ -8,6 +8,7 @@ import { RegisterPage } from './components/RegisterPage';
 import { RollDice} from './components/DiceRoll'
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
+import {CharacterSheet} from "./components/CharacterSheet"
 
 export default class App extends Component {
   displayName = App.name
@@ -20,6 +21,7 @@ export default class App extends Component {
         <Route path='/Game' component={Game} />
         <Route path='/RegisterPage' component={RegisterPage} />
         <Route path='/RollDice' component={RollDice} />
+        <Route path="/CharacterSheet" component={CharacterSheet} />
       </Layout>
     );
   }

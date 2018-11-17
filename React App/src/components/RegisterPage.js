@@ -1,6 +1,6 @@
 ﻿import React, { Component } from 'react';
 
-export class RegisterPage extends React.Component {
+export class RegisterPage extends Component {
 
   constructor(props) {
     super(props);
@@ -26,7 +26,13 @@ export class RegisterPage extends React.Component {
       alert("Passwords are not the same")
     } else {
       console.log(this.state)
-      alert(JSON.stringify(this.state))
+      var user = {
+        FirstName: this.state.FirstName,
+        LastName: this.state.LastName,
+        Username: this.state.Username,
+        Password: this.state.Password,
+      }
+      alert(JSON.stringify(user))
     }
   }
 
