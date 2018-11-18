@@ -20,8 +20,32 @@ function subscribeToChatMessages(callback) {
   socket.emit("subscribeToChatMessages");
 }
 
-function sendMessage({ message }) {
-  socket.emit("sendMessage", { message });
+function subscribeToUserTyping(callback){
+    socket.on('userIsTyping', user => callback(user));
 }
 
-export { subscribeToChatMessages, sendMessage };
+function subscribeToUserDoneTyping(callback){
+    socket.on('doneTyping', user => callback(user));
+}
+
+function sendMessage({ message }){
+    socket.emit('sendMessage', { message });
+}
+
+function typing({ user }){
+    socket.emit('typing', { user })
+}
+
+function doneTyping({ user }){
+    socket.emit('doneTyping', { user })
+}
+
+export {
+    subscribeToChatMessages,
+    sendMessage,
+    subscribeToUserTyping,
+    typing,
+    doneTyping,
+    subscribeToUserDoneTyping
+}
+>>>>>>> Stashed changes
