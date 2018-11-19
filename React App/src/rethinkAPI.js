@@ -3,9 +3,9 @@ import Rx from "rxjs/Rx";
 
 const port = 5585;
 
-//const socket = openSocket(`http://localhost:${port}`);
+const socket = openSocket(`http://73.131.209.95:${port}`);
 
-const socket = openSocket('http://localhost:5585');
+//const socket = openSocket('http://localhost:5585');
 
 function subscribeToChatMessages(callback) {
   // const messagesStream = Rx.Observable.fromEventPattern(
