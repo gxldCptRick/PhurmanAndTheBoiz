@@ -19,4 +19,10 @@
 
 .user-typing {
     font-size: 10px;
+    height: 15px;
+    width: 200px;
+}
+
+.user-typing > p {
+    margin: 0;
 }

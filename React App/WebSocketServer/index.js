@@ -29,13 +29,12 @@ function sendMessage({ dbConnection, message }) {
 }
 
 function typing({ user, client }){
-    console.log(user);
-    console.log(client);
-    client.emit('userIsTyping', user);
+    console.log(`socket server user broadcasting: ${user}`);
+    client.broadcast.emit('userIsTyping', user);
 }
 
 function doneTyping({ user, client }){
-    client.emit('doneTyping', user);   
+    client.broadcast.emit('doneTyping', { user });   
 }
 
 r.connect({
@@ -50,14 +49,12 @@ r.connect({
       });
       client.on('sendMessage', ({ message }) => {
           sendMessage({ message, dbConnection });
-      })
-
-      client.on('typing', ({ client, user }) => {
-          console.log(`client in client.on(typing): ${client}`)
+      });
+      client.on('typing', ({ user }) => {
           typing({ client, user });
       });
 
-      client.on('doneTyping', ({ client, user }) => {
+      client.on('doneTyping', ({ user }) => {
           doneTyping({ client, user });
       });
     });

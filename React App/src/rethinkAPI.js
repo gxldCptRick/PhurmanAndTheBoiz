@@ -3,7 +3,9 @@ import Rx from "rxjs/Rx";
 
 const port = 5585;
 
-const socket = openSocket(`http://73.131.209.95:${port}`);
+//const socket = openSocket(`http://localhost:${port}`);
+
+const socket = openSocket('http://localhost:5585');
 
 function subscribeToChatMessages(callback) {
   // const messagesStream = Rx.Observable.fromEventPattern(
@@ -21,11 +23,11 @@ function subscribeToChatMessages(callback) {
 }
 
 function subscribeToUserTyping(callback){
-    socket.on('userIsTyping', user => callback(user));
+    socket.on('userIsTyping', user => callback({ user }));
 }
 
 function subscribeToUserDoneTyping(callback){
-    socket.on('doneTyping', user => callback(user));
+    socket.on('doneTyping', user => callback({ user} ));
 }
 
 function sendMessage({ message }){
@@ -48,4 +50,3 @@ export {
     doneTyping,
     subscribeToUserDoneTyping
 }
->>>>>>> Stashed changes

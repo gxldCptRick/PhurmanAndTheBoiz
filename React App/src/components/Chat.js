@@ -7,7 +7,8 @@ import * as ReactDOM from 'react-dom';
 
 var typingTimer;
 var listOfNames = ["Adalberto", "Leeanna", "Rico", "Barbar", "Claudette", "Tanja", "Kelly", "Gerry", "Kerri", "Chau"];
-var doneTypingInterval = 1000;
+var doneTypingInterval = 500;
+var emmitedCurrentlyTypingEvent = false;
 export default class Chat extends React.Component{
     state = {
         user: listOfNames[Math.floor(Math.random()*listOfNames.length)],
@@ -26,17 +27,22 @@ export default class Chat extends React.Component{
             }));
         })
 
+
         subscribeToUserTyping(({ user }) => {
+            console.log(this.state.usersThatAreTyping);
+            console.log(`user that is typing: ${user}`);
             this.setState(prevState => ({
-                usersThatAreTyping: prevState.userThatIsTyping.concat([user])
+                usersThatAreTyping: prevState.usersThatAreTyping.concat([user])
             }))
         })
 
         subscribeToUserDoneTyping(({ user }) => {
-            var index = this.state.usersThatAreTyping.indexOf(user);
-            if (index !== -1){
-                this.state.usersThatAreTyping.splice(index, 1);
-            }
+            var nameOfUserDoneTyping = user.user;
+            this.setState({
+                usersThatAreTyping: this.state.usersThatAreTyping.filter((userName) =>{
+                    return userName !== nameOfUserDoneTyping
+                })
+            });
         })
     }
 
@@ -70,15 +76,18 @@ export default class Chat extends React.Component{
         var chatMessageBoxHeight = typeof(chat_message) === 'undefined' ? 30 : chat_message.clientHeight + 10;
 
         if (domMessage_container.scrollTop >= (maxScrollTop - chatMessageBoxHeight)){
-            console.log("In if statement");
             domMessage_container.scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
         }
     }
 
     handleKeyPress = (event) => {
         clearTimeout(typingTimer);
-        typing({ user: this.state.user });
-        this.somebodyIsTyping = true;
+
+        if (!emmitedCurrentlyTypingEvent){
+            typing({ user: this.state.user });
+            emmitedCurrentlyTypingEvent = true;
+        }
+
         if (event.key === 'Enter'){
             this.handleSendMessage();
         }
@@ -86,7 +95,10 @@ export default class Chat extends React.Component{
 
     handleKeyUp = (event) => {
         clearTimeout(typingTimer);
-        typingTimer = setTimeout(doneTyping({ user: this.state.user}), doneTypingInterval);
+        typingTimer = setTimeout(() => {
+            doneTyping({ user: this.state.user})
+            emmitedCurrentlyTypingEvent = false;
+        }, doneTypingInterval);
     }
 
     componentDidUpdate(){
@@ -100,7 +112,7 @@ export default class Chat extends React.Component{
             </div>
         ));
 
-        let typingUser = (<p></p>);
+        let typingUser = (<p>  </p>);
 
         if (this.state.usersThatAreTyping.length > 1){
             typingUser = (
