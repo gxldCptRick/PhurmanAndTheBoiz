@@ -28,15 +28,6 @@ function sendMessage({ dbConnection, message }) {
     .then(() => console.log(`${message} sent to database`));
 }
 
-function typing({ user, client }){
-    console.log(`socket server user broadcasting: ${user}`);
-    client.broadcast.emit('userIsTyping', user);
-}
-
-function doneTyping({ user, client }){
-    client.broadcast.emit('doneTyping', { user });   
-}
-
 r.connect({
   host: "73.20.98.246",
   port: 28015,
@@ -44,21 +35,15 @@ r.connect({
 }).then(dbConnection => {
   // r.table('chat_messages').delete().run(dbConnection);
   io.on("connection", client => {
-      client.on("subscribeToChatMessages", () => {
-        subscribeToChatMessages({ client, dbConnection });
-      });
-      client.on('sendMessage', ({ message }) => {
-          sendMessage({ message, dbConnection });
-      });
-      client.on('typing', ({ user }) => {
-          typing({ client, user });
-      });
+    client.on("subscribeToChatMessages", () => {
+      subscribeToChatMessages({ client, dbConnection });
+    });
 
-      client.on('doneTyping', ({ user }) => {
-          doneTyping({ client, user });
-      });
+    client.on("sendMessage", ({ message }) => {
+      sendMessage({ message, dbConnection });
     });
   });
+});
 
 const port = 5585;
 io.listen(port);
