@@ -47,8 +47,8 @@ export class RegisterPage extends React.Component {
   }
   render() {
     return (
-
-      <form onSubmit={this.handleSubmit}>
+      <div className="bod">
+      <form  onSubmit={this.handleSubmit} >
         <label> First Name:
           <input
             value={this.state.FirstName}
@@ -88,6 +88,7 @@ export class RegisterPage extends React.Component {
         <br />
         <input type="submit" value="Submit" />
       </form>
+      </div>
     );
   }
 }
