@@ -2,11 +2,12 @@
     margin-right: 10px;
 }
 
-/* Highlighting rules for nav menu items */
-.navbar .navbar-nav .active a,
-.navbar .navbar-nav .active a:hover,
-.navbar .navbar-nav .active a:focus {
-    background-image: none;
-    background-color: #4189C7;
-    color: white;
+.navbar-header{
+    float: left;
+}
+.navbar-collapse{
+    float: right;
+}
+.nav.navbar-nav li a{
+    padding: 15px 30px;
 }
