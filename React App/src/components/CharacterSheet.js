@@ -237,29 +237,7 @@ export class CharacterSheet extends Component {
     <h4>Current items</h4>
     <this.renderItem items={this.state.sheet.inventory}></this.renderItem>
     <h4>Add Item</h4>
-    <form>
-      <div className='row'>
-        <div className='col-md-3'>
-          <label className='col-md-3'>Item Name</label>
-          <input type='text' className='col-md-9' onChange={this.handleNewItemNameChange} value={this.state.item.itemName} />
-        </div>
-        <div className='col-md-3'>
-          <label className='col-md-3'>Type</label>
-          <input type='text' className='col-md-9' onChange={this.handleNewItemTypeChange} value={this.state.item.itemType} />
-        </div>
-        <div className='col-md-3'>
-          <label className='col-md-3'>Damage Roll</label>
-          <input type='text' className='col-md-9' onChange={this.handleNewItemDamageChange} value={this.state.item.stats.damageRoll} />
-        </div>
-        <div className='col-md-3'>
-          <label className='col-md-3'>Attack Bonus</label>
-          <input type='text' className='col-md-9' onChange={this.handleNewItemBonusChange} value={this.state.item.stats.attackBonus} />
-        </div>
-      </div>
-      <div className='row'>
-        <button value={this.state.item} onClick={this.handleAddItem}>Add Item</button>
-      </div>
-    </form>
+
     <h3>Description</h3>
     <div className='row'>
       <div className='col-md-12'>
@@ -268,10 +246,10 @@ export class CharacterSheet extends Component {
       </div>
     </div>
     <div className='row'>
-      <button value={this.state.item} onClick={this.itemJSON}>Add Item</button>
+      <button value={this.state.item} onClick={this.itemJSON}>New Item State</button>
     </div>
     <div className='row'>
-      <button value={this.state.item} onClick={this.stateJSON}>Add Item</button>
+      <button value={this.state.item} onClick={this.stateJSON}>State State</button>
     </div>
   </div>
   );
