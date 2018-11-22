@@ -23,7 +23,7 @@ export default class App extends Component {
         <Route path='/Game' component={Game} />
         <Route path='/RegisterPage' component={RegisterPage} />
         <Route path='/RollDice' component={RollDice} />
-        <Route path="/CharacterSheet" component={CharacterSheet} />
+        <Route path="/CharacterSheet/:id" component={CharacterSheet} />
       </Layout>
       <footer>Phurman and The Boiz @2018</footer>
       </div>
