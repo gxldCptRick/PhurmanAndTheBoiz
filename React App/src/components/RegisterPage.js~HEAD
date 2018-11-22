@@ -1,6 +1,6 @@
 ﻿import React, { Component } from 'react';
 
-export class RegisterPage extends Component {
+export class RegisterPage extends React.Component {
 
   constructor(props) {
     super(props);
@@ -26,13 +26,7 @@ export class RegisterPage extends Component {
       alert("Passwords are not the same")
     } else {
       console.log(this.state)
-      var user = {
-        FirstName: this.state.FirstName,
-        LastName: this.state.LastName,
-        Username: this.state.Username,
-        Password: this.state.Password,
-      }
-      alert(JSON.stringify(user))
+      alert(JSON.stringify(this.state))
     }
   }
 
@@ -53,23 +47,26 @@ export class RegisterPage extends Component {
   }
   render() {
     return (
-      <div className="bod">
-      <h1>Register for the Dungeon</h1>
-      <form  onSubmit={this.handleSubmit} >
+<div className='form-horizontal'>
+      <div className='row'>
+        <div className='col-md-6'>
         <label> First Name:
           <input
             value={this.state.FirstName}
             onChange={this.handleFirstNameChange}
           />
         </label>
-        <br />
+
+        </div>
+        <div className='col-md-6'>
         <label> Last Name:
         <input
             value={this.state.LastName}
             onChange={this.handleLastNameChange}
           />
         </label>
-        <br />
+        </div>
+      </div>
         <label> Username:
         <input
             value={this.state.Username}
@@ -85,7 +82,7 @@ export class RegisterPage extends Component {
           />
         </label>
         <br />
-        <label>Confirm Password:
+        <label>Confirm Password
         <input
             type="Password"
             value={this.state.p2}
@@ -93,9 +90,8 @@ export class RegisterPage extends Component {
           />
         </label>
         <br />
-        <input type="submit" value="Submit" />
-      </form>
-      </div>
+        <input type="submit" value="Submit" onClick={this.handleSubmit} />
+        </div>
     );
   }
 }

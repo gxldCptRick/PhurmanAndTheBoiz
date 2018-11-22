@@ -5,52 +5,52 @@ import { LinkContainer } from "react-router-bootstrap";
 import "./NavMenu.css";
 
 export class NavMenu extends Component {
- displayName = NavMenu.name
+  displayName = NavMenu.name;
 
- render() {
-  return (
-   <Navbar inverse fixedTop fluid collapseOnSelect>
-    <Navbar.Header>
-     <Navbar.Brand>
-      <Link to={'/'}>PhurmanAndTheBoiz.API</Link>
-     </Navbar.Brand>
-     <Navbar.Toggle />
-    </Navbar.Header>
-    <Navbar.Collapse>
-     <Nav>
-      <LinkContainer to={'/'} exact>
-       <NavItem>
-        <Glyphicon glyph='home' /> Home
+  render() {
+    return (
+      <Navbar inverse fixedTop fluid collapseOnSelect>
+        <Navbar.Header>
+          <Navbar.Brand>
+            <Link to={"/"}>PhurmanAndTheBoiz.API</Link>
+          </Navbar.Brand>
+          <Navbar.Toggle />
+        </Navbar.Header>
+        <Navbar.Collapse>
+          <Nav>
+            <LinkContainer to={"/"} exact>
+              <NavItem>
+                <Glyphicon glyph="home" /> Home
               </NavItem>
-      </LinkContainer>
-      <LinkContainer to={'/counter'}>
-       <NavItem>
-        <Glyphicon glyph='education' /> Counter
+            </LinkContainer>
+            <LinkContainer to={"/counter"}>
+              <NavItem>
+                <Glyphicon glyph="education" /> Counter
               </NavItem>
-          </LinkContainer>
-          <LinkContainer to={'/RegisterPage'}>
-            <NavItem>
-              <Glyphicon glyph='th-list' /> Register
-            </NavItem>
-          </LinkContainer>
-      <LinkContainer to={'/Game'}>
-       <NavItem>
-        <Glyphicon glyph='th-list' /> Game
+            </LinkContainer>
+            <LinkContainer to={"/RegisterPage"}>
+              <NavItem>
+                <Glyphicon glyph="th-list" /> Register
               </NavItem>
-      </LinkContainer>
-      <LinkContainer to={'/RollDice'}>
-       <NavItem>
-        <Glyphicon glyph='th-list' /> Roll a dice
+            </LinkContainer>
+            <LinkContainer to={"/Game"}>
+              <NavItem>
+                <Glyphicon glyph="th-list" /> Game
               </NavItem>
-      </LinkContainer>
-      <LinkContainer to={'/CharacterSheet'}>
-       <NavItem>
-        <Glyphicon glyph='th-list' /> Aww Sheet
+            </LinkContainer>
+            <LinkContainer to={"/RollDice"}>
+              <NavItem>
+                <Glyphicon glyph="th-list" /> Roll a dice
               </NavItem>
-      </LinkContainer>
-     </Nav>
-    </Navbar.Collapse>
-   </Navbar>
-  );
- }
+            </LinkContainer>
+            <LinkContainer to={"/CharacterSheet"}>
+              <NavItem>
+                <Glyphicon glyph="th-list" /> Aww Sheet
+              </NavItem>
+            </LinkContainer>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
+    );
+  }
 }
