@@ -56,19 +56,13 @@ namespace PhurmanAndTheBoiz.API
             }
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
-            //app.UseSpaStaticFiles();
-
+            
             app.UseCors("CorsPolicy");
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller}/{action=Index}/{id?}");
-            });
-            app.UseSpa(spa =>
-            {
-                spa.UseProxyToSpaDevelopmentServer(@"http://127.0.0.1:3000");
             });
         }
     }
