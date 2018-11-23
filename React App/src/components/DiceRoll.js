@@ -28,7 +28,7 @@ export class RollDice extends Component {
 
   render() {
     return (
-      <div>
+      <div className = "bod">
         <h2>{this.state.result}</h2>
         <button onClick={this.handleRoll}>Roll D20</button>
       </div>

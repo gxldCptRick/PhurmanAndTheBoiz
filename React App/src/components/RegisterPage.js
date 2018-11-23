@@ -59,7 +59,9 @@ export class RegisterPage extends Component {
   }
   render() {
     return (
-<form>
+      <div className="bod">
+      <h1>Register for the Dungeon</h1>
+      <form  onSubmit={this.handleSubmit} >
         <label> First Name:
           <input
             value={this.state.FirstName}
@@ -89,7 +91,7 @@ export class RegisterPage extends Component {
           />
         </label>
         <br />
-        <label>Confirm Password
+        <label>Confirm Password:
         <input
             type="Password"
             value={this.state.p2}

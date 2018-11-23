@@ -26,7 +26,7 @@ namespace PhurmanAndTheBoiz.API
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
-                    builder => builder.WithOrigins(@"http://73.131.209.95:3000")
+                    builder => builder.WithOrigins(@"https://73.131.209.95:5585")
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials());
@@ -68,7 +68,7 @@ namespace PhurmanAndTheBoiz.API
             });
             app.UseSpa(spa =>
             {
-                spa.UseProxyToSpaDevelopmentServer(@"http://73.131.209.95:3000");
+                spa.UseProxyToSpaDevelopmentServer(@"http://127.0.0.1:3000");
             });
         }
     }
