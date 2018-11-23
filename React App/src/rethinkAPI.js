@@ -3,7 +3,7 @@ import Rx from "rxjs/Rx";
 
 const port = 5585;
 
-const socket = openSocket(`http://73.131.209.95:${port}`);
+const socket = openSocket(`http://73.20.98.246:${port}`);
 
 //const socket = openSocket('http://localhost:5585');
 
