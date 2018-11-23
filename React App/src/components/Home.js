@@ -11,6 +11,6 @@ export class Home extends Component {
         <h1>Dungeon Rollers</h1>
         <Canvas style={{background: "yellow"}}></Canvas>
       </div>
-      );
+    );
   }
 }
