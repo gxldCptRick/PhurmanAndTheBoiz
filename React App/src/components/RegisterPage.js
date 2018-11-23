@@ -101,6 +101,7 @@ export class RegisterPage extends Component {
         <br />
         <input type='button' value="Submit" onClick={this.handleSubmit} />
         </form>
+        </div>
     );
   }
 }
