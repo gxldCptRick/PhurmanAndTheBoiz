@@ -1,4 +1,5 @@
 ﻿import React, { Component } from 'react';
+import openSocket from 'socket.io-client'
 
 export class RegisterPage extends Component {
 
@@ -20,19 +21,24 @@ export class RegisterPage extends Component {
     this.handleConfirmPassword = this.handleConfirmPassword.bind(this);
 
   }
-
   handleSubmit(event) {
     if (this.state.Password != this.state.p2) {
       alert("Passwords are not the same")
     } else {
-      console.log(this.state)
       var user = {
-        FirstName: this.state.FirstName,
-        LastName: this.state.LastName,
-        Username: this.state.Username,
-        Password: this.state.Password,
-      }
-      alert(JSON.stringify(user))
+        firstName: this.state.FirstName,
+        lastName: this.state.LastName,
+        userName: this.state.Username,
+        password: this.state.Password,
+      };
+      alert(JSON.stringify(user));
+      fetch('api/dnd/user',{
+          method:'POST',
+          body: JSON.stringify({user}),
+            headers:{
+              'Content-Type': 'application/json'
+            },
+      }).then(Response => console.log(Response))
     }
   }
 
@@ -53,8 +59,7 @@ export class RegisterPage extends Component {
   }
   render() {
     return (
-
-      <form onSubmit={this.handleSubmit}>
+<form>
         <label> First Name:
           <input
             value={this.state.FirstName}
@@ -92,8 +97,8 @@ export class RegisterPage extends Component {
           />
         </label>
         <br />
-        <input type="submit" value="Submit" />
-      </form>
+        <input type='button' value="Submit" onClick={this.handleSubmit} />
+        </form>
     );
   }
 }

@@ -18,8 +18,6 @@ export class Home extends Component {
         </ul>
         <Chat />
       </div>
-
-      
     );
   }
 }
