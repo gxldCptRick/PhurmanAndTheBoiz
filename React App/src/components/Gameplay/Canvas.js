@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Line from "../models/Line";
 import * as RethinkAPI from '../../rethinkAPI';
+
 class Canvas extends Component {
   constructor(props) {
     super(props);
@@ -8,7 +9,11 @@ class Canvas extends Component {
     this.lines = props.lines && Array.isArray(props.lines)? [...props.lines]: [];
     RethinkAPI.subscribeToPointDraw((point) => {
       point = point || {}
-      this.drawPoint(point, point.isBeginning);
+
+      if (!this.isDrawing){
+        this.drawPoint(point, point.isBeginning);
+      }
+      
     })
   }
 
