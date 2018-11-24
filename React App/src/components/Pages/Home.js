@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import Chat from './Chat';
-import Canvas from './Canvas'
+import Canvas from '../Gameplay/Canvas'
 
 export class Home extends Component {
   displayName = Home.name
