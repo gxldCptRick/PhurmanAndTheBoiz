@@ -120,7 +120,7 @@ export default class Chat extends React.Component{
             );
         }
 
-        else if (this.state.usersThatAreTyping.length == 1){
+        else if (this.state.usersThatAreTyping.length === 1){
             typingUser = (
                 <p>{this.state.usersThatAreTyping[0]} is typing...</p>
             );
