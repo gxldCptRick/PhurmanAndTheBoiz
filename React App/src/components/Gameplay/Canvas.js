@@ -1,36 +1,45 @@
 import React, { Component } from "react";
 import Line from "../models/Line";
-
+import * as RethinkAPI from '../../rethinkAPI';
 class Canvas extends Component {
   constructor(props) {
     super(props);
     this.isDrawing = false;
     this.lines = props.lines && Array.isArray(props.lines)? [...props.lines]: [];
+    RethinkAPI.subscribeToPointDraw((point) => {
+      point = point || {}
+      this.drawPoint(point, point.isBeginning);
+    })
   }
 
-  ClearDrawing(){
+  clearDrawing(){
+    this.lines = [];
+    this.currentLine = undefined;
     let ctx = this.drawingCanvas.getContext("2d");
     ctx.clearRect(0, 0, this.drawingCanvas.width, this.drawingCanvas.height);
   };
 
-  ReDrawLines() {
-    let ctx = this.drawingCanvas.getContext("2d");
+  reDrawLines() {
     this.lines.forEach(line => {
       let points = line.points;
       for (let i = 0; i < points.length; i++) {
-        if (i === 0) {
-          ctx.beginPath();
-          ctx.moveTo(points[i].x, points[i].y);
-        } else {
-          ctx.lineTo(points[i].x, points[i].y);
-        }
+          this.drawPoint(points[i], i === 0)   
       }
-      ctx.stroke();
     });
   };
 
-  StartDrawing(event){
-    
+  drawPoint(point, isBeginning){
+    let ctx = this.drawingCanvas.getContext("2d");
+    if (isBeginning) {
+      ctx.beginPath();
+      ctx.moveTo(point.x, point.y);
+    } else {
+      ctx.lineTo(point.x, point.y);
+    }
+    ctx.stroke();
+  };
+
+  startDrawing(event){
     this.isDrawing = true;
     let ctx = this.drawingCanvas.getContext("2d");
     let point = {x: event.nativeEvent.offsetX, y: event.nativeEvent.offsetY}
@@ -41,37 +50,27 @@ class Canvas extends Component {
     this.currentLine = newestLine;
     this.lines.push(newestLine);
     newestLine.addPoint(point);
-    console.log(newestLine);
-    console.log(this.lines);
+    point.isBeginning = true;
+    RethinkAPI.sendPointToDraw(point);
   };
 
-  FinishDrawing() {
+  finishDrawing() {
     this.isDrawing = false;
   }
 
-  DrawingOnTheCanvas(event) {
+  drawingOnTheCanvas(event) {
     if(this.isDrawing){
-      this.UpdateCanvas({x: event.nativeEvent.offsetX, y:event.nativeEvent.offsetY});
+      this.updateCanvas({x: event.nativeEvent.offsetX, y:event.nativeEvent.offsetY});
     }
   }
 
-  UpdateCanvas({ x, y }) {
+  updateCanvas({ x, y }) {
     if (this.isDrawing) {
       let ctx = this.drawingCanvas.getContext("2d");
       ctx.lineTo(x, y);
-      if(this.counter && this.counter > 3){
-        console.log(this.counter);
-        ctx.stroke();
-        this.counter = 0;
-      }
-      else {
-        
-        console.log(this.counter);
-        if(!this.counter) this.counter = 0;
-        this.counter++;
-      }
-      
+      ctx.stroke();
       this.currentLine.addPoint({x, y});
+      RethinkAPI.sendPointToDraw({x, y});
     }
   }
 
@@ -80,18 +79,18 @@ class Canvas extends Component {
       <div>
         <canvas
           ref={c => (this.drawingCanvas = c)}
-          onMouseMove={event => this.DrawingOnTheCanvas(event)}
-          onMouseDown={event => this.StartDrawing(event)}
-          onMouseUp={event => this.FinishDrawing(event)}
-          onMouseLeave={event => this.FinishDrawing(event)}
-          width="1000px"
-          height="600px"
+          onMouseMove={event => this.drawingOnTheCanvas(event)}
+          onMouseDown={event => this.startDrawing(event)}
+          onMouseUp={event => this.finishDrawing(event)}
+          onMouseLeave={event => this.finishDrawing(event)}
           style={this.props.style}
+          width="900px"
+          height="500px"
         />
-        <button type="button" onClick={_ => this.ClearDrawing()}>
+        <button type="button" onClick={_ => this.clearDrawing()}>
           Clear
         </button>
-        <button type="button" onClick={_=>this.ReDrawLines()}>
+        <button type="button" onClick={_=>this.reDrawLines()}>
           ReDraw
         </button>
       </div>

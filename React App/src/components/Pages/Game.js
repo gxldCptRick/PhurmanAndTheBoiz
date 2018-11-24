@@ -4,7 +4,9 @@ export class Game extends Component {
 
  render() {
   return (
-   <h2>Game</h2>
+      <React.partial>
+          <h2>Game</h2>
+      </React.partial>
   );
  }
 }
