@@ -3,7 +3,9 @@ import Rx from "rxjs/Rx";
 
 const port = 5585;
 
-const socket = openSocket(`http://73.131.209.95:${port}`);
+const socket = openSocket(`http://73.20.98.246:${port}`);
+
+//const socket = openSocket('http://localhost:5585');
 
 function subscribeToChatMessages(callback) {
   // const messagesStream = Rx.Observable.fromEventPattern(
@@ -20,8 +22,31 @@ function subscribeToChatMessages(callback) {
   socket.emit("subscribeToChatMessages");
 }
 
-function sendMessage({ message }) {
-  socket.emit("sendMessage", { message });
+function subscribeToUserTyping(callback){
+    socket.on('userIsTyping', user => callback({ user }));
 }
 
-export { subscribeToChatMessages, sendMessage };
+function subscribeToUserDoneTyping(callback){
+    socket.on('doneTyping', user => callback({ user} ));
+}
+
+function sendMessage({ message }){
+    socket.emit('sendMessage', { message });
+}
+
+function typing({ user }){
+    socket.emit('typing', { user })
+}
+
+function doneTyping({ user }){
+    socket.emit('doneTyping', { user })
+}
+
+export {
+    subscribeToChatMessages,
+    sendMessage,
+    subscribeToUserTyping,
+    typing,
+    doneTyping,
+    subscribeToUserDoneTyping
+}

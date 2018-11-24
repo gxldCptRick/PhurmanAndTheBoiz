@@ -22,7 +22,7 @@ export class RegisterPage extends Component {
 
   }
   handleSubmit(event) {
-    if (this.state.Password != this.state.p2) {
+    if (this.state.Password !== this.state.p2) {
       alert("Passwords are not the same")
     } else {
       var user = {
