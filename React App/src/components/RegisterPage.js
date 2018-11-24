@@ -1,16 +1,16 @@
 ﻿import React, { Component } from 'react';
-import openSocket from 'socket.io-client'
+import axios from 'axios';
 
 export class RegisterPage extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      FirstName: '',
-      LastName: '',
-      Username: '',
-      Password: '',
-      p2: '',
+      FirstName: 'first',
+      LastName: 'last',
+      Username: 'user',
+      Password: 'pass',
+      p2: 'pass',
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -31,14 +31,18 @@ export class RegisterPage extends Component {
         userName: this.state.Username,
         password: this.state.Password,
       };
-      alert(JSON.stringify(user));
-      fetch('api/dnd/user',{
-          method:'POST',
-          body: JSON.stringify({user}),
-            headers:{
-              'Content-Type': 'application/json'
-            },
-      }).then(Response => console.log(Response))
+
+      axios.post('http://gxldcptrick-demo-app.herokuapp.com/api/dnd/user',{
+        user
+      }).
+      then(function(response){
+        alert(response);
+        console.log(response);
+      }).
+      catch(function(error){
+        alert('error');
+        console.log(error);
+      })
     }
   }
 
@@ -59,49 +63,51 @@ export class RegisterPage extends Component {
   }
   render() {
     return (
-      <div className="bod">
-      <h1>Register for the Dungeon</h1>
-      <form  onSubmit={this.handleSubmit} >
-        <label> First Name:
-          <input
-            value={this.state.FirstName}
-            onChange={this.handleFirstNameChange}
-          />
-        </label>
-        <br />
-        <label> Last Name:
-        <input
-            value={this.state.LastName}
-            onChange={this.handleLastNameChange}
-          />
-        </label>
-        <br />
-        <label> Username:
-        <input
-            value={this.state.Username}
-            onChange={this.handleUserNameChange}
-          />
-        </label>
-        <br />
-        <label>Password:
-        <input
-            type="Password"
-            value={this.state.Password}
-            onChange={this.handlePasswordChange}
-          />
-        </label>
-        <br />
-        <label>Confirm Password:
-        <input
-            type="Password"
-            value={this.state.p2}
-            onChange={this.handleConfirmPassword}
-          />
-        </label>
-        <br />
-        <input type='button' value="Submit" onClick={this.handleSubmit} />
+      <div>
+        <h1>Register for the Dungeon</h1>
+        <form>
+          <div className='row'>
+            <div className='col-md-4'>
+              <label className='control-label col-md-12'>Username</label>  
+              <div className='col-md-12'>
+                  <input value={this.state.Username} onChange={this.handleUserNameChange}/>
+              </div>
+            </div>
+            <div className='col-md-4'>
+              <label className='control-label col-md-12'>First Name</label>
+              <div className='col-md-12'>
+                <input type='text' value={this.state.FirstName} onChange={this.handleFirstNameChange}/>
+              </div>
+            </div>
+            <div className='col-md-4'>
+              <label className='control-label col-md-12'> Last Name</label>
+              <div className='col-md-12'>
+                <input type='text' value={this.state.LastName} onChange={this.handleLastNameChange}/>
+              </div>
+            </div>
+          </div>
+          <div className='row'>
+            <div className='col-md-6'>
+              <label className='control-label col-md-12'>Password</label>  
+              <div className='col-md-12'>
+                <input type="Password" value={this.state.Password} onChange={this.handlePasswordChange}/>
+              </div>
+            </div>
+            <div className='col-md-6'>
+              <label className='control-label col-md-12'>Confirm Password</label>  
+              <div className='col-md-6'>
+                <input type="Password" value={this.state.p2} onChange={this.handleConfirmPassword}/>    
+              </div>
+            </div>
+          </div>
+          <div className='row'>
+            <div className='col-md-4'>
+            <br/>
+              <input type='submit' value="Submit" onClick={this.handleSubmit} />
+            </div>
+          </div>
         </form>
-        </div>
+      </div>
     );
   }
 }
