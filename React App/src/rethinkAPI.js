@@ -21,14 +21,13 @@ function subscribeToChatMessages(callback) {
 }
 
 function subscribeToPointDraw(callback) {
-  console.log(callback);
-  socket.on("drawingPointRecieved", point => {callback(point); console.log(point)});
+  //console.log(callback);
+  socket.on("drawingPointRecieved", point => {callback(point); /*console.log(point)*/});
   socket.emit("subscribeToPointDraw");
 }
 
-function sendPointToDraw(point: { x: number, y: number }) {
-    console.log(point);
-    socket.emit("drawingPointSent", point);
+function sendPointToDraw({lineId, x, y}) {
+    socket.emit("drawingPointSent", {lineId, x, y});
 }
 function subscribeToUserDoneTyping(callback) {
   socket.on("doneTyping", user => callback({ user }));
@@ -51,6 +50,17 @@ function doneTyping({ user }: { user: string }) {
 
 }
 
+function generateUUID (callback){
+   socket.emit("generateUUID");
+}
+
+function subscribeToMessageFromServer(callback){
+  socket.on("message", message => callback(message));
+}
+
+function sendLine({ newLine }){
+  socket.emit("sendLine", { newLine });
+}
 export {
   subscribeToChatMessages,
   sendMessage,
@@ -59,5 +69,8 @@ export {
   doneTyping,
   subscribeToUserDoneTyping,
   subscribeToPointDraw,
-  sendPointToDraw
+  sendPointToDraw,
+  generateUUID,
+  subscribeToMessageFromServer,
+  sendLine
 };

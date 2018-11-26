@@ -1,15 +1,43 @@
 import React, { Component } from "react";
 import Line from "../models/Line";
 import * as RethinkAPI from '../../rethinkAPI';
+
 class Canvas extends Component {
   constructor(props) {
     super(props);
     this.isDrawing = false;
-    this.lines = props.lines && Array.isArray(props.lines)? [...props.lines]: [];
-    RethinkAPI.subscribeToPointDraw((point) => {
-      point = point || {}
-      this.drawPoint(point, point.isBeginning);
+    this.drawingFromDB = true;
+    this.currentLineId = null;
+    //this.lines = props.lines && Array.isArray(props.lines)? [...props.lines]: [];
+
+    RethinkAPI.subscribeToMessageFromServer((uuid) => {
+      console.log("Id recieved from server");
+      this.currentLineId = uuid;
+      console.log(uuid);
     })
+
+    RethinkAPI.subscribeToPointDraw((line) => {
+      this.drawLine(line);
+      //point = point || {}
+      //this.drawPoint(point, point.isBeginning);
+    })
+  }
+
+  drawLine(line){
+    if (line.points.length < 1){
+      return;
+    }
+
+    if (!this.isDrawing){
+      let arrayLength = line.points.length;
+      let ctx = this.drawingCanvas.getContext("2d");
+      ctx.beginPath();
+      ctx.moveTo(line.points[0].x, line.points[0].y);
+      for(let i = 1; i < arrayLength; i++){
+        ctx.lineTo(line.points[i].x, line.points[i].y);
+      }
+      ctx.stroke();
+    }
   }
 
   clearDrawing(){
@@ -28,16 +56,16 @@ class Canvas extends Component {
     });
   };
 
-  drawPoint(point, isBeginning){
-    let ctx = this.drawingCanvas.getContext("2d");
-    if (isBeginning) {
-      ctx.beginPath();
-      ctx.moveTo(point.x, point.y);
-    } else {
-      ctx.lineTo(point.x, point.y);
-    }
-    ctx.stroke();
-  };
+  // drawPoint(point, isBeginning){
+  //   let ctx = this.drawingCanvas.getContext("2d");
+  //   if (isBeginning) {
+  //     ctx.beginPath();
+  //     ctx.moveTo(point.x, point.y);
+  //   } else {
+  //     ctx.lineTo(point.x, point.y);
+  //   }
+  //   ctx.stroke();
+  // };
 
   startDrawing(event){
     this.isDrawing = true;
@@ -46,12 +74,19 @@ class Canvas extends Component {
     ctx.beginPath();
     ctx.fillStyle = "#fff";
     ctx.moveTo(point.x, point.y);
-    let newestLine = new Line();
-    this.currentLine = newestLine;
-    this.lines.push(newestLine);
-    newestLine.addPoint(point);
-    point.isBeginning = true;
-    RethinkAPI.sendPointToDraw(point);
+    let newLine = new Line();
+    newLine.setId(this.currentLineId);
+    RethinkAPI.sendLine({ newLine });
+    console.log(newLine);
+
+
+
+    // let newestLine = new Line();
+    // this.currentLine = newestLine;
+    // this.lines.push(newestLine);
+    // newestLine.addPoint(point);
+    // point.isBeginning = true;
+    // RethinkAPI.sendPointToDraw(point);
   };
 
   finishDrawing() {
@@ -69,8 +104,8 @@ class Canvas extends Component {
       let ctx = this.drawingCanvas.getContext("2d");
       ctx.lineTo(x, y);
       ctx.stroke();
-      this.currentLine.addPoint({x, y});
-      RethinkAPI.sendPointToDraw({x, y});
+      let lineId = this.currentLineId;
+      RethinkAPI.sendPointToDraw({x, y, lineId});
     }
   }
 
