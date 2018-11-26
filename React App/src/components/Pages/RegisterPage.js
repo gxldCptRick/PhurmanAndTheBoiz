@@ -1,6 +1,6 @@
 ﻿import React, { Component } from 'react';
 
-export class RegisterPage extends React.Component {
+export class RegisterPage extends Component {
 
   constructor(props) {
     super(props);
@@ -20,13 +20,24 @@ export class RegisterPage extends React.Component {
     this.handleConfirmPassword = this.handleConfirmPassword.bind(this);
 
   }
-
   handleSubmit(event) {
-    if (this.state.Password != this.state.p2) {
+    if (this.state.Password !== this.state.p2) {
       alert("Passwords are not the same")
     } else {
-      console.log(this.state)
-      alert(JSON.stringify(this.state))
+      var user = {
+        firstName: this.state.FirstName,
+        lastName: this.state.LastName,
+        userName: this.state.Username,
+        password: this.state.Password,
+      };
+      alert(JSON.stringify(user));
+      fetch('api/dnd/user',{
+          method:'POST',
+          body: JSON.stringify({user}),
+            headers:{
+              'Content-Type': 'application/json'
+            },
+      }).then(Response => console.log(Response))
     }
   }
 
@@ -47,8 +58,9 @@ export class RegisterPage extends React.Component {
   }
   render() {
     return (
-
-      <form onSubmit={this.handleSubmit}>
+      <div className="bod">
+      <h1>Register for the Dungeon</h1>
+      <form  onSubmit={this.handleSubmit} >
         <label> First Name:
           <input
             value={this.state.FirstName}
@@ -78,7 +90,7 @@ export class RegisterPage extends React.Component {
           />
         </label>
         <br />
-        <label>Confirm Password
+        <label>Confirm Password:
         <input
             type="Password"
             value={this.state.p2}
@@ -86,8 +98,9 @@ export class RegisterPage extends React.Component {
           />
         </label>
         <br />
-        <input type="submit" value="Submit" />
-      </form>
+        <input type='button' value="Submit" onClick={this.handleSubmit} />
+        </form>
+        </div>
     );
   }
 }

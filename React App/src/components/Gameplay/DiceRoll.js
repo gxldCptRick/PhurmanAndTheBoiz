@@ -1,6 +1,6 @@
 ﻿import React, { Component } from 'react';
 
-export class RollDice extends React.Component {
+export class RollDice extends Component {
 
   constructor(props) {
     super(props);
@@ -28,7 +28,7 @@ export class RollDice extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className = "bod">
         <h2>{this.state.result}</h2>
         <button onClick={this.handleRoll}>Roll D20</button>
       </div>
