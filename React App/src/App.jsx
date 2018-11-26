@@ -4,6 +4,7 @@ import { Characters } from "./components/Pages/Characters";
 import { Layout } from "./components/Layout";
 import { Home } from "./components/Pages/Home";
 import { Game } from "./components/Pages/Game";
+import {Items } from "./components/Pages/Items";
 import { RegisterPage } from "./components/Pages/RegisterPage";
 import { RollDice } from "./components/Gameplay/DiceRoll";
 import "bootstrap/dist/css/bootstrap.css";
@@ -24,6 +25,7 @@ export default class App extends Component {
           <Route path="/RegisterPage" component={RegisterPage} />
           <Route path="/RollDice" component={RollDice} />
           <Route path="/CharacterSheet/:id" component={CharacterSheet} />
+          <Route exact path="/Items" component={Items}/>
         </Layout>
         <footer>Phurman and The Boiz @2018</footer>
       </div>

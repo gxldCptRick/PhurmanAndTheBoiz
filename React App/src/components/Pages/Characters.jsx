@@ -1,25 +1,27 @@
 import React from "react";
-import {Item} from "../models/Item";
+import { CharacterSheet } from "../models/CharacterSheet";
 export class Characters extends React.Component {
-  constructor(props){
-    super(props)
-    fetch("http://localhost:60434/api/dnd/item")
+  constructor(props) {
+    super(props);
+    fetch("http://localhost:60434/api/dnd/characterSheet")
       .then(response => response.json())
       .then(jsonResponse => {
-        this.setState({thing: [...jsonResponse]});
+        this.setState({ thing: [...jsonResponse] });
         return jsonResponse;
       })
-      .then (json => console.log(json))
+      .then(json => console.log(json))
       .catch(err => console.log(err));
-      this.state = {
-        thing: []
-      };
+    this.state = {
+      thing: []
+    };
   }
-  render(){
+  render() {
     return (
       <div>
         <h1>Characters</h1>
-        {this.state.thing.map(element => (<Item key={element.itemId} {...element} />))}
+        {this.state.thing.map(element => (
+          <CharacterSheet key={element.characterId} {...element} />
+        ))}
       </div>
     );
   }
