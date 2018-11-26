@@ -26,7 +26,7 @@ namespace PhurmanAndTheBoiz.API
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
-                    builder => builder.WithOrigins(@"https://73.131.209.95:5585")
+                    builder => builder.WithOrigins(@"*")
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials());
