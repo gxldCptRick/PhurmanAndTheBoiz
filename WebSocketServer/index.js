@@ -46,7 +46,7 @@ function subscribeToDrawingPoint(dbConnection, client) {
     .run(dbConnection)
     .then(cursor => {
       cursor.each((err, pointRow) => {
-        client.emit("drawingPointRecieved", pointRow.new_val);
+        client.broadcast.emit("drawingPointRecieved", pointRow.new_val);
         console.log("object read from database");
       });
     });
