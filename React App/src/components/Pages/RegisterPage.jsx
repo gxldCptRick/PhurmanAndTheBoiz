@@ -1,5 +1,4 @@
 ﻿import React, { Component } from 'react';
-import axios from 'axios';
 
 export class RegisterPage extends Component {
 
@@ -25,24 +24,23 @@ export class RegisterPage extends Component {
     if (this.state.Password !== this.state.p2) {
       alert("Passwords are not the same")
     } else {
-      var user = {
+      var user={
         firstName: this.state.FirstName,
         lastName: this.state.LastName,
         userName: this.state.Username,
-        password: this.state.Password,
-      };
-
-      axios.post('http://gxldcptrick-demo-app.herokuapp.com/api/dnd/user',{
-        user
-      }).
-      then(function(response){
-        alert(response);
-        console.log(response);
-      }).
-      catch(function(error){
-        alert('error');
-        console.log(error);
+        password: this.state.Password
+      }
+      fetch("http://localhost:56453/api/dnd/user",{
+        method: 'POST',
+        mode: 'no-cors',
+        headers:{
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user)
       })
+      .then(response => alert(JSON.stringify(response)))
+      .catch(err => console.log(err))
     }
   }
 
@@ -65,7 +63,6 @@ export class RegisterPage extends Component {
     return (
       <div>
         <h1>Register for the Dungeon</h1>
-        <form>
           <div className='row'>
             <div className='col-md-4'>
               <label className='control-label col-md-12'>Username</label>  
@@ -106,7 +103,6 @@ export class RegisterPage extends Component {
               <input type='submit' value="Submit" onClick={this.handleSubmit} />
             </div>
           </div>
-        </form>
       </div>
     );
   }
