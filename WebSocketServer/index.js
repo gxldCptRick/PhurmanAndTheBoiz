@@ -93,8 +93,8 @@ function sendLine({dbConnection, newLine, client}){
 }
 
 r.connect({
-  // host: "73.20.98.246",
-  host: "localhost",
+  host: "73.20.98.246",
+  // host: "localhost",
   port: 28015,
   db: "test"
 }).then(dbConnection => {
