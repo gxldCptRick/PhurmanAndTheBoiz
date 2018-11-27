@@ -45,7 +45,7 @@ namespace PhurmanAndTheBoiz.API.Controllers
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var Token = tokenHandler.WriteToken(token);
-
+            userDto.Password = null;
             return Ok(new
             {
                 userDto,
