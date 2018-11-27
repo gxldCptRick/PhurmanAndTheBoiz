@@ -1,36 +1,38 @@
-﻿import React, { Component } from 'react';
-
+﻿import React, { Component } from "react";
+import { RollADice } from "../../helpers/RollADice";
 export class RollDice extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
-      result: 0,
-    }
+      allTheDiceRolls: [],
+      totalAmount: 0
+    };
     this.handleRoll = this.handleRoll.bind(this);
   }
 
   handleRoll(event) {
+    this.setState(RollADice(this.state.roll));
+  }
 
-    var min = 1;
-    var max = 20;
-    var rand = 0
-    var isValid = false;
-    while(!isValid){
-      rand = min + (Math.random() * (max + min));
-      rand = Math.floor(rand);
-      if(rand >= min && rand <= max){
-        isValid = true;
-      }
-    }
-    this.setState({ result: rand});
+  handleStuff(event) {
+    event.preventDefault();
   }
 
   render() {
     return (
-      <div className = "bod">
-        <h2>{this.state.result}</h2>
-        <button onClick={this.handleRoll}>Roll D20</button>
+      <div className="bod">
+        <h2>
+          Rolls:
+          {this.state.allTheDiceRolls.map(element => ` [${element}] `)}
+        </h2>
+        <h3>{this.state.totalAmount}</h3>
+        <input
+          value={this.state.roll}
+          onSubmit={this.handleStuff}
+          type="text"
+          onChange={event => this.setState({ roll: event.target.value })}
+        />
+        <button onClick={this.handleRoll}>Roll</button>
       </div>
     );
   }
