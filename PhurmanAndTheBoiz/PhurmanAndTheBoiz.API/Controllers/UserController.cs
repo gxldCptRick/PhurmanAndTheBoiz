@@ -21,6 +21,7 @@ namespace PhurmanAndTheBoiz.API.Controllers
             _service = service;
         }
         [HttpPost]
+        [Route("[action]")]
         public IActionResult Authenticate([FromBody]User userDto)
         {
             var user = _service.AuthenticateUser(userDto.Username, userDto.Password);
@@ -53,6 +54,7 @@ namespace PhurmanAndTheBoiz.API.Controllers
         }
         
         [HttpPost]
+        [Route("[action]")]
         public IActionResult Register([FromBody]User userDto)
         {
             try
