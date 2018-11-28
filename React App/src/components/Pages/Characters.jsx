@@ -1,6 +1,6 @@
 import React from "react";
 import { CharacterSheet } from "../models/CharacterSheet";
-export class Characters extends React.Component {
+export default class Characters extends React.Component {
   constructor(props) {
     super(props);
     fetch("http://localhost:60434/api/dnd/characterSheet")

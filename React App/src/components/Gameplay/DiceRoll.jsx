@@ -1,6 +1,6 @@
 ﻿import React, { Component } from "react";
 import { RollADice } from "../../helpers/RollADice";
-export class RollDice extends Component {
+export class DiceRoll extends Component {
   constructor(props) {
     super(props);
     this.state = {
