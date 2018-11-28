@@ -12,7 +12,7 @@ export class NavMenu extends Component {
       <Navbar inverse fixedTop fluid collapseOnSelect>
         <Navbar.Header>
           <Navbar.Brand>
-            <Link to={"/"}>PhurmanAndTheBoiz.API</Link>
+            <Link to={"/"}>PhurmanAndTheBoiz</Link>
           </Navbar.Brand>
           <Navbar.Toggle />
         </Navbar.Header>
@@ -28,30 +28,10 @@ export class NavMenu extends Component {
                 <Glyphicon glyph="bookmark" /> Register
               </NavItem>
             </LinkContainer>
-            <LinkContainer to={"/characters"}>
+            <LinkContainer to={"/game"}>
               <NavItem>
-                <Glyphicon glyph="file" />
-                Characters
-              </NavItem>
-            </LinkContainer>
-            <LinkContainer to={"/Items"}>
-              <NavItem>
-                <Glyphicon glyph="shopping-cart" /> Items
-              </NavItem>
-            </LinkContainer>
-            <LinkContainer to={"/Game"}>
-              <NavItem>
-                <Glyphicon glyph="heart" /> Game
-              </NavItem>
-            </LinkContainer>
-            <LinkContainer to={"/RollDice"}>
-              <NavItem>
-                <Glyphicon glyph="th-list" /> Roll a dice
-              </NavItem>
-            </LinkContainer>
-            <LinkContainer to={"/CharacterSheet"}>
-              <NavItem>
-                <Glyphicon glyph="th-list" /> Aww Sheet
+                <Glyphicon glyph="heart" />
+                Game
               </NavItem>
             </LinkContainer>
           </Nav>

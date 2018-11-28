@@ -5,6 +5,7 @@ import * as RethinkAPI from "../../rethinkAPI";
 class Canvas extends Component {
   constructor(props) {
     super(props);
+    console.log(props);
     this.isDrawing = false;
     this.lines =
       props.lines && Array.isArray(props.lines) ? [...props.lines] : [];
