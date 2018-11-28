@@ -2,11 +2,10 @@ FROM node:latest
 
 MAINTAINER PhurmanAndDaBoiz
 
-COPY . /WebSocketServer
-WORKDIR /WebSocketServer
+VOLUME $(PWD):/user/src/app
 
-run npm install
+RUN npm install
 
 EXPOSE 5585
 
-ENTRYPOINT ["npm", "start"]
+CMD ["npm", "start"]
