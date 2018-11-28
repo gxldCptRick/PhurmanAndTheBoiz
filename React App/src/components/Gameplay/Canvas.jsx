@@ -16,6 +16,57 @@ class Canvas extends Component {
     });
   }
 
+  generateRoom() {
+    let roomWidth = (Math.floor(Math.random() * 4) + 3) * 25;
+    let roomHeight = (Math.floor(Math.random() * 4) + 3) * 25;
+    let roomXPoint = Math.floor(Math.random() * 775) + 25;
+    let roomYPoint = Math.floor(Math.random() * 375) + 25;
+
+    let tooTall = true;
+    let tooWide = true;
+
+    while (tooTall) {
+      if ((roomYPoint + roomHeight) > 450) {
+        roomHeight = (Math.floor(Math.random() * 4) + 3) * 25;
+      } else {
+        tooTall = false;
+      }
+    }
+
+    while (tooWide) {
+      if ((roomXPoint + roomWidth) > 450) {
+        roomWidth = (Math.floor(Math.random() * 4) + 3) * 25;
+      } else {
+        tooWide = false;
+      }
+    }
+
+    let ctx = this.drawingCanvas.getContext("2d");
+    ctx.beginPath();
+    ctx.rect(roomXPoint, roomYPoint, roomWidth, roomHeight);
+    ctx.stroke();
+  }
+
+  connectRooms() {
+
+  }
+
+  generateMap() {
+    this.clearDrawing();
+    let ctx = this.drawingCanvas.getContext("2d");
+    ctx.beginPath();
+    ctx.rect(25, 25, 850, 450);
+    ctx.stroke();
+
+    let roomCount = Math.floor(Math.random() * 4) + 3;
+    var i;
+    for (i = 0; i < roomCount; i++) {
+      this.generateRoom();
+    }
+
+    this.connectRooms();
+  }
+
   clearDrawing() {
     this.lines = [];
     this.currentLine = undefined;
@@ -96,6 +147,9 @@ class Canvas extends Component {
           width="900px"
           height="500px"
         />
+        <button type="button" onClick={_ => this.generateMap()}>
+          Generate Map
+        </button>
         <button type="button" onClick={_ => this.clearDrawing()}>
           Clear
         </button>
