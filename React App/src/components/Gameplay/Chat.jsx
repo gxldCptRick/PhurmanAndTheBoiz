@@ -1,5 +1,5 @@
-import React,{Component} from 'react';
-import '../index.css';
+import React from 'react';
+import '../../index.css';
 import { sendMessage, subscribeToChatMessages,
          typing, subscribeToUserTyping,
          doneTyping, subscribeToUserDoneTyping} from '../../rethinkAPI';
