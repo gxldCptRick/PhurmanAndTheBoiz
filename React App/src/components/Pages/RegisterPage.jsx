@@ -5,11 +5,11 @@ export class RegisterPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      FirstName: 'first',
-      LastName: 'last',
-      Username: 'user',
-      Password: 'pass',
-      p2: 'pass',
+      FirstName: '',
+      LastName: '',
+      Username: '',
+      Password: '',
+      p2: '',
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -30,17 +30,17 @@ export class RegisterPage extends Component {
         userName: this.state.Username,
         password: this.state.Password
       }
-      fetch("http://localhost:56453/api/dnd/user",{
+      fetch("http://localhost:56453/api/dnd/user/register",{
         method: 'POST',
-        mode: 'no-cors',
+        mode: 'cors',
         headers:{
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(user)
       })
-      .then(response => alert(JSON.stringify(response)))
-      .catch(err => console.log(err))
+      .then(response => console.log(JSON.stringify(response)))
+      .catch(err =>err.json())
     }
   }
 
@@ -66,35 +66,25 @@ export class RegisterPage extends Component {
           <div className='row'>
             <div className='col-md-4'>
               <label className='control-label col-md-12'>Username</label>  
-              <div className='col-md-12'>
-                  <input value={this.state.Username} onChange={this.handleUserNameChange}/>
-              </div>
+              <input classname='col-md-12' value={this.state.Username} onChange={this.handleUserNameChange} pattern=".{1,55}" required title='Must be between 1 and 55 characters long'/>
             </div>
             <div className='col-md-4'>
               <label className='control-label col-md-12'>First Name</label>
-              <div className='col-md-12'>
-                <input type='text' value={this.state.FirstName} onChange={this.handleFirstNameChange}/>
-              </div>
+              <input classname='col-md-12' type='text' value={this.state.FirstName} onChange={this.handleFirstNameChange} pattern=".{2,55}" required title='Must be between 2 and 55 characters long'/>
             </div>
             <div className='col-md-4'>
-              <label className='control-label col-md-12'> Last Name</label>
-              <div className='col-md-12'>
-                <input type='text' value={this.state.LastName} onChange={this.handleLastNameChange}/>
-              </div>
+              <label className='control-label col-md-12'> Last Name </label>
+              <input classname='col-md-12' type='text' value={this.state.LastName} onChange={this.handleLastNameChange} pattern=".{2,55}" required title='Must be between 2 and 55 characters long'/>
             </div>
           </div>
           <div className='row'>
             <div className='col-md-6'>
               <label className='control-label col-md-12'>Password</label>  
-              <div className='col-md-12'>
-                <input type="Password" value={this.state.Password} onChange={this.handlePasswordChange}/>
-              </div>
+              <input classname='col-md-12' type="Password" value={this.state.Password} onChange={this.handlePasswordChange} pattern=".{8,55}" required title='Must be between 8 and 55 characters long'/>
             </div>
             <div className='col-md-6'>
               <label className='control-label col-md-12'>Confirm Password</label>  
-              <div className='col-md-6'>
-                <input type="Password" value={this.state.p2} onChange={this.handleConfirmPassword}/>    
-              </div>
+              <input classname='col-md-12' type="Password" value={this.state.p2} onChange={this.handleConfirmPassword}/>    
             </div>
           </div>
           <div className='row'>

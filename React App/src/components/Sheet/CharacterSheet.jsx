@@ -46,7 +46,6 @@ export class CharacterSheet extends Component {
   this.renderItem = this.renderItem.bind(this);
 }
   renderItem(inv){
-
     var renderedItem = inv.items.map((i) =>
       <div key={i.itemId}>
         <h4>{i.itemName}</h4>
