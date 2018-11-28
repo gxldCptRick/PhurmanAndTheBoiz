@@ -77,3 +77,31 @@ footer {
   bottom: 0;
   top: 100%;
 }
+
+
+
+
+
+
+
+
+/*Temporary CSS for the Profile Page*/
+.border {
+  border: 2px black solid;
+  
+}
+
+.list-box {
+  height: 100px;
+  border: 2px blue solid;
+  margin-bottom: 100px;
+}
+
+.list-box {
+  overflow-y: scroll;
+}
+
+.list-box > ul {
+  list-style-type: none;
+}
+
