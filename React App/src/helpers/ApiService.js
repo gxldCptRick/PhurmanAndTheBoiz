@@ -69,15 +69,15 @@ export function GetSpecificUser(id: number): Promise<void | Response> {
 }
 
 export function Login(login: {
-  username: string,
+  userName: string,
   password: string
 }): void {
-  PostToResource("User/Login", login)
+  PostToResource("User/Authenticate", login)
   .then(function(response){
     if(response.status === 200){
       return response.json();
     }else {
-      throw new TypeError("Not A Valid Login");
+      throw new TypeError(response.json());
     }
   })
   .then(function(user){
