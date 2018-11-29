@@ -90,9 +90,7 @@ export function Login(login: {
 }
 
 export function RegisterUser(newUser): Promise<void | Response> {
-  return PostToResource("User/Register", newUser).catch(err =>
-    console.warn(err)
-  );
+  return PostToResource("User/Register", newUser).catch(err => console.warn(err));
 }
 
 

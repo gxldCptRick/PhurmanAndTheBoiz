@@ -4,7 +4,6 @@ using PhurmanAndTheBoiz.DAL.Models;
 using PhurmanAndTheBoiz.DAL.Services;
 using PhurmanAndTheBoiz.DAL.Services.Exceptions;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -48,31 +47,36 @@ namespace PhurmanAndTheBoiz.API.Controllers
             userDto.Password = null;
             return Ok(new
             {
-                userDto,
-                Token
+                user = userDto,
+                token = Token
             });
         }
-        
+
         [HttpPost]
         [Route("[action]")]
         public IActionResult Register([FromBody]User userDto)
         {
+            var actionResult = default(IActionResult);
             try
             {
                 _service.CreateUser(userDto, userDto.Password);
-                return Ok();
+                userDto.Password = null;
+                actionResult = StatusCode(201, userDto);
             }
             catch (AppException e)
             {
-                return BadRequest(e);
+                actionResult = BadRequest(e);
             }
+
+            return actionResult;
         }
 
         // GET: api/User
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(_service.GetAllUsers());
+            var actionResult = Ok(_service.GetAllUsers());
+            return actionResult;
         }
 
         // GET: api/User/5
@@ -87,25 +91,38 @@ namespace PhurmanAndTheBoiz.API.Controllers
         [HttpPut("{id}")]
         public IActionResult UpdateUser(int id, [FromBody] User userDto)
         {
+            var actionResult = default(IActionResult);
             try
             {
                 var user = _service.GetUserById(id);
                 _service.UpdateUser(user, user.Password);
-                return Ok();
+                user.Password = null;
+                actionResult = Ok(user);
             }
             catch (AppException appException)
             {
-                return BadRequest(appException);
+                actionResult = BadRequest(appException);
             }
-            
+
+            return actionResult;
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            _service.DeleteUser(id);
-            return Ok();
+            var actionResult = default(IActionResult);
+            if (id == 0)
+            {
+                actionResult = StatusCode(204);
+            }
+            else
+            {
+                _service.DeleteUser(id);
+                actionResult = Ok($"{id} was succesfully Deleted");
+            }
+
+            return actionResult;
         }
     }
 }

@@ -55,6 +55,6 @@ namespace PhurmanAndTheBoiz.DAL.Services
         /// Deletes a user with a given id if found.
         /// </summary>
         /// <param name="id">the id of the deleted user</param>
-        void DeleteUser(int id);
+        bool DeleteUser(int id);
     }
 }

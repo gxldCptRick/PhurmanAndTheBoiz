@@ -22,5 +22,4 @@ FirstName varchar(55) not null,
 LastName varchar(55) not null,
 Username varchar(55) not null,
 PasswordHash varbinary(64) not null,
-PasswordSalt varbinary(128) not null
-);
+PasswordSalt varbinary(128) not null);
