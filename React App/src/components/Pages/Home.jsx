@@ -7,7 +7,7 @@ export class Home extends Component {
       <div className="bod">
         <h1>Dungeon Rollers</h1>
         <div>
-          <p style={{fontFamily: "Comic Sans MS"}}>
+          <p className="Ptag">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
             eget ipsum mauris. Sed ornare feugiat odio, non laoreet velit
             aliquet a. Morbi auctor venenatis viverra. Sed sed velit pulvinar,
