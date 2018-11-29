@@ -77,3 +77,40 @@ body {
   background-image: none;
 }
 
+<<<<<<< HEAD
+=======
+footer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  top: 100%;
+}
+
+
+
+
+
+
+
+
+/*Temporary CSS for the Profile Page*/
+.border {
+  border: 2px black solid;
+  
+}
+
+.list-box {
+  height: 100px;
+  border: 2px blue solid;
+  margin-bottom: 100px;
+}
+
+.list-box {
+  overflow-y: scroll;
+}
+
+.list-box > ul {
+  list-style-type: none;
+}
+
+>>>>>>> 9878e900af3d520f2d74e00dbd0694050a344547

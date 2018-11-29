@@ -34,7 +34,7 @@ namespace PhurmaAndTheBoiz.API.Tests.Controllers
             {
                 var value = ok.Value;
                 var t = value.GetType();
-                var member = t.GetProperty("Token");
+                var member = t.GetProperty("token");
                 var token = member.GetValue(value);
                 Assert.IsNotNull(token);
             }
@@ -62,7 +62,7 @@ namespace PhurmaAndTheBoiz.API.Tests.Controllers
             dependency.Setup(obj => obj.CreateUser(It.IsNotNull<User>(), It.IsNotNull<string>()));
             var controller = new UserController(dependency.Object);
             var result = controller.Register(new User() { Password = "null" });
-            Assert.IsInstanceOfType(result, typeof(OkResult));
+            Assert.IsInstanceOfType(result, typeof(ObjectResult));
         }
 
         [TestMethod]
