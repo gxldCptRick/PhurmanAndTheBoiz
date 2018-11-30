@@ -24,7 +24,7 @@ namespace PhurmanAndTheBoiz.API.Controllers
         }
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult Authenticate([FromBody]User userDto)
+        public IActionResult Authenticate([FromBody]UserAuthetication userDto)
         {
             var user = _service.AuthenticateUser(userDto.Username, userDto.Password);
 
