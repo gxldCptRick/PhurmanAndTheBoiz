@@ -34,6 +34,12 @@ export class NavMenu extends Component {
                 Game
               </NavItem>
             </LinkContainer>
+            <LinkContainer to={"/Profile"}>
+              <NavItem>
+                <Glyphicon glyph="heart" />
+                Profile Page
+              </NavItem>
+            </LinkContainer>
           </Nav>
         </Navbar.Collapse>
       </Navbar>

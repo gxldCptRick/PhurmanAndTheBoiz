@@ -1,9 +1,12 @@
 import React from "react";
-import { CharacterSheet } from "../models/CharacterSheet";
+import  CharacterSheet  from "../models/CharacterSheet";
 export default class Characters extends React.Component {
   constructor(props) {
     super(props);
     this.state =  props.state;
+    this.state = {
+      thing: []
+    }
   }
   render() {
     return (
