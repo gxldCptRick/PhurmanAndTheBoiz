@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using PhurmanAndTheBoiz.DAL.Models;
 using PhurmanAndTheBoiz.DAL.Services;
@@ -10,6 +11,7 @@ using System.Text;
 
 namespace PhurmanAndTheBoiz.API.Controllers
 {
+    [Authorize]
     [Route("api/dnd/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -19,9 +21,10 @@ namespace PhurmanAndTheBoiz.API.Controllers
         {
             _service = service;
         }
+        [AllowAnonymous]
         [HttpPost]
         [Route("[action]")]
-        public IActionResult Authenticate([FromBody]User userDto)
+        public IActionResult Authenticate([FromBody]UserAuthetication userDto)
         {
             var user = _service.AuthenticateUser(userDto.Username, userDto.Password);
 
@@ -51,7 +54,7 @@ namespace PhurmanAndTheBoiz.API.Controllers
                 token = Token
             });
         }
-
+        [AllowAnonymous]
         [HttpPost]
         [Route("[action]")]
         public IActionResult Register([FromBody]User userDto)
@@ -71,7 +74,9 @@ namespace PhurmanAndTheBoiz.API.Controllers
             return actionResult;
         }
 
+
         // GET: api/User
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Get()
         {

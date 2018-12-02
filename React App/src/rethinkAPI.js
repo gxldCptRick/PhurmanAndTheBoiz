@@ -19,21 +19,14 @@ function subscribeToChatMessages(callback) {
   socket.emit("subscribeToChatMessages");
 }
 
-function subscribeToUserTyping(callback) {
-  socket.on("userIsTyping", user => callback({user}));
-}
-
 function subscribeToPointDraw(callback) {
-  socket.on("drawingPointRecieved", point => {
-    callback(point);
-    console.log("point recieved",point);
-  });
+  //console.log(callback);
+  socket.on("drawingPointRecieved", point => {callback(point); /*console.log(point)*/});
   socket.emit("subscribeToPointDraw");
 }
 
-function sendPointToDraw(point) {
-  console.log("sending point", point);
-  socket.emit("drawingPointSent", point);
+function sendPointToDraw({lineId, x, y}) {
+    socket.emit("drawingPointSent", {lineId, x, y});
 }
 function subscribeToUserDoneTyping(callback) {
   socket.on("doneTyping", user => callback({ user }));
@@ -47,10 +40,26 @@ function typing({ user }) {
   socket.emit("typing", { user });
 }
 
-function doneTyping({ user }) {
-  socket.emit("doneTyping", { user });
+function subscribeToUserTyping(callback){
+    socket.on('userIsTyping', user => callback(user));
 }
 
+function doneTyping({ user }) {
+  socket.emit("doneTyping", { user });
+
+}
+
+function generateUUID (callback){
+   socket.emit("generateUUID");
+}
+
+function subscribeToMessageFromServer(callback){
+  socket.on("message", message => callback(message));
+}
+
+function sendLine({ newLine }){
+  socket.emit("sendLine", { newLine });
+}
 export {
   subscribeToChatMessages,
   sendMessage,
@@ -59,5 +68,8 @@ export {
   doneTyping,
   subscribeToUserDoneTyping,
   subscribeToPointDraw,
-  sendPointToDraw
+  sendPointToDraw,
+  generateUUID,
+  subscribeToMessageFromServer,
+  sendLine
 };
