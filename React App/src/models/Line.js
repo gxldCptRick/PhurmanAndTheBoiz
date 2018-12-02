@@ -1,5 +1,5 @@
 // @flow
-class Line {
+export default class Line {
   constructor() {
     this.points = [];
   }
@@ -7,5 +7,3 @@ class Line {
     this.points.push(point);
   }
 }
-
-export default Line;

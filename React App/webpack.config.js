@@ -7,9 +7,10 @@ module.exports = {
   entry: "./src/index.jsx",
   output: {
     path: path.join(__dirname, "/dist"),
+    publicPath: "/",
     filename: "bundle.js"
   },
-  devServer:{
+  devServer: {
     port: 3000,
     historyApiFallback: true
   },
@@ -25,7 +26,7 @@ module.exports = {
         enforce: "pre",
         exclude: /node_modules/,
         use: {
-          loader: "eslint-loader",
+          loader: "eslint-loader"
         }
       },
       {
@@ -42,7 +43,15 @@ module.exports = {
         test: /\.css$/,
         use: ExtractTextPlugin.extract({
           fallback: "style-loader",
-          use: ["css-loader"]
+          use: ["css-loader", "postcss-loader"]
+        })
+      },
+      {
+        test: /\.less$/,
+        exclude: /node_modules/,
+        use: ExtractTextPlugin.extract({
+          fallback: "style-loader",
+          use: ["css-loader", "postcss-loader", "less-loader"]
         })
       },
       {
@@ -60,6 +69,6 @@ module.exports = {
       filename: "index.html", //target html
       template: "./public/index.html" //source html
     }),
-    new ExtractTextPlugin({ filename: "css/style.css" })
+    new ExtractTextPlugin({ filename: "main.css" })
   ]
 };
