@@ -107,7 +107,7 @@ export default class Chat extends React.Component{
 
     render(){
         let chatMessages = this.state.chatMessages.map(chatMessage =>(
-            <div className="message" ref="chat_message">
+            <div key={chatMessage.id} className="message" ref="chat_message">
                 {chatMessage.message}
             </div>
         ));

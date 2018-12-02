@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
 
+import React, {Component} from 'react';
 export class ItemForm extends Component{
-  constructor(props){
+  constructor(props: { id: number}){
     super(props);
     this.state = {
       playerID: props.id,

@@ -3,8 +3,8 @@ class Line {
   constructor() {
     this.points = [];
   }
-  addPoint(point: { x:number, y:number}){
-      this.points.push(point);
+  addPoint(point: { x: number, y: number }) {
+    this.points.push(point);
   }
 }
 

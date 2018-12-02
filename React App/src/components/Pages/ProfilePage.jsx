@@ -5,13 +5,13 @@ export default class ProfilePage extends React.Component {
     
     render(){
         return(
-            <div class="row">
-                <div class="col-md-3">
+            <div className="row">
+                <div className="col-md-3">
                     <img src="https://via.placeholder.com/300x250.png?text=Milo+Screws+everybody+over"/>
                     <Character />
                 </div>
 
-                <div class="col-md-6">
+                <div className="col-md-6">
                     <div>
                         <div>
                             <label>Firstname</label>
@@ -45,9 +45,9 @@ export default class ProfilePage extends React.Component {
 
                 </div>
 
-                <div class="col-md-3 ">
+                <div className="col-md-3 ">
                     <h3>Game thing</h3>
-                    <div class="list-box">
+                    <div className="list-box">
                         <ul>
                             <li>placeholder</li>
                             <li>placeholder</li>
@@ -63,7 +63,7 @@ export default class ProfilePage extends React.Component {
                     </div>
 
                     <h3>Game thing</h3>
-                    <div class="list-box">
+                    <div className="list-box">
                         <ul>
                             <li>placeholder</li>
                             <li>placeholder</li>
@@ -73,8 +73,8 @@ export default class ProfilePage extends React.Component {
                         </ul>
                     </div>
 
-                    <h3>I don't remeber what the title was</h3>
-                    <div class="list-box">
+                    <h3> I don't remeber what the title was</h3>
+                    <div className="list-box">
                         <ul>
                             <li>placeholder</li>
                             <li>placeholder</li>
