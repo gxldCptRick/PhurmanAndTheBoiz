@@ -9,6 +9,10 @@ module.exports = {
     path: path.join(__dirname, "/dist"),
     filename: "bundle.js"
   },
+  devServer:{
+    port: 3000,
+    historyApiFallback: true
+  },
   resolve: {
     extensions: [".js", ".jsx"]
   },
@@ -20,7 +24,9 @@ module.exports = {
         test: /\.jsx?$/,
         enforce: "pre",
         exclude: /node_modules/,
-        use: ["eslint-loader"]
+        use: {
+          loader: "eslint-loader",
+        }
       },
       {
         test: /\.jsx?$/,

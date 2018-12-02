@@ -20,7 +20,7 @@
   },
   "scripts": {
     "start": "rimraf ./build && react-scripts start",
-    "start-webpack": "webpack-dev-server --mode development --open --hot",
+    "start-webpack": "webpack-dev-server --watch",
     "build-webpack": "webpack --mode production",
     "serve": "http-server ./dist",
     "build": "react-scripts build",
