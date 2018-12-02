@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, {Component} from 'react'
 
 export class Stats extends Component{

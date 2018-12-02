@@ -21,27 +21,10 @@ export class RegisterPage extends Component {
 
   }
   handleSubmit(event) {
-    if (this.state.Password !== this.state.p2) {
-      alert("Passwords are not the same")
-    } else {
-      var user={
-        firstName: this.state.FirstName,
-        lastName: this.state.LastName,
-        userName: this.state.Username,
-        password: this.state.Password
-      }
-      fetch("http://localhost:56453/api/dnd/user/register",{
-        method: 'POST',
-        mode: 'cors',
-        headers:{
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(user)
-      })
-      .then(response => console.log(JSON.stringify(response)))
-      .catch(err =>err.json())
-    }
+    // do other work
+    /* eslint-disable */
+    console.log(event);
+    /* eslint-disable */
   }
 
   handleFirstNameChange(event) {
@@ -66,25 +49,25 @@ export class RegisterPage extends Component {
           <div className='row'>
             <div className='col-md-4'>
               <label className='control-label col-md-12'>Username</label>  
-              <input classname='col-md-12' value={this.state.Username} onChange={this.handleUserNameChange} pattern=".{1,55}" required title='Must be between 1 and 55 characters long'/>
+              <input className='col-md-12' value={this.state.Username} onChange={this.handleUserNameChange} pattern=".{1,55}" required title='Must be between 1 and 55 characters long'/>
             </div>
             <div className='col-md-4'>
               <label className='control-label col-md-12'>First Name</label>
-              <input classname='col-md-12' type='text' value={this.state.FirstName} onChange={this.handleFirstNameChange} pattern=".{2,55}" required title='Must be between 2 and 55 characters long'/>
+              <input className='col-md-12' type='text' value={this.state.FirstName} onChange={this.handleFirstNameChange} pattern=".{2,55}" required title='Must be between 2 and 55 characters long'/>
             </div>
             <div className='col-md-4'>
               <label className='control-label col-md-12'> Last Name </label>
-              <input classname='col-md-12' type='text' value={this.state.LastName} onChange={this.handleLastNameChange} pattern=".{2,55}" required title='Must be between 2 and 55 characters long'/>
+              <input className='col-md-12' type='text' value={this.state.LastName} onChange={this.handleLastNameChange} pattern=".{2,55}" required title='Must be between 2 and 55 characters long'/>
             </div>
           </div>
           <div className='row'>
             <div className='col-md-6'>
               <label className='control-label col-md-12'>Password</label>  
-              <input classname='col-md-12' type="Password" value={this.state.Password} onChange={this.handlePasswordChange} pattern=".{8,55}" required title='Must be between 8 and 55 characters long'/>
+              <input className='col-md-12' type="Password" value={this.state.Password} onChange={this.handlePasswordChange} pattern=".{8,55}" required title='Must be between 8 and 55 characters long'/>
             </div>
             <div className='col-md-6'>
               <label className='control-label col-md-12'>Confirm Password</label>  
-              <input classname='col-md-12' type="Password" value={this.state.p2} onChange={this.handleConfirmPassword}/>    
+              <input className='col-md-12' type="Password" value={this.state.p2} onChange={this.handleConfirmPassword}/>    
             </div>
           </div>
           <div className='row'>

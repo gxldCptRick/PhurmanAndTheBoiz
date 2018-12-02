@@ -17,7 +17,7 @@ namespace PhurmaAndTheBoiz.API.Tests.Controllers
             var dependency = new Mock<IUserService>();
             dependency.Setup(obj => obj.AuthenticateUser(It.IsAny<string>(), It.IsAny<string>())).Returns(new User());
             var controller = new UserController(dependency.Object);
-            var result = controller.Authenticate(new User());
+            var result = controller.Authenticate(new UserAuthetication());
             Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));
         }
@@ -28,7 +28,7 @@ namespace PhurmaAndTheBoiz.API.Tests.Controllers
             var dependency = new Mock<IUserService>();
             dependency.Setup(obj => obj.AuthenticateUser(It.IsAny<string>(), It.IsAny<string>())).Returns(new User());
             var controller = new UserController(dependency.Object);
-            var result = controller.Authenticate(new User());
+            var result = controller.Authenticate(new UserAuthetication());
             Assert.IsNotNull(result);
             if (result is OkObjectResult ok)
             {
@@ -50,7 +50,7 @@ namespace PhurmaAndTheBoiz.API.Tests.Controllers
             var dependency = new Mock<IUserService>();
             dependency.Setup(obj => obj.AuthenticateUser(It.IsAny<string>(), It.IsAny<string>()));
             var controller = new UserController(dependency.Object);
-            var result = controller.Authenticate(new User());
+            var result = controller.Authenticate(new UserAuthetication());
             Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
         }
