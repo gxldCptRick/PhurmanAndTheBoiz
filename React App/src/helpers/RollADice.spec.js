@@ -1,4 +1,3 @@
-// @flow
 import chai from "chai";
 import * as Dice from "./RollADice";
 import mocha from "mocha";

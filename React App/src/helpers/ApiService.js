@@ -1,10 +1,12 @@
 /* eslint-disable no-console, no-unused-vars */
 import * as Path from "path";
 import AuthHeader from "./AuthHeader";
-const rootPath = "http://gxldcptrick-demo-app.heroku/api/dnd";
+import fetch from "node-fetch";
+const rootPath = "https://gxldcptrick-demo-app.herokuapp.com/api/dnd";
 
-function DeleteResource(resource: string, id: string) {
-  return fetch(Path.join(rootPath, resource, id), {
+export function DeleteResource(resourceName: string, id: string = "") {
+  let path = `${rootPath}/${resourceName}/${id}`;
+  return fetch(path, {
     method: "DELETE",
     mode: "cors",
     cache: "no-cache",
@@ -17,8 +19,16 @@ function DeleteResource(resource: string, id: string) {
   });
 }
 
-function PutToResource(resource: string, data): Promise<Response> {
-  return fetch(Path.join(rootPath, resource), {
+export function PutToResource(
+  resourceName: string,
+  id: string = "",
+  data: any
+): Promise<Response> {
+  if (data === undefined || data === null) {
+    throw new TypeError("Cannot Put an undefined object");
+  }
+  let path = `${rootPath}/${resourceName}/${id}`;
+  return fetch(path, {
     method: "PUT",
     mode: "cors",
     cache: "no-cache",
@@ -32,8 +42,12 @@ function PutToResource(resource: string, data): Promise<Response> {
   });
 }
 
-function PostToResource(resource: string, data): Promise<Response> {
-  return fetch(Path.join(rootPath, resource), {
+export function PostToResource(
+  resourceName: string,
+  data: any
+): Promise<Response> {
+  let path = `${rootPath}/${resourceName}/`;
+  return fetch(path, {
     method: "POST",
     mode: "cors",
     cache: "no-cache",
@@ -47,8 +61,13 @@ function PostToResource(resource: string, data): Promise<Response> {
   });
 }
 
-function GetResource(resourceName: string, id: string = ""): Promise<Response> {
-  return fetch(Path.join(rootPath, resourceName, id), {
+export function GetResource(
+  resourceName: string,
+  id: string = ""
+): Promise<Response> {
+  let path = `${rootPath}/${resourceName}/${id}`;
+  console.log(path);
+  return fetch(path, {
     method: "GET",
     mode: "cors",
     redirect: "follow",
@@ -60,36 +79,30 @@ function GetResource(resourceName: string, id: string = ""): Promise<Response> {
   });
 }
 
-export function GetAllTheUsers(): Promise<void | Response> {
-  return GetResource("User").catch(err => console.warn(err));
-}
-
-export function GetSpecificUser(id: number): Promise<void | Response> {
-  return GetResource(`User`, id.toString()).catch(err => console.warn(err));
-}
-
-export function Login(login: { userName: string, password: string }): void {
-  PostToResource("User/Authenticate", login)
-    .then(function(response) {
-      if (response.status === 200) {
-        return response.json();
-      } else {
-        throw new TypeError(response.json());
-      }
-    })
-    .then(function(user) {
-      localStorage.setItem("user", JSON.stringify(user));
-    })
-    .catch(function(err) {
-      console.log(err);
-      throw err;
+const SpecialPaths = {
+  Register: "User/Register",
+  Login: "User/Authenticate"
+};
+export function LoginUser(login: {
+  username: string,
+  password: string
+}): Promise<any> {
+  return PostToResource(SpecialPaths.Login, login)
+    .then(response => response.json())
+    .then(json => {
+      localStorage.setItem("user", JSON.stringify(json));
+      return json;
     });
 }
 
-export function RegisterUser(newUser): Promise<void | Response> {
-  return PostToResource("User/Register", newUser).catch(err =>
-    console.warn(err)
-  );
+export function RegisterUser(user: any): Promise<any> {
+  return PostToResource(SpecialPaths.Register, user)
+  .then(response => response.json())
 }
 
-export function DeleteUser(id): Promise<void | Response> {}
+export const Resource = {
+  Users: "User",
+  Characters: "CharacterSheet",
+  Maps: "Map",
+  Items: "Item"
+};

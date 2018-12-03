@@ -5,7 +5,6 @@ import * as RethinkAPI from '../../rethinkAPI';
 class Canvas extends Component {
   constructor(props) {
     super(props);
-    console.log(props);
     this.isDrawing = false;
     this.drawingFromDB = true;
     this.currentLineId = null;
@@ -163,7 +162,7 @@ class Canvas extends Component {
     let newLine = new Line();
     newLine.setId(this.currentLineId);
     RethinkAPI.sendLine({ newLine });
-  };
+  }
 
   finishDrawing() {
     this.isDrawing = false;
