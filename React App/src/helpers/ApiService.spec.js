@@ -9,6 +9,9 @@ describe("API Functions Correctly", function() {
     it("Response Should not be null for Users", function(done) {
       Api.GetResource(Api.Resource.Users)
         .then(response => response.json())
+        .then(function(json){
+          should.exist(json);
+        })
         .then(() => done())
         .catch(err => {
           console.log(err);
@@ -19,6 +22,9 @@ describe("API Functions Correctly", function() {
     it("Response Should not be null for Items", function(done) {
       Api.GetResource(Api.Resource.Items)
         .then(response => response.json())
+        .then(function(json){
+          should.exist(json);
+        })
         .then(() => done())
         .catch(err => {
           console.log(err);
@@ -29,6 +35,9 @@ describe("API Functions Correctly", function() {
     it("Response Should not be null for Characters", function(done) {
       Api.GetResource(Api.Resource.Characters)
         .then(response => response.json())
+        .then(function(json){
+          should.exist(json);
+        })
         .then(() => done())
         .catch(err => {
           console.log(err);
@@ -39,6 +48,9 @@ describe("API Functions Correctly", function() {
     it("Response Should not be null for Maps", function(done) {
       Api.GetResource(Api.Resource.Maps)
         .then(response => response.json())
+        .then(function(json){
+          should.exist(json);
+        })
         .then(() => done())
         .catch(err => {
           console.log(err);
