@@ -17,7 +17,7 @@ namespace PhurmaAndTheBoiz.API.Tests.Controllers
             var dependency = new Mock<IUserService>();
             dependency.Setup(obj => obj.AuthenticateUser(It.IsAny<string>(), It.IsAny<string>())).Returns(new User());
             var controller = new UserController(dependency.Object);
-            var result = controller.Authenticate(new User());
+            var result = controller.Authenticate(new UserAuthetication());
             Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));
         }
@@ -28,13 +28,13 @@ namespace PhurmaAndTheBoiz.API.Tests.Controllers
             var dependency = new Mock<IUserService>();
             dependency.Setup(obj => obj.AuthenticateUser(It.IsAny<string>(), It.IsAny<string>())).Returns(new User());
             var controller = new UserController(dependency.Object);
-            var result = controller.Authenticate(new User());
+            var result = controller.Authenticate(new UserAuthetication());
             Assert.IsNotNull(result);
             if (result is OkObjectResult ok)
             {
                 var value = ok.Value;
                 var t = value.GetType();
-                var member = t.GetProperty("Token");
+                var member = t.GetProperty("token");
                 var token = member.GetValue(value);
                 Assert.IsNotNull(token);
             }
@@ -50,7 +50,7 @@ namespace PhurmaAndTheBoiz.API.Tests.Controllers
             var dependency = new Mock<IUserService>();
             dependency.Setup(obj => obj.AuthenticateUser(It.IsAny<string>(), It.IsAny<string>()));
             var controller = new UserController(dependency.Object);
-            var result = controller.Authenticate(new User());
+            var result = controller.Authenticate(new UserAuthetication());
             Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
         }
@@ -62,7 +62,7 @@ namespace PhurmaAndTheBoiz.API.Tests.Controllers
             dependency.Setup(obj => obj.CreateUser(It.IsNotNull<User>(), It.IsNotNull<string>()));
             var controller = new UserController(dependency.Object);
             var result = controller.Register(new User() { Password = "null" });
-            Assert.IsInstanceOfType(result, typeof(OkResult));
+            Assert.IsInstanceOfType(result, typeof(ObjectResult));
         }
 
         [TestMethod]

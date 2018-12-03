@@ -46,9 +46,8 @@ export class CharacterSheet extends Component {
   this.renderItem = this.renderItem.bind(this);
 }
   renderItem(inv){
-
     var renderedItem = inv.items.map((i) =>
-      <div key={i.itemId}>
+      (<div key={i.itemId}>
         <h4>{i.itemName}</h4>
         <div className='row'>
           <div className='col-md-4'>
@@ -64,7 +63,7 @@ export class CharacterSheet extends Component {
             <input readOnly className='col-md-9' value={i.stats.attackBonus}></input>
           </div>
         </div>
-      </div>
+      </div>)
       );
     return(renderedItem);
   }

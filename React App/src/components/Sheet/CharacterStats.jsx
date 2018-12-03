@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, {Component} from 'react'
 
 export class Stats extends Component{
@@ -6,7 +7,6 @@ export class Stats extends Component{
     this.state = {};
   }
   render(){
-    console.log(this.props)
     return(
       <div className='row'>
       <div className='col-md-2'>

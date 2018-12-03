@@ -14,6 +14,9 @@ namespace PhurmanAndTheBoiz.DAL.Models.JsonData
         [JsonProperty("userId", NullValueHandling = NullValueHandling.Ignore)]
         public int? UserId { get; set; }
 
+        [JsonProperty("level", NullValueHandling= NullValueHandling.Ignore)]
+        public int? Level { get; set; }
+
         [JsonProperty("characterName", NullValueHandling = NullValueHandling.Ignore)]
         public string CharacterName { get; set; }
 

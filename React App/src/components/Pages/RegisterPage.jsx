@@ -1,16 +1,15 @@
 ﻿import React, { Component } from 'react';
-import axios from 'axios';
 
 export class RegisterPage extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      FirstName: 'first',
-      LastName: 'last',
-      Username: 'user',
-      Password: 'pass',
-      p2: 'pass',
+      FirstName: '',
+      LastName: '',
+      Username: '',
+      Password: '',
+      p2: '',
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -22,28 +21,10 @@ export class RegisterPage extends Component {
 
   }
   handleSubmit(event) {
-    if (this.state.Password !== this.state.p2) {
-      alert("Passwords are not the same")
-    } else {
-      var user = {
-        firstName: this.state.FirstName,
-        lastName: this.state.LastName,
-        userName: this.state.Username,
-        password: this.state.Password,
-      };
-
-      axios.post('http://gxldcptrick-demo-app.herokuapp.com/api/dnd/user',{
-        user
-      }).
-      then(function(response){
-        alert(response);
-        console.log(response);
-      }).
-      catch(function(error){
-        alert('error');
-        console.log(error);
-      })
-    }
+    // do other work
+    /* eslint-disable */
+    console.log(event);
+    /* eslint-disable */
   }
 
   handleFirstNameChange(event) {
@@ -65,39 +46,28 @@ export class RegisterPage extends Component {
     return (
       <div>
         <h1>Register for the Dungeon</h1>
-        <form>
           <div className='row'>
             <div className='col-md-4'>
               <label className='control-label col-md-12'>Username</label>  
-              <div className='col-md-12'>
-                  <input value={this.state.Username} onChange={this.handleUserNameChange}/>
-              </div>
+              <input className='col-md-12' value={this.state.Username} onChange={this.handleUserNameChange} pattern=".{1,55}" required title='Must be between 1 and 55 characters long'/>
             </div>
             <div className='col-md-4'>
               <label className='control-label col-md-12'>First Name</label>
-              <div className='col-md-12'>
-                <input type='text' value={this.state.FirstName} onChange={this.handleFirstNameChange}/>
-              </div>
+              <input className='col-md-12' type='text' value={this.state.FirstName} onChange={this.handleFirstNameChange} pattern=".{2,55}" required title='Must be between 2 and 55 characters long'/>
             </div>
             <div className='col-md-4'>
-              <label className='control-label col-md-12'> Last Name</label>
-              <div className='col-md-12'>
-                <input type='text' value={this.state.LastName} onChange={this.handleLastNameChange}/>
-              </div>
+              <label className='control-label col-md-12'> Last Name </label>
+              <input className='col-md-12' type='text' value={this.state.LastName} onChange={this.handleLastNameChange} pattern=".{2,55}" required title='Must be between 2 and 55 characters long'/>
             </div>
           </div>
           <div className='row'>
             <div className='col-md-6'>
               <label className='control-label col-md-12'>Password</label>  
-              <div className='col-md-12'>
-                <input type="Password" value={this.state.Password} onChange={this.handlePasswordChange}/>
-              </div>
+              <input className='col-md-12' type="Password" value={this.state.Password} onChange={this.handlePasswordChange} pattern=".{8,55}" required title='Must be between 8 and 55 characters long'/>
             </div>
             <div className='col-md-6'>
               <label className='control-label col-md-12'>Confirm Password</label>  
-              <div className='col-md-6'>
-                <input type="Password" value={this.state.p2} onChange={this.handleConfirmPassword}/>    
-              </div>
+              <input className='col-md-12' type="Password" value={this.state.p2} onChange={this.handleConfirmPassword}/>    
             </div>
           </div>
           <div className='row'>
@@ -106,7 +76,6 @@ export class RegisterPage extends Component {
               <input type='submit' value="Submit" onClick={this.handleSubmit} />
             </div>
           </div>
-        </form>
       </div>
     );
   }
