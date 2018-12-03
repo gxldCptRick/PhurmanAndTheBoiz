@@ -4,7 +4,7 @@ import AuthHeader from "./AuthHeader";
 import fetch from "node-fetch";
 const rootPath = "https://gxldcptrick-demo-app.herokuapp.com/api/dnd";
 
-export function DeleteResource(resourceName: string, id: string = "") {
+function DeleteResource(resourceName: string, id: string = "") {
   let path = `${rootPath}/${resourceName}/${id}`;
   return fetch(path, {
     method: "DELETE",
@@ -16,10 +16,13 @@ export function DeleteResource(resourceName: string, id: string = "") {
       "Content-Type": "application/json; charset=utf-8",
       ...AuthHeader()
     }
+  }).then(function(response){
+    if(response.status === 401) throw new Error("Must Login Before Attempting To Post.");
+    return response;
   });
 }
 
-export function PutToResource(
+function PutToResource(
   resourceName: string,
   id: string = "",
   data: any
@@ -39,10 +42,13 @@ export function PutToResource(
       "Content-Type": "application/json; charset=utf-8",
       ...AuthHeader()
     }
+  }).then(function(response){
+    if(response.status === 401) throw new Error("Must Login Before Attempting To Post.");
+    return response;
   });
 }
 
-export function PostToResource(
+function PostToResource(
   resourceName: string,
   data: any
 ): Promise<Response> {
@@ -58,15 +64,17 @@ export function PostToResource(
       "Content-Type": "application/json; charset=utf-8",
       ...AuthHeader()
     }
+  }).then(function(response){
+    if(response.status === 401) throw new Error("Must Login Before Attempting To Post.");
+    return response;
   });
 }
 
-export function GetResource(
+function GetResource(
   resourceName: string,
   id: string = ""
 ): Promise<Response> {
   let path = `${rootPath}/${resourceName}/${id}`;
-  console.log(path);
   return fetch(path, {
     method: "GET",
     mode: "cors",
@@ -83,7 +91,7 @@ const SpecialPaths = {
   Register: "User/Register",
   Login: "User/Authenticate"
 };
-export function LoginUser(login: {
+function LoginUser(login: {
   username: string,
   password: string
 }): Promise<any> {
@@ -95,14 +103,23 @@ export function LoginUser(login: {
     });
 }
 
-export function RegisterUser(user: any): Promise<any> {
+function RegisterUser(user: any): Promise<any> {
   return PostToResource(SpecialPaths.Register, user)
   .then(response => response.json())
 }
 
-export const Resource = {
+const Resource = {
   Users: "User",
   Characters: "CharacterSheet",
   Maps: "Map",
   Items: "Item"
 };
+export {
+  Resource,
+  RegisterUser,
+  LoginUser,
+  GetResource,
+  PostToResource,
+  PutToResource,
+  DeleteResource
+}

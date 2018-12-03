@@ -124,7 +124,7 @@ namespace PhurmanAndTheBoiz.API.Controllers
             else
             {
                 _service.DeleteUser(id);
-                actionResult = Ok($"{id} was succesfully Deleted");
+                actionResult = Ok(new { message = $"{id} was successfully deleted." });
             }
 
             return actionResult;
