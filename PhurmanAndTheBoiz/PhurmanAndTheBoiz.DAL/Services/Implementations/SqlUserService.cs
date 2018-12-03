@@ -65,8 +65,9 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
             return createdUser;
         }
 
-        public void DeleteUser(int id)
+        public bool DeleteUser(int id)
         {
+            bool deleted = false;
             WorkWithConnection((context) =>
             {
                 var user = context.Users.FirstOrDefault((u) => u.Id == id);
@@ -74,8 +75,10 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
                 {
                     context.Users.Remove(user);
                     context.SaveChanges();
+                    deleted = true;
                 }
             });
+            return deleted;
         }
 
         public IEnumerable<User> GetAllUsers()

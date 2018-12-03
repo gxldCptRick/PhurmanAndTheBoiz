@@ -1,0 +1,47 @@
+.flex {
+  display: flex;
+}
+
+.toolbar {
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+nav > ul {
+  display: flex;
+  flex-direction: column;
+}
+
+nav > ul > li a {
+  padding: 16px;
+  background: black;
+}
+nav > ul > li {
+  list-style: none;
+  width: 100%;
+  margin: 10px;
+}
+
+nav > ul > li:first-child a {
+  border-top-left-radius: 15%;
+  border-top-right-radius: 15%;
+}
+
+nav > ul > li:last-child a {
+  border-bottom-left-radius: 15%;
+  border-bottom-right-radius: 15%;
+}
+
+nav > ul > li a:hover {
+  background: yellow;
+}
+
+nav > ul > li > a {
+  text-decoration: none;
+  color: #dadbdf;
+}
+
+nav > ul > li > a:hover {
+  text-decoration: none;
+  color: white;
+}

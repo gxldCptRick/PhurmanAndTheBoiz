@@ -1,5 +1,5 @@
-import React,{Component} from 'react';
-import '../index.css';
+import React from 'react';
+import '../../index.css';
 import { sendMessage, subscribeToChatMessages,
          typing, subscribeToUserTyping,
          doneTyping, subscribeToUserDoneTyping} from '../../rethinkAPI';
@@ -107,7 +107,7 @@ export default class Chat extends React.Component{
 
     render(){
         let chatMessages = this.state.chatMessages.map(chatMessage =>(
-            <div className="message" ref="chat_message">
+            <div key={chatMessage.id} className="message" ref="chat_message">
                 {chatMessage.message}
             </div>
         ));

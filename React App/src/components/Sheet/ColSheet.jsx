@@ -118,7 +118,7 @@ export class Sheet extends Component{
 
   renderItem(inv){
     var renderedItem = inv.items.map((i) =>
-      <div key={i.itemId}>
+      (<div key={i.itemId}>
         <h4>{i.itemName}</h4>
         <label className='col-md-12 control-label'>Type</label>
         <input className='col-md-12' value={i.itemType}></input>
@@ -126,7 +126,7 @@ export class Sheet extends Component{
         <input className='col-md-12' value={i.stats.damageRoll}></input>
         <label className='col-md-12 control-label'>Attack Bonus</label>
         <input className='col-md-12' value={i.stats.attackBonus}></input>
-      </div>
+      </div>)
       );
     return(renderedItem);
   }

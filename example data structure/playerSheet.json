@@ -4,6 +4,7 @@
   "characterName": "The Big Gey",
   "class": "Warrior",
   "alignment": "Chaotic Neutral",
+  "Level":"1",
   "experiencePoints": 0,
   "stats": {
     "strength": 30,

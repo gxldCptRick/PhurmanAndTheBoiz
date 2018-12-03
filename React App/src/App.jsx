@@ -1,15 +1,12 @@
 import React, { Component } from "react";
 import { Route } from "react-router";
-import { Characters } from "./components/Pages/Characters";
 import { Layout } from "./components/Layout";
 import { Home } from "./components/Pages/Home";
 import { Game } from "./components/Pages/Game";
-import {Items } from "./components/Pages/Items";
-import { RegisterPage } from "./components/Pages/RegisterPage";
-import { RollDice } from "./components/Gameplay/DiceRoll";
+import {RegisterPage} from './components/Pages/RegisterPage'
+import ProfilePage from "./components/Pages/ProfilePage";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/css/bootstrap-theme.css";
-import { CharacterSheet } from "./components/Sheet/CharacterSheet";
 import "./App.css";
 
 export default class App extends Component {
@@ -21,11 +18,8 @@ export default class App extends Component {
         <Layout>
           <Route exact path="/" component={Home} />
           <Route path="/Game" component={Game} />
-          <Route exact path="/characters" component={Characters} />
-          <Route path="/RegisterPage" component={RegisterPage} />
-          <Route path="/RollDice" component={RollDice} />
-          <Route path="/CharacterSheet/:id" component={CharacterSheet} />
-          <Route exact path="/Items" component={Items}/>
+          <Route path="/Register" component={RegisterPage} />
+          <Route path="/Profile" component={ProfilePage}/>
         </Layout>
         <footer>Phurman and The Boiz @2018</footer>
       </div>
