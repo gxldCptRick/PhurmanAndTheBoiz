@@ -1,5 +1,7 @@
 import React from "react";
 import Characters from "./Characters";
+import CharacterSheet from "../models/CharacterSheet";
+import { GetResource,Resource } from "../../helpers/ApiService";
 
 let mockData = [
   {
@@ -14,7 +16,20 @@ let mockData = [
   }
 ];
 
+
 export default class ProfilePage extends React.Component {
+
+  GetSheets(){
+    var userSheets = GetResource(Resource.Characters,1);
+    var sheets = userSheets.map((i) =>
+      ( <div key={i.characterId}>
+
+      </div>
+      )
+    ) 
+    return sheets
+  }
+
   render() {
     return (
       <div className="row">
@@ -22,7 +37,6 @@ export default class ProfilePage extends React.Component {
           <img src="https://via.placeholder.com/300x250.png?text=Milo+Screws+everybody+over" />
           <Characters data={mockData} />
         </div>
-
         <div className="col-md-6">
           <div>
             <div>
@@ -56,31 +70,13 @@ export default class ProfilePage extends React.Component {
         </div>
 
         <div className="col-md-3 ">
-          <h3>Game thing</h3>
+          <h3>Game Sessions</h3>
           <div className="list-box">
-            <ul>
-              <li>placeholder</li>
-              <li>placeholder</li>
-              <li>placeholder</li>
-              <li>placeholder</li>
-              <li>placeholder</li>
-              <li>placeholder</li>
-              <li>placeholder</li>
-              <li>placeholder</li>
-              <li>placeholder</li>
-              <li>placeholder</li>
-            </ul>
           </div>
 
-          <h3>Game thing</h3>
+          <h3>Character List</h3>
           <div className="list-box">
-            <ul>
-              <li>placeholder</li>
-              <li>placeholder</li>
-              <li>placeholder</li>
-              <li>placeholder</li>
-              <li>placeholder</li>
-            </ul>
+
           </div>
 
           <h3> I don't remeber what the title was</h3>

@@ -1,4 +1,5 @@
 ﻿import React, { Component } from 'react';
+import { RegisterUser } from '../../helpers/ApiService';
 
 export class RegisterPage extends Component {
 
@@ -21,10 +22,14 @@ export class RegisterPage extends Component {
 
   }
   handleSubmit(event) {
-    // do other work
-    /* eslint-disable */
-    console.log(event);
-    /* eslint-disable */
+    var user={
+      firstName: this.state.FirstName,
+      lastName: this.state.LastName,
+      userName: this.state.Username,
+      password: this.state.Password
+
+    }
+    RegisterUser(user);
   }
 
   handleFirstNameChange(event) {

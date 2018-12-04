@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {RegisterPage} from './RegisterPage'
 import {Login} from './Login'
 
-export class XD extends Component{
+export class Account extends Component{
   constructor(props){
     super(props);
     this.state={};
