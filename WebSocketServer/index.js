@@ -8,24 +8,28 @@ function subscribeToChatMessages({ dbConnection, client }) {
     .changes({ include_initial: true })
     .run(dbConnection)
     .then(cursor => {
-      cursor.each((err, messageRow) =>
+      cursor.each((err, messageRow) =>{
         client.emit("chatMessageRecieved", messageRow.new_val)
+        console.log(messageRow.new_val)
+      }
       );
     });
 }
 
-function sendMessage({ dbConnection, message }) {
-  var date = new Date().toLocaleTimeString();
-  console.log(`${message} sent!`);
+function sendMessage({ dbConnection, message, user }) {
+  var date = new Date();
+  console.log(date);
+  console.log(`${message} sent from ${user}!`);
 
   return r
     .table("chat_messages")
     .insert({
       message,
+      user,
       timestamp: date
     })
     .run(dbConnection)
-    .then(() => console.log(`${message} sent to database`));
+    .then(() => console.log(`${message} from ${user} sent to database`));
 }
 
 function typing({ user, client }) {
@@ -104,8 +108,8 @@ r.connect({
     client.on("subscribeToChatMessages", () => {
       subscribeToChatMessages({ client, dbConnection });
     });
-    client.on("sendMessage", ({ message }) => {
-      sendMessage({ message, dbConnection });
+    client.on("sendMessage", ({ message, user }) => {
+      sendMessage({ message, user, dbConnection });
     });
     client.on("typing", ({ user }) => {
       typing({ client, user });
