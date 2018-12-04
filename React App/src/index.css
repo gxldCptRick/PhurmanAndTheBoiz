@@ -22,6 +22,7 @@
     padding: 3px;
     background: grey;
     margin-bottom: 3px;
+    color: #ffffff;
 }
 
 .user-typing {
@@ -32,4 +33,13 @@
 
 .user-typing > p {
     margin: 0;
+}
+
+.message-small {
+    font-size: 9px;
+}
+
+.flex-space-between{
+    display: flex;
+    justify-content: space-between;
 }
