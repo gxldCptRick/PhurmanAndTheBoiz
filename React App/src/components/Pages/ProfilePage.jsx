@@ -1,6 +1,7 @@
 import React from "react";
 import Characters from "./Characters";
-import CharacterSheet from "../models/CharacterSheet";
+import CharacterSheet from "../Sheet/CharacterSheet";
+import {RenderCharacterList} from '../../helpers/ProfileHelper'
 import { GetResource,Resource } from "../../helpers/ApiService";
 
 let mockData = [
@@ -19,22 +20,31 @@ let mockData = [
 
 export default class ProfilePage extends React.Component {
 
-  GetSheets(){
-    var userSheets = GetResource(Resource.Characters,1);
-    var sheets = userSheets.map((i) =>
-      ( <div key={i.characterId}>
+  componentWillMount(){
+    GetResource(Resource.CharacterSheet,'1')
+    .then(response => response.json())
+    .then(json =>{this.setState({characterData: json})}  )
+  }
 
-      </div>
-      )
-    ) 
-    return sheets
+  constructor(props){
+    super(props);
+    this.state={
+      characterData: [{}]
+    }
+
+    this.RenderChars = this.RenderChars.bind(this);
+  }
+
+  RenderChars(){
+    console.log('Rend-R')
+    return RenderCharacterList(this.state.characterData);
   }
 
   render() {
     return (
       <div className="row">
         <div className="col-md-3">
-          <img src="https://via.placeholder.com/300x250.png?text=Milo+Screws+everybody+over" />
+          <img src="https://via.placeholder.com/300x250.png?text=Milo+Screws+everybody+over" alt='Img'/>
           <Characters data={mockData} />
         </div>
         <div className="col-md-6">
@@ -63,10 +73,7 @@ export default class ProfilePage extends React.Component {
               <input value="Change Password" type="button" />
             </div>
           </div>
-
-          <div>
-            <p>Div placeholder for character sheet component</p>
-          </div>
+            <CharacterSheet/>
         </div>
 
         <div className="col-md-3 ">
@@ -76,7 +83,7 @@ export default class ProfilePage extends React.Component {
 
           <h3>Character List</h3>
           <div className="list-box">
-
+            <this.RenderChars/>
           </div>
 
           <h3> I don't remeber what the title was</h3>

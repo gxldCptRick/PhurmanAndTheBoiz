@@ -81,7 +81,7 @@ export function GetResource(
 
 const SpecialPaths = {
   Register: "User/Register",
-  Login: "User/Authenticate"
+  Login: "User/Authenticate",
 };
 export function LoginUser(user): Promise<any> {
   return PostToResource(SpecialPaths.Login, user)
@@ -101,5 +101,6 @@ export const Resource = {
   Users: "User",
   Characters: "CharacterSheet",
   Maps: "Map",
-  Items: "Item"
+  Items: "Item",
+  UserCharacter: 'Charactersheet/User',
 };

@@ -50,7 +50,7 @@ export class RegisterPage extends Component {
   render() {
     return (
       <div>
-        <h1>Register for the Dungeon</h1>
+        <h1>Register for DungeonRollers</h1>
           <div className='row'>
             <div className='col-md-4'>
               <label className='control-label col-md-12'>Username</label>  

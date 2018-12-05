@@ -25,7 +25,7 @@ export class NavMenu extends Component {
             </LinkContainer>
             <LinkContainer to={"/Account"}>
               <NavItem>
-                <Glyphicon glyph="bookmark" /> Register
+                <Glyphicon glyph="bookmark" /> Account
               </NavItem>
             </LinkContainer>
             <LinkContainer to={"/Game"}>
