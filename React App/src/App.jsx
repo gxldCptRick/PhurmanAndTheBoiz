@@ -3,11 +3,11 @@ import { Route } from "react-router";
 import { Layout } from "./components/Layout";
 import { Home } from "./components/Pages/Home";
 import { Game } from "./components/Pages/Game";
-import {RegisterPage} from './components/Pages/RegisterPage'
 import ProfilePage from "./components/Pages/ProfilePage";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/css/bootstrap-theme.css";
 import "./App.css";
+import { Account } from "./components/Pages/Account";
 
 export default class App extends Component {
   displayName = App.name;
@@ -18,7 +18,7 @@ export default class App extends Component {
         <Layout>
           <Route exact path="/" component={Home} />
           <Route path="/Game" component={Game} />
-          <Route path="/Register" component={RegisterPage} />
+          <Route path="/Account" component={Account} />
           <Route path="/Profile" component={ProfilePage}/>
         </Layout>
         <footer>Phurman and The Boiz @2018</footer>
