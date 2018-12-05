@@ -3,30 +3,39 @@ import Line from "../../models/Line";
 import * as RethinkAPI from '../../rethinkAPI';
 
 class Canvas extends Component {
+  state = {
+    lines: []
+  }
   constructor(props) {
     super(props);
     this.isDrawing = false;
-    this.drawingFromDB = true;
     this.currentLineId = null;
 
     RethinkAPI.subscribeToMessageFromServer((uuid) => {
+      console.log(uuid);
       this.currentLineId = uuid;
     })
 
     RethinkAPI.subscribeToPointDraw((line) => {
       this.drawLine(line);
     })
+
+    RethinkAPI.generateUUID();
   }
 
   drawLine(line){
-    if (line === null)
+    if (line === null){
+      this.clearDrawing();
       return;
+    }
+      
     if (line.points.length < 1){
       return;
     }
 
     if (!this.isDrawing){
       let arrayLength = line.points.length;
+      console.log("Drawing Line from server");
       let ctx = this.drawingCanvas.getContext("2d");
       ctx.fillStyle = "#fff";
       ctx.beginPath();
@@ -551,8 +560,6 @@ class Canvas extends Component {
   }
 
   clearDrawing() {
-    this.lines = [];
-    this.currentLine = undefined;
     let ctx = this.drawingCanvas.getContext("2d");
     ctx.clearRect(0, 0, this.drawingCanvas.width, this.drawingCanvas.height);
   }
@@ -566,7 +573,9 @@ class Canvas extends Component {
     ctx.moveTo(point.x, point.y);
     let newLine = new Line();
     newLine.setId(this.currentLineId);
+    this.state.lines.push(newLine);
     RethinkAPI.sendLine({ newLine });
+    console.log("Sent line " + newLine.id);
   }
 
   finishDrawing() {
@@ -584,11 +593,15 @@ class Canvas extends Component {
 
   updateCanvas({ x, y }) {
     if (this.isDrawing) {
+      let index = this.state.lines.length - 1;
       let ctx = this.drawingCanvas.getContext("2d");
       ctx.fillStyle = "#fff";
       ctx.lineTo(x, y);
       ctx.stroke();
+      
       let lineId = this.currentLineId;
+      this.state.lines[index].points.push({x, y})
+      console.log(lineId);
       RethinkAPI.sendPointToDraw({x, y, lineId});
     }
   }
@@ -609,7 +622,7 @@ class Canvas extends Component {
         <button type="button" onClick={_ => this.generateMap()}>
           Generate Map
         </button>
-        <button type="button" onClick={_ => this.clearDrawing()}>
+        <button type="button" onClick={_ => RethinkAPI.nukeMap()}>
           Clear
         </button>
         <button type="button" onClick={_ => this.reDrawLines()}>
