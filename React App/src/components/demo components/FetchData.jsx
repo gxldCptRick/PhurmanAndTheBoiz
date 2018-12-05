@@ -27,12 +27,12 @@ export class FetchData extends Component {
         </thead>
         <tbody>
           {forecasts.map(forecast =>
-            <tr key={forecast.dateFormatted}>
+            (<tr key={forecast.dateFormatted}>
               <td>{forecast.dateFormatted}</td>
               <td>{forecast.temperatureC}</td>
               <td>{forecast.temperatureF}</td>
               <td>{forecast.summary}</td>
-            </tr>
+            </tr>)
           )}
         </tbody>
       </table>

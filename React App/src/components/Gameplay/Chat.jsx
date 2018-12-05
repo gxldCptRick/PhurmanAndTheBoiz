@@ -2,13 +2,16 @@ import React from 'react';
 import '../../index.css';
 import { sendMessage, subscribeToChatMessages,
          typing, subscribeToUserTyping,
-         doneTyping, subscribeToUserDoneTyping} from '../../rethinkAPI';
+         doneTyping, subscribeToUserDoneTyping,
+         unsubscribeToUserTyping, unsubscribeToChatMessages,
+         unsubscribeToUserDoneTyping} from '../../rethinkAPI';
 import * as ReactDOM from 'react-dom';
 
 var typingTimer;
 var listOfNames = ["Adalberto", "Leeanna", "Rico", "Barbar", "Claudette", "Tanja", "Kelly", "Gerry", "Kerri", "Chau"];
 var doneTypingInterval = 500;
 var emmitedCurrentlyTypingEvent = false;
+var dateFormatOptions = { hour: 'numeric', minute: 'numeric', hour12: true };
 export default class Chat extends React.Component{
     state = {
         user: listOfNames[Math.floor(Math.random()*listOfNames.length)],
@@ -20,37 +23,13 @@ export default class Chat extends React.Component{
     constructor(props){
         super(props);
 
-        subscribeToChatMessages((chatMessage) => {
-            console.log(`${chatMessage} recieved`);
-            this.setState(prevState => ({
-                chatMessages: prevState.chatMessages.concat([chatMessage])
-            }));
-        })
-
-
-        subscribeToUserTyping(({ user }) => {
-            console.log(this.state.usersThatAreTyping);
-            console.log(`user that is typing: ${user}`);
-            this.setState(prevState => ({
-                usersThatAreTyping: prevState.usersThatAreTyping.concat([user])
-            }))
-        })
-
-        subscribeToUserDoneTyping(({ user }) => {
-            var nameOfUserDoneTyping = user.user;
-            this.setState({
-                usersThatAreTyping: this.state.usersThatAreTyping.filter((userName) =>{
-                    return userName !== nameOfUserDoneTyping
-                })
-            });
-        })
     }
 
     handleSendMessage = () =>{
         var userMessage  = this.state.message.replace(/^\s+/, '').replace(/\s+$/, '');
         
         if (userMessage !== ''){
-            sendMessage({ message: this.state.message });
+            sendMessage({ message: this.state.message, user: this.state.user });
         }
 
         this.setState({
@@ -105,10 +84,54 @@ export default class Chat extends React.Component{
         this.scrollToBottom();
     }
 
+    componentDidMount(){
+        console.log("chat mounted");
+        subscribeToUserTyping(({ user }) => {
+            console.log(this.state.usersThatAreTyping);
+            console.log(`user that is typing: ${user}`);
+            this.setState(prevState => ({
+                usersThatAreTyping: prevState.usersThatAreTyping.concat([user])
+            }))
+        })
+        
+        subscribeToChatMessages((chatMessage) => {
+            console.log(`${chatMessage} recieved`);
+            this.setState(prevState => ({
+                chatMessages: prevState.chatMessages.concat([chatMessage])
+            }));
+        })      
+
+        subscribeToUserDoneTyping(({ user }) => {
+            var nameOfUserDoneTyping = user.user;
+            this.setState({
+                usersThatAreTyping: this.state.usersThatAreTyping.filter((userName) =>{
+                    return userName !== nameOfUserDoneTyping
+                })
+            });
+        })
+    }
+
+    componentWillUnmount(){
+        unsubscribeToUserTyping();
+        unsubscribeToChatMessages();
+        unsubscribeToUserDoneTyping();
+    }
+
     render(){
         let chatMessages = this.state.chatMessages.map(chatMessage =>(
-            <div className="message" ref="chat_message">
+            <div key={chatMessage.id} className="message" ref="chat_message">
                 {chatMessage.message}
+
+                <div className="flex-space-between">
+                    <div className="message-small">
+                        {chatMessage.user}
+                    </div>
+                    <div className="message-small">
+                        {new Date(chatMessage.timestamp).toLocaleString('en-US', dateFormatOptions)}
+                    </div>
+                </div>
+                
+                
             </div>
         ));
 

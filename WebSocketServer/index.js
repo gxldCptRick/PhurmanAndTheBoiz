@@ -8,24 +8,28 @@ function subscribeToChatMessages({ dbConnection, client }) {
     .changes({ include_initial: true })
     .run(dbConnection)
     .then(cursor => {
-      cursor.each((err, messageRow) =>
+      cursor.each((err, messageRow) =>{
         client.emit("chatMessageRecieved", messageRow.new_val)
+        console.log(messageRow.new_val)
+      }
       );
     });
 }
 
-function sendMessage({ dbConnection, message }) {
-  var date = new Date().toLocaleTimeString();
-  console.log(`${message} sent!`);
+function sendMessage({ dbConnection, message, user }) {
+  var date = new Date();
+  console.log(date);
+  console.log(`${message} sent from ${user}!`);
 
   return r
     .table("chat_messages")
     .insert({
       message,
+      user,
       timestamp: date
     })
     .run(dbConnection)
-    .then(() => console.log(`${message} sent to database`));
+    .then(() => console.log(`${message} from ${user} sent to database`));
 }
 
 function typing({ user, client }) {
@@ -39,43 +43,82 @@ function doneTyping({ user, client }) {
 
 function subscribeToDrawingPoint(dbConnection, client) {
   var date = new Date().toLocaleTimeString();
-  console.log(date);
   return r
-    .table("drawing")
+    .table("lines")
     .changes({ include_initial: true })
     .run(dbConnection)
     .then(cursor => {
       cursor.each((err, pointRow) => {
-        client.broadcast.emit("drawingPointRecieved", pointRow.new_val);
+        console.log(pointRow);
+        client.emit("drawingPointRecieved", pointRow.new_val);
         console.log("object read from database");
       });
     });
 }
 
-function sendPoint({ point, dbConnection }) {
+function sendPoint({ lineId, x, y, dbConnection }) {
+  var date = new Date().toLocaleTimeString();
+  console.log(`Line id: ${lineId}`);
+  return r
+    .table("lines")
+    .get(`${lineId}`)
+    .update({
+      points: r.row("points").append({x, y})
+    })
+    .run(dbConnection, (err, res) => {
+      if (err){
+        console.log("error");
+      }
+      else{
+        console.log(res);
+      }
+    })
+    .then(() => console.log(`object sent to database`));
+}
+
+function generateUUID(dbConnection, client){
+  return r.uuid().run(dbConnection, (err, res) => {
+      client.send(res);
+    })
+}
+
+function sendLine({dbConnection, newLine, client}){
   var date = new Date().toLocaleTimeString();
   return r
-    .table("drawing")
+    .table("lines")
     .insert({
-      ...point,
+      points: newLine.points,
       timestamp: date
     })
-    .run(dbConnection)
-    .then(() => console.log(`object sent to database`));
+    .run(dbConnection, (err, res) =>{
+      client.send(res.generated_keys[0]);
+      console.log(res.generated_keys[0]);
+    })
+    .then(() => console.log("Sent line to DB"));
+}
+
+function nukeMap({ dbConnection }){
+  console.log("NUKED RETHINK DB LINES")
+  return r
+    .table("lines")
+    .delete()
+    .run(dbConnection);
 }
 
 r.connect({
   host: "73.20.98.246",
+  //host: "localhost",
   port: 28015,
   db: "test"
 }).then(dbConnection => {
-  // r.table('chat_messages').delete().run(dbConnection);
+  //  r.table('chat_messages').delete().run(dbConnection);
+  //r.table('drawing').delete().run(dbConnection);
   io.on("connection", client => {
     client.on("subscribeToChatMessages", () => {
       subscribeToChatMessages({ client, dbConnection });
     });
-    client.on("sendMessage", ({ message }) => {
-      sendMessage({ message, dbConnection });
+    client.on("sendMessage", ({ message, user }) => {
+      sendMessage({ message, user, dbConnection });
     });
     client.on("typing", ({ user }) => {
       typing({ client, user });
@@ -86,10 +129,21 @@ r.connect({
     client.on("subscribeToPointDraw", _ => {
       subscribeToDrawingPoint(dbConnection, client);
     });
-    client.on("drawingPointSent", point => {
-      //console.log(point);
-      sendPoint({ point, dbConnection });
+    client.on("drawingPointSent", ({ lineId, x, y }) => {
+      sendPoint({ lineId, x, y, dbConnection });
     });
+    client.on("generateUUID", () =>{
+      generateUUID(dbConnection, client);
+    });
+    client.on("sendLine", ({ newLine }) => {
+      sendLine({ newLine, dbConnection, client });
+    });
+
+    client.on("nukeMap", () => {
+      nukeMap({ dbConnection });
+    })
+
+
   });
 });
 

@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PhurmanAndTheBoiz.DAL.Models.JsonData;
 using PhurmanAndTheBoiz.DAL.Services;
 
 namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
 {
+    [Authorize]
     [Route("api/dnd/[controller]")]
     [ApiController]
     public class ItemController : ControllerBase
@@ -15,6 +17,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
         }
 
         // GET: api/Item
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Get()
         {

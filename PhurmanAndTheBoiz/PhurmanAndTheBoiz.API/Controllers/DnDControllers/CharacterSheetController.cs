@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PhurmanAndTheBoiz.DAL.Models.JsonData;
 using PhurmanAndTheBoiz.DAL.Services;
 
 namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
 {
+    [Authorize]
     [Route("api/DnD/[controller]")]
     [ApiController]
     public class CharacterSheetController : ControllerBase
@@ -14,6 +16,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             _service = service;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Get()
         {

@@ -100,7 +100,7 @@ namespace PhurmanAndTheBoiz.API
             }
 
             app.UseHttpsRedirection();
-            
+            app.UseAuthentication();
             app.UseCors("CorsPolicy");
             app.UseMvc(routes =>
             {
