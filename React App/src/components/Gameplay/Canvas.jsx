@@ -3,30 +3,39 @@ import Line from "../../models/Line";
 import * as RethinkAPI from '../../rethinkAPI';
 
 class Canvas extends Component {
+  state = {
+    lines: []
+  }
   constructor(props) {
     super(props);
     this.isDrawing = false;
-    this.drawingFromDB = true;
     this.currentLineId = null;
 
     RethinkAPI.subscribeToMessageFromServer((uuid) => {
+      console.log(uuid);
       this.currentLineId = uuid;
     })
 
     RethinkAPI.subscribeToPointDraw((line) => {
       this.drawLine(line);
     })
+
+    RethinkAPI.generateUUID();
   }
 
   drawLine(line){
-    if (line === null)
+    if (line === null){
+      this.clearDrawing();
       return;
+    }
+      
     if (line.points.length < 1){
       return;
     }
 
     if (!this.isDrawing){
       let arrayLength = line.points.length;
+      console.log("Drawing Line from server");
       let ctx = this.drawingCanvas.getContext("2d");
       ctx.fillStyle = "#fff";
       ctx.beginPath();
@@ -329,10 +338,14 @@ class Canvas extends Component {
     ctx.lineTo(roomXPoint + 25, roomYPoint);
     ctx.moveTo(roomXPoint + 50, roomYPoint);
 
+    var doorPoints
+
     if (takenDoors.includes("00")) {
       switch (roomWidth / 25) {
 
         case 3, 6:
+
+          doorPoints.push({"door" : "00", "doorStart" : roomXPoint + 25, "doorEnd" : roomXPoint + 50, "doorAxis" : "X", "connected" : false});
 
           ctx.lineTo(roomXPoint + 25, roomYPoint);
           ctx.moveTo(roomXPoint + 50, roomYPoint);
@@ -342,9 +355,13 @@ class Canvas extends Component {
         case 4:
 
           if (Math.floor(Math.random() * 2) == 0) {
+            doorPoints.push({"door" : "00", "doorStart" : roomXPoint + 25, "doorEnd" : roomXPoint + 50, "doorAxis" : "X", "connected" : false});
+
             ctx.lineTo(roomXPoint + 25, roomYPoint);
             ctx.moveTo(roomXPoint + 50, roomYPoint);
           } else {
+            doorPoints.push({"door" : "00", "doorStart" : roomXPoint + 50, "doorEnd" : roomXPoint + 75, "doorAxis" : "X", "connected" : false});
+
             ctx.lineTo(roomXPoint + 50, roomYPoint);
             ctx.moveTo(roomXPoint + 75, roomYPoint);
           }
@@ -352,6 +369,8 @@ class Canvas extends Component {
           break;
 
         case 5:
+
+          doorPoints.push({"door" : "00", "doorStart" : roomXPoint + 50, "doorEnd" : roomXPoint + 75, "doorAxis" : "X", "connected" : false});
 
           ctx.lineTo(roomXPoint + 50, roomYPoint);
           ctx.moveTo(roomXPoint + 75, roomYPoint);
@@ -361,6 +380,8 @@ class Canvas extends Component {
     }
 
     if (takenDoors.includes("01")) {
+      doorPoints.push({"door" : "01", "doorStart" : roomXPoint + roomWidth - 50, "doorEnd" : roomXPoint + roomWidth - 25, "doorAxis" : "X", "connected" : false});
+
       ctx.lineTo(roomXPoint + roomWidth - 50, roomYPoint);
       ctx.moveTo(roomXPoint + roomWidth - 25, roomYPoint);
     }
@@ -372,6 +393,8 @@ class Canvas extends Component {
 
         case 3, 6:
 
+          doorPoints.push({"door" : "10", "doorStart" : roomYPoint + 25, "doorEnd" : roomYPoint + 50, "doorAxis" : "Y", "connected" : false});
+
           ctx.lineTo(roomXPoint + roomWidth, roomYPoint + 25);
           ctx.moveTo(roomXPoint + roomWidth, roomYPoint + 50);
 
@@ -380,9 +403,13 @@ class Canvas extends Component {
         case 4:
 
           if (Math.floor(Math.random() * 2) == 0) {
+            doorPoints.push({"door" : "10", "doorStart" : roomYPoint + 25, "doorEnd" : roomYPoint + 50, "doorAxis" : "Y", "connected" : false});
+
             ctx.lineTo(roomXPoint + roomWidth, roomYPoint + 25);
             ctx.moveTo(roomXPoint + roomWidth, roomYPoint + 50);
           } else {
+            doorPoints.push({"door" : "10", "doorStart" : roomYPoint + 50, "doorEnd" : roomYPoint + 75, "doorAxis" : "Y", "connected" : false});
+
             ctx.lineTo(roomXPoint + roomWidth, roomYPoint + 50);
             ctx.moveTo(roomXPoint + roomWidth, roomYPoint + 75);
           }
@@ -390,6 +417,8 @@ class Canvas extends Component {
           break;
 
         case 5:
+
+          doorPoints.push({"door" : "10", "doorStart" : roomYPoint + 50, "doorEnd" : roomYPoint + 75, "doorAxis" : "Y", "connected" : false});
 
           ctx.lineTo(roomXPoint + roomWidth, roomYPoint + 50);
           ctx.moveTo(roomXPoint + roomWidth, roomYPoint + 75);
@@ -399,6 +428,8 @@ class Canvas extends Component {
     }
 
     if (takenDoors.includes("11")) {
+      doorPoints.push({"door" : "11", "doorStart" : roomYPoint + roomHeight - 50, "doorEnd" : roomYPoint + roomHeight - 25, "doorAxis" : "Y", "connected" : false});
+
       ctx.lineTo(roomXPoint + roomWidth, roomYPoint + roomHeight - 50);
       ctx.moveTo(roomXPoint + roomWidth, roomYPoint + roomHeight - 25);
     }
@@ -410,6 +441,8 @@ class Canvas extends Component {
 
         case 3, 6:
 
+         doorPoints.push({"door" : "20", "doorStart" : roomXPoint + roomWidth - 25, "doorEnd" : roomXPoint + roomWidth - 50, "doorAxis" : "X", "connected" : false});
+
           ctx.lineTo(roomXPoint + roomWidth - 25, roomYPoint + roomHeight);
           ctx.moveTo(roomXPoint + roomWidth - 50, roomYPoint + roomHeight);
 
@@ -418,9 +451,13 @@ class Canvas extends Component {
         case 4:
 
           if (Math.floor(Math.random() * 2) == 0) {
+            doorPoints.push({"door" : "20", "doorStart" : roomXPoint + roomWidth - 25, "doorEnd" : roomXPoint + roomWidth - 50, "doorAxis" : "X", "connected" : false});
+
             ctx.lineTo(roomXPoint + roomWidth - 25, roomYPoint + roomHeight);
             ctx.moveTo(roomXPoint + roomWidth - 50, roomYPoint + roomHeight);
           } else {
+            doorPoints.push({"door" : "20", "doorStart" : roomXPoint + roomWidth - 50, "doorEnd" : roomXPoint + roomWidth - 75, "doorAxis" : "X", "connected" : false});
+
             ctx.lineTo(roomXPoint + roomWidth - 50, roomYPoint + roomHeight);
             ctx.moveTo(roomXPoint + roomWidth - 75, roomYPoint + roomHeight);
           }
@@ -428,6 +465,8 @@ class Canvas extends Component {
           break;
 
         case 5:
+
+        doorPoints.push({"door" : "20", "doorStart" : roomXPoint + roomWidth - 50, "doorEnd" : roomXPoint + roomWidth - 75, "doorAxis" : "X", "connected" : false});
 
           ctx.lineTo(roomXPoint + roomWidth - 50, roomYPoint + roomHeight);
           ctx.moveTo(roomXPoint + roomWidth - 75, roomYPoint + roomHeight);
@@ -437,6 +476,8 @@ class Canvas extends Component {
     }
 
     if (takenDoors.includes("21")) {
+      doorPoints.push({"door" : "21", "doorStart" : roomXPoint + 50, "doorEnd" : roomXPoint + 25, "doorAxis" : "X", "connected" : false});
+
       ctx.lineTo(roomXPoint + 50, roomYPoint + roomHeight);
       ctx.moveTo(roomXPoint + 25, roomYPoint + roomHeight);
     }
@@ -448,6 +489,8 @@ class Canvas extends Component {
 
         case 3, 6:
 
+          doorPoints.push({"door" : "30", "doorStart" : roomYPoint + roomHeight - 25, "doorEnd" : roomYPoint + roomHeight - 50, "doorAxis" : "Y", "connected" : false});
+
           ctx.lineTo(roomXPoint, roomYPoint + roomHeight - 25);
           ctx.moveTo(roomXPoint, roomYPoint + roomHeight - 50);
 
@@ -456,9 +499,13 @@ class Canvas extends Component {
         case 4:
 
           if (Math.floor(Math.random() * 2) == 0) {
+            doorPoints.push({"door" : "30", "doorStart" : roomYPoint + roomHeight - 25, "doorEnd" : roomYPoint + roomHeight - 50, "doorAxis" : "Y", "connected" : false});
+
             ctx.lineTo(roomXPoint, roomYPoint + roomHeight - 25);
             ctx.moveTo(roomXPoint, roomYPoint + roomHeight - 50);
           } else {
+            doorPoints.push({"door" : "30", "doorStart" : roomYPoint + roomHeight - 50, "doorEnd" : roomYPoint + roomHeight - 75, "doorAxis" : "Y", "connected" : false});
+
             ctx.lineTo(roomXPoint, roomYPoint + roomHeight - 50);
             ctx.moveTo(roomXPoint, roomYPoint + roomHeight - 75);
           }
@@ -466,6 +513,8 @@ class Canvas extends Component {
           break;
 
         case 5:
+
+        doorPoints.push({"door" : "30", "doorStart" : roomYPoint + roomHeight - 50, "doorEnd" : roomYPoint + roomHeight - 75, "doorAxis" : "Y", "connected" : false});
 
           ctx.lineTo(roomXPoint, roomYPoint + roomHeight - 50);
           ctx.moveTo(roomXPoint, roomYPoint + roomHeight - 75);
@@ -475,6 +524,7 @@ class Canvas extends Component {
     }
 
     if (takenDoors.includes("31")) {
+      doorPoints.push({"door" : "31", "doorStart" : roomYPoint + 50, "doorEnd" : roomYPoint + 25, "doorAxis" : "Y", "connected" : false});
       ctx.lineTo(roomXPoint, roomYPoint + 50);
       ctx.moveTo(roomXPoint, roomYPoint + 25);
     }
@@ -482,7 +532,9 @@ class Canvas extends Component {
     ctx.lineTo(roomXPoint, roomYPoint);
     ctx.stroke();
 
-    return newRoom;
+    var returnRoom = {"top" : newRoom.top, "left" : newRoom.left, "bottom" : newRoom.bottom, "right" : newRoom.right, "doorPoints" : doorPoints, "doorCount" : doorCount, "connctedDoors" : 0};
+
+    return returnRoom;
   }
 
   connectRooms() {
@@ -508,8 +560,6 @@ class Canvas extends Component {
   }
 
   clearDrawing() {
-    this.lines = [];
-    this.currentLine = undefined;
     let ctx = this.drawingCanvas.getContext("2d");
     ctx.clearRect(0, 0, this.drawingCanvas.width, this.drawingCanvas.height);
   }
@@ -523,7 +573,9 @@ class Canvas extends Component {
     ctx.moveTo(point.x, point.y);
     let newLine = new Line();
     newLine.setId(this.currentLineId);
+    this.state.lines.push(newLine);
     RethinkAPI.sendLine({ newLine });
+    console.log("Sent line " + newLine.id);
   }
 
   finishDrawing() {
@@ -541,11 +593,15 @@ class Canvas extends Component {
 
   updateCanvas({ x, y }) {
     if (this.isDrawing) {
+      let index = this.state.lines.length - 1;
       let ctx = this.drawingCanvas.getContext("2d");
       ctx.fillStyle = "#fff";
       ctx.lineTo(x, y);
       ctx.stroke();
+      
       let lineId = this.currentLineId;
+      this.state.lines[index].points.push({x, y})
+      console.log(lineId);
       RethinkAPI.sendPointToDraw({x, y, lineId});
     }
   }
@@ -566,7 +622,7 @@ class Canvas extends Component {
         <button type="button" onClick={_ => this.generateMap()}>
           Generate Map
         </button>
-        <button type="button" onClick={_ => this.clearDrawing()}>
+        <button type="button" onClick={_ => RethinkAPI.nukeMap()}>
           Clear
         </button>
         <button type="button" onClick={_ => this.reDrawLines()}>
