@@ -3,7 +3,7 @@ import openSocket from "socket.io-client";
 //import Rx from "rxjs/Rx";
 const port = 5585;
 const socket = openSocket(`http://73.20.98.246:${port}`);
-//const socket = openSocket(`http://localhost:${port}`);
+// const socket = openSocket(`http://localhost:${port}`);
 function subscribeToChatMessages(callback) {
   // const messagesStream = Rx.Observable.fromEventPattern(
   //     h => socket.on('messageSent', h),
@@ -32,8 +32,8 @@ function subscribeToUserDoneTyping(callback) {
   socket.on("doneTyping", user => callback({ user }));
 }
 
-function sendMessage({ message }) {
-  socket.emit("sendMessage", { message });
+function sendMessage({ message, user }) {
+  socket.emit("sendMessage", { message, user });
 }
 
 function typing({ user }) {
@@ -41,7 +41,7 @@ function typing({ user }) {
 }
 
 function subscribeToUserTyping(callback){
-    socket.on('userIsTyping', user => callback(user));
+    socket.on('userIsTyping', user => callback({ user }));
 }
 
 function doneTyping({ user }) {
@@ -49,7 +49,7 @@ function doneTyping({ user }) {
 
 }
 
-function generateUUID (callback){
+function generateUUID (){
    socket.emit("generateUUID");
 }
 
@@ -59,6 +59,22 @@ function subscribeToMessageFromServer(callback){
 
 function sendLine({ newLine }){
   socket.emit("sendLine", { newLine });
+}
+
+function nukeMap(){
+  socket.emit("nukeMap");
+}
+
+function unsubscribeToUserTyping(){
+  socket.off("subscribeToUserTyping");
+}
+
+function unsubscribeToChatMessages(){
+  socket.off("subscribeToChatMessages");
+}
+
+function unsubscribeToUserDoneTyping(){
+  socket.off("subscribeToUserDoneTyping");
 }
 export {
   subscribeToChatMessages,
@@ -71,5 +87,9 @@ export {
   sendPointToDraw,
   generateUUID,
   subscribeToMessageFromServer,
-  sendLine
+  sendLine,
+  nukeMap,
+  unsubscribeToUserTyping,
+  unsubscribeToChatMessages,
+  unsubscribeToUserDoneTyping
 };

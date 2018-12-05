@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import { ItemForm } from './NewItemForm';
 import { Stats } from './CharacterStats';
+import { Resource, PutToResource, PostToResource, GetResource } from '../../helpers/ApiService';
 
-export class CharacterSheet extends Component {
+export default class CharacterSheet extends Component {
   constructor(props) {
   super(props)
   this.state= {
-      characterId: 1,
+    characterId: 1,
       userId: 1,
       characterName: 'The Big Gey',
       class: "Warrior",
@@ -44,6 +45,38 @@ export class CharacterSheet extends Component {
       description: ""
     };
   this.renderItem = this.renderItem.bind(this);
+  this.handleButtonPush = this.handleButtonPush.bind(this);
+  this.renderButton = this.renderButton.bind(this);
+}
+
+componentDidMount(){
+  if(this.props.characterId !== ''){
+    GetResource(Resource.Characters,this.props.characterId)
+    .then(response => response.json())
+    .then(json => this.setState({json}))
+  }else{
+
+  }
+}
+
+handleButtonPush(){
+  if(this.state.characterId !== ''){
+    PutToResource(Resource.CharacterSheet, this.state.characterId);
+  }else{
+    PostToResource(Resource.Characters,this.state.userId);
+  }
+}
+
+renderButton(){
+  if(this.state.characterId !== ''){
+    return(
+      <button onClick={this.handleButtonPush}>Save Changes</button>
+    );
+  }else{
+    return(
+      <button onClick={this.handleButtonPush}>Add Character</button>
+    );  
+  }
 }
   renderItem(inv){
     var renderedItem = inv.items.map((i) =>
@@ -138,7 +171,7 @@ export class CharacterSheet extends Component {
 
   render() {
   return (
-  <div>
+  <div className='col-md-12'>
     <h2> Character Sheet </h2>
     <h3>General</h3>
     <div className='row'>
@@ -149,7 +182,7 @@ export class CharacterSheet extends Component {
         </div>
       </div>
       <div className='col-md-4'>
-        <label className='control-label col-md-12'>Class</label>
+        <label className='control-label'>Class</label>
         <div className='col-md-12'>
           <input type='text' value={this.state.class} onChange={this.changeClass.bind(this)}/>
         </div>
@@ -204,9 +237,10 @@ export class CharacterSheet extends Component {
     <div className='row'>
       <div className='col-md-12'>
         <label className='control-label col-md-12'>Description</label>
-        <input type='text' />
+        <textarea/>
       </div>
     </div>
+    <this.renderButton/>
   </div>
   );
   }
