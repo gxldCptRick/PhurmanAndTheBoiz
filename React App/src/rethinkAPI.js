@@ -49,7 +49,7 @@ function doneTyping({ user }) {
 
 }
 
-function generateUUID (callback){
+function generateUUID (){
    socket.emit("generateUUID");
 }
 
@@ -59,6 +59,10 @@ function subscribeToMessageFromServer(callback){
 
 function sendLine({ newLine }){
   socket.emit("sendLine", { newLine });
+}
+
+function nukeMap(){
+  socket.emit("nukeMap");
 }
 
 function unsubscribeToUserTyping(){
@@ -84,6 +88,7 @@ export {
   generateUUID,
   subscribeToMessageFromServer,
   sendLine,
+  nukeMap,
   unsubscribeToUserTyping,
   unsubscribeToChatMessages,
   unsubscribeToUserDoneTyping

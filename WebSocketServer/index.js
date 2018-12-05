@@ -49,6 +49,7 @@ function subscribeToDrawingPoint(dbConnection, client) {
     .run(dbConnection)
     .then(cursor => {
       cursor.each((err, pointRow) => {
+        console.log(pointRow);
         client.emit("drawingPointRecieved", pointRow.new_val);
         console.log("object read from database");
       });
@@ -96,9 +97,17 @@ function sendLine({dbConnection, newLine, client}){
     .then(() => console.log("Sent line to DB"));
 }
 
+function nukeMap({ dbConnection }){
+  console.log("NUKED RETHINK DB LINES")
+  return r
+    .table("lines")
+    .delete()
+    .run(dbConnection);
+}
+
 r.connect({
   host: "73.20.98.246",
-  // host: "localhost",
+  //host: "localhost",
   port: 28015,
   db: "test"
 }).then(dbConnection => {
@@ -129,6 +138,10 @@ r.connect({
     client.on("sendLine", ({ newLine }) => {
       sendLine({ newLine, dbConnection, client });
     });
+
+    client.on("nukeMap", () => {
+      nukeMap({ dbConnection });
+    })
 
 
   });
