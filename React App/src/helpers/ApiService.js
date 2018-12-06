@@ -13,7 +13,7 @@ function DeleteResource(resourceName: string, id: string = "") {
     redirect: "follow",
     credentials: "include",
     headers: {
-      "Content-Type": "application/json; charset=utf-8",
+      "Content-Type": "application/json",
       ...AuthHeader()
     }
   }).then(function(response){
@@ -52,7 +52,7 @@ function PostToResource(
   resourceName: string,
   data: any
 ): Promise<Response> {
-  let path = `${rootPath}/${resourceName}/`;
+  let path = `${rootPath}/${resourceName}`;
   return fetch(path, {
     method: "POST",
     mode: "cors",
@@ -89,13 +89,10 @@ function GetResource(
 
 const SpecialPaths = {
   Register: "User/Register",
-  Login: "User/Authenticate"
+  Login: "User/Authenticate",
 };
-function LoginUser(login: {
-  username: string,
-  password: string
-}): Promise<any> {
-  return PostToResource(SpecialPaths.Login, login)
+export function LoginUser(user): Promise<any> {
+  return PostToResource(SpecialPaths.Login, user)
     .then(response => response.json())
     .then(json => {
       localStorage.setItem("user", JSON.stringify(json));
@@ -112,7 +109,8 @@ const Resource = {
   Users: "User",
   Characters: "CharacterSheet",
   Maps: "Map",
-  Items: "Item"
+  Items: "Item",
+  UserCharacter: 'Charactersheet/User',
 };
 export {
   Resource,

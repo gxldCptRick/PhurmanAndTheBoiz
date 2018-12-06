@@ -1,26 +1,23 @@
 ﻿import React, { Component } from 'react';
+import { LoginUser } from '../../helpers/ApiService';
 
 export class Login extends Component {
  constructor(props) {
   super(props);
   this.state={
-    Username:'',
     Password:'',
+    Username:'',
   }
-  this.handleLoginAttempt= this.handleLoginAttempt.bind(this);
-  this.handlePasswordChange = this.handlePasswordChange.bind(this);
-  this.handleUserNameChange = this.handlePasswordChange.bind(this);
  }
 
  handlePasswordChange(event){
-   this.setState({Username: event.target.value})
+   this.setState({Password: event.target.value})
  }
  handleUserNameChange(event){
-    this.setState({Password: event.target.value})
+    this.setState({Username: event.target.value})
  }
- handleLoginAttempt(event){
-  alert(JSON.stringify(this.state))
-  console.log(JSON.stringify(this.state))
+ handleLoginAttempt(){
+  LoginUser(this.state)
  }
 
  render() {
@@ -30,23 +27,18 @@ export class Login extends Component {
         <div className='row'>
           <div className='col-md-6'>
           <label> Username:
-        <input
-            value={this.state.Username}
-            onChange={this.handleUserNameChange}
+        <input onChange={this.handleUserNameChange.bind(this)}
           />
         </label>
           </div>
           <div className='col-md-6'>
         <label>Password:
-        <input
-            type="Password"
-            value={this.state.Password}
-            onChange={this.handlePasswordChange}
+        <input type="Password" onChange={this.handlePasswordChange.bind(this)}
           />
         </label>
           </div>
         </div>
-        <input type='submit' value="Login" onClick={this.handleLoginAttempt}></input>
+        <input type='submit' value="Login" onClick={this.handleLoginAttempt.bind(this)}></input>
    </div>
   );
  }

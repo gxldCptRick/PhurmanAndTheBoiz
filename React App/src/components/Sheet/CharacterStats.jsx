@@ -10,19 +10,19 @@ export class Stats extends Component{
     return(
       <div className='row'>
       <div className='col-md-2'>
-        <label className='control-label col-md-12'> Strength </label>
+        <label className='control-label'> Strength </label>
         <div className='col-md-12'>
           <input type='text' value={this.props.state.strength}  onChange={this.props.strengthStat}/>
         </div>
       </div>
       <div className='col-md-2'>
-        <label className='control-label col-md-12'> Dexterity </label>
+        <label className='control-label'> Dexterity </label>
         <div className='col-md-12'>
           <input type='text' value={this.props.state.dexterity}  onChange={this.props.dexterityStat}/>
         </div>
       </div>
       <div className='col-md-2'>
-        <label className='control-label col-md-12'> Constitution </label>
+        <label className='control-label'> Constitution </label>
         <div className='col-md-12'>
           <input type='text' value={this.props.state.constitution}  onChange={this.props.constitutionStat}/>
         </div>
