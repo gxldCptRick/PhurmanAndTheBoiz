@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace PhurmanAndTheBoiz.DAL.Models
 {
@@ -23,7 +21,14 @@ namespace PhurmanAndTheBoiz.DAL.Models
 
         [Required]
         [DataType(DataType.Password)]
-        [StringLength(maximumLength:30, MinimumLength = 8, ErrorMessage = "You must have a password that is shorter than 30 characters and longer than 8 characters.")]
+        [StringLength(maximumLength: 30, MinimumLength = 8, ErrorMessage = "You must have a password that is shorter than 30 characters and longer than 8 characters.")]
         public string Password { get; set; }
+
+        public List<string> Roles { get; set; }
+        public User()
+        {
+            Roles = new List<string>();
+        }
+
     }
 }

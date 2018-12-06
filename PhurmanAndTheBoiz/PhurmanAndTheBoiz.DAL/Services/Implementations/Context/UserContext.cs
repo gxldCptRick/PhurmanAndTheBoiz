@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using PhurmanAndTheBoiz.DAL.Models.Entities;
 
 namespace PhurmanAndTheBoiz.DAL.Services.Implementations.Context
@@ -7,6 +7,7 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations.Context
     {
         public DbSet<UserEntity> Users { get; set; }
 
+        public DbSet<RoleEntity> Roles { get; set; }
         public UserContext(DbContextOptions options) : base(options) { }
     }
 }

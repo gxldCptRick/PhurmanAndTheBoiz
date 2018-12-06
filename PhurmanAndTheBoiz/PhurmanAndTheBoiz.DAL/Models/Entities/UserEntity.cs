@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace PhurmanAndTheBoiz.DAL.Models.Entities
 {
@@ -28,5 +29,7 @@ namespace PhurmanAndTheBoiz.DAL.Models.Entities
         [MinLength(128, ErrorMessage = "Password salt is not the expected length.")]
         public byte[] PasswordSalt { get; set; }
 
+
+        public virtual List<RoleEntity> Roles { get; set; }
     }
 }

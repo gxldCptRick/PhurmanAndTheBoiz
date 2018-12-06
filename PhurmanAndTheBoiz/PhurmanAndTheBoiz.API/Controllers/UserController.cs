@@ -6,6 +6,7 @@ using PhurmanAndTheBoiz.DAL.Services;
 using PhurmanAndTheBoiz.DAL.Services.Exceptions;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
@@ -17,7 +18,7 @@ namespace PhurmanAndTheBoiz.API.Controllers
     public class UserController : ControllerBase
     {
         private IUserService _service;
-        public UserController(IUserService service)
+        public UserController(IUserManager service)
         {
             _service = service;
         }
@@ -35,12 +36,11 @@ namespace PhurmanAndTheBoiz.API.Controllers
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes("okay fermin lets get super cereal this time around");
+            var claims = user.Roles.Select((role) => new Claim(ClaimTypes.Role, role)).ToList();
+            claims.Add(new Claim(ClaimTypes.Name, user.Id.ToString()));
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
-                }),
+                Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
@@ -74,6 +74,26 @@ namespace PhurmanAndTheBoiz.API.Controllers
             return actionResult;
         }
 
+
+        [HttpPost]
+        [Authorize(Policy = "Admin")]
+        [Route("[action]")]
+        public IActionResult AddRoleToUser([FromBody]User userDto)
+        {
+            var actionResult = default(IActionResult);
+            try
+            {
+                
+                userDto.Password = null;
+                actionResult = StatusCode(201, userDto);
+            }
+            catch (AppException e)
+            {
+                actionResult = BadRequest(e);
+            }
+
+            return actionResult;
+        }
 
         // GET: api/User
         [AllowAnonymous]

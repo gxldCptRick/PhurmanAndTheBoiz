@@ -10,21 +10,47 @@ using System.Linq;
 
 namespace PhurmanAndTheBoiz.DAL.Services.Implementations
 {
-    public class SqlUserService : IUserService
+    public class SqlUserManager : IUserManager
     {
         private readonly DbContextOptions _options;
 
-        static SqlUserService()
+        static SqlUserManager()
         {
             Mapper.Initialize((config) =>
             config.AddProfile<AutoMapperUserProfile>());
         }
 
-        public SqlUserService(string connectionString)
+        public SqlUserManager(string connectionString)
         {
             var builder = new DbContextOptionsBuilder<UserContext>();
             builder.UseSqlServer(connectionString);
             _options = builder.Options;
+        }
+
+        public Role AddRole(string role)
+        {
+            var roleSent = new Role();
+            WorkWithConnection(context =>
+            {
+                var roleDb = context.Roles.Add(new RoleEntity() { RoleName = role });
+                context.SaveChanges();
+                roleSent = Mapper.Map<Role>(roleDb.Entity);
+            });
+
+            return roleSent;
+        }
+
+        public void AddUserToRole(int userId, int roleId)
+        {
+
+            WorkWithConnection(context =>
+            {
+                var user = context.Users.Single(s => s.Id == userId);
+                var role = context.Roles.Single(r => r.Id == roleId);
+                user.Roles.Add(role);
+                role.Users.Add(user);
+                context.SaveChanges();
+            });
         }
 
         public User AuthenticateUser(string username, string password)
@@ -39,7 +65,6 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
                     {
                         user = Mapper.Map<User>(userEntity);
                     }
-
                 });
             }
 
@@ -67,7 +92,7 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
 
         public bool DeleteUser(int id)
         {
-            bool deleted = false;
+            var deleted = false;
             WorkWithConnection((context) =>
             {
                 var user = context.Users.FirstOrDefault((u) => u.Id == id);
@@ -92,20 +117,33 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
                 {
                     var mappedUser = Mapper.Map<User>(userEntity);
                     users.Add(mappedUser);
+                    foreach (var role in userEntity.Roles)
+                    {
+                        mappedUser.Roles.Add(role.RoleName);
+                    }
                 }
             });
 
             return users;
         }
 
+        public IEnumerable<Role> GetAllRoles()
+        {
+            var roles = new List<Role>();
+            WorkWithConnection(context =>
+            {
+                foreach (var role in context.Roles)
+                {
+                    roles.Add(Mapper.Map<Role>(role));
+                }
+            });
+
+            return roles;
+        }
+
         public User GetUserById(int id)
         {
-            User user = null;
-            WorkWithConnection((context) =>
-            {
-                var userEntity = context.Users.FirstOrDefault((u) => u.Id == id);
-                user = Mapper.Map<User>(userEntity);
-            });
+            var user = GetAllUsers().Single(u => u.Id == id);
             return user;
         }
 
@@ -140,6 +178,29 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
                 }
             });
 
+        }
+
+        public Role GetRoleById(int id)
+        {
+            var role = default(Role);
+            WorkWithConnection(context =>
+            {
+                var dbRole = context.Roles.SingleOrDefault(r => r.Id == id);
+                role = Mapper.Map<Role>(dbRole);
+            });
+
+            return role;
+        }
+
+        public bool IsUserInRole(int userId, string role)
+        {
+            var isInRole = false;
+            WorkWithConnection(context =>
+            {
+                var user = context.Users.SingleOrDefault(u => u.Id == userId);
+                if (user != null) isInRole = user.Roles.Any(r => r.RoleName == role);
+            });
+            return isInRole;
         }
 
         #region Private Implementations

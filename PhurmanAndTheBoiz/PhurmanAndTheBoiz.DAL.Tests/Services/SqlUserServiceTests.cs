@@ -38,7 +38,7 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
 
         private IUserService GenerateService()
         {
-            return new SqlUserService(@"Server=73.20.98.246;Database=DndTest;User Id=dndTest;Password=Milo4Life;");
+            return new SqlUserManager(@"Server=73.20.98.246;Database=DndTest;User Id=dndTest;Password=Milo4Life;");
         }
 
         [TestMethod]

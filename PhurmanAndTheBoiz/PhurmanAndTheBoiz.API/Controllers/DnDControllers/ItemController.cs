@@ -10,7 +10,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
     [ApiController]
     public class ItemController : ControllerBase
     {
-        private IDnDService _service;
+        private IItemService _service;
         public ItemController(IDnDService service)
         {
             _service = service;

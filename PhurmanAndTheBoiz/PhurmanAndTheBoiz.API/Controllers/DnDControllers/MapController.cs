@@ -10,7 +10,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
     [ApiController]
     public class MapController : ControllerBase
     {
-        private IDnDService _service;
+        private IMapService _service;
         public MapController(IDnDService service)
         {
             _service = service;
@@ -62,7 +62,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
         public IActionResult Post([FromBody] DnDMap value)
         {
             value.MapId = null;
-            _service.SaveMap(value);
+            value = _service.SaveMap(value);
             return Ok(value);
         }
 
