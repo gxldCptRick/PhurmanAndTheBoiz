@@ -10,7 +10,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
     [ApiController]
     public class CharacterSheetController : ControllerBase
     {
-        private IDnDService _service;
+        private ICharacterSheetService _service;
         public CharacterSheetController(IDnDService service)
         {
             _service = service;
@@ -75,7 +75,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             }
             else
             { 
-                _service.SaveCharacter(characterSheet);
+               characterSheet = _service.SaveCharacter(characterSheet);
                 result = Ok(characterSheet);
             }
 
@@ -92,7 +92,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             }
             else
             {
-                _service.DeleteItem(id);
+                _service.DeleteCharacter(id);
                 result = Ok();
             }
             return result;

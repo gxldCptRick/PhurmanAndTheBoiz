@@ -66,7 +66,7 @@ describe("API Functions Correctly", function() {
   describe("Speicial Fuctions Work Correctly", function() {
     it("Login Should Have Token On Success", function(done) {
       this.timeout(4000);
-      Api.LoginUser({ username: "The Batman", password: "Milo@Is3Great" })
+      Api.LoginUser({ username: "SUPER KAMI GURU", password: "#Team3Star" })
         .then(function(json) {
           should.exist(json.token);
         })

@@ -69,7 +69,7 @@ class Canvas extends Component {
     return(isOverlapping);
   }
 
-  generateRoom(rooms, roomCount) {
+  generateRoom(rooms, roomCount, currentRoom, currentDoorCount) {
     var roomWidth = (Math.floor(Math.random() * 4) + 3) * 25;
     var roomHeight = (Math.floor(Math.random() * 4) + 3) * 25;
     var roomYPoint = (Math.floor(Math.random() * 12) + 3) * 25;
@@ -161,6 +161,20 @@ class Canvas extends Component {
 
     if (doorCount == 0) {
       doorCount = 1;
+    }
+
+    if (currentRoom == roomCount - 1) {
+      let isEven = (currentDoorCount + doorCount % 2 == 0);
+
+      while(!isEven) {
+        doorCount = Math.floor(Math.random() * (roomCount - 1)) + 1;
+
+        if (doorCount > maxDoorCount) {
+          doorCount = maxDoorCount;
+        }
+
+        isEven = (currentDoorCount + doorCount % 2 == 0);
+      }
     }
 
     if (doorCount > maxDoorCount) {
@@ -338,7 +352,7 @@ class Canvas extends Component {
     ctx.lineTo(roomXPoint + 25, roomYPoint);
     ctx.moveTo(roomXPoint + 50, roomYPoint);
 
-    var doorPoints
+    var doorPoints = [];
 
     if (takenDoors.includes("00")) {
       switch (roomWidth / 25) {
@@ -537,7 +551,7 @@ class Canvas extends Component {
     return returnRoom;
   }
 
-  connectRooms() {
+  connectRooms(rooms) {
 
   }
 
@@ -552,11 +566,13 @@ class Canvas extends Component {
     var rooms = [];
     var i;
     for (i = 0; i < roomCount; i++) {
-      var newRoom = this.generateRoom(rooms, roomCount);
+      var totalDoorCount = 0;
+      var newRoom = this.generateRoom(rooms, roomCount, i, totalDoorCount);
       rooms.push(newRoom);
+      totalDoorCount += newRoom.doorCount;
     }
 
-    this.connectRooms();
+    this.connectRooms(rooms);
   }
 
   clearDrawing() {

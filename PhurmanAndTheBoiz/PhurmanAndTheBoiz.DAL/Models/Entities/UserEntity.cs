@@ -1,11 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.IdGenerators;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace PhurmanAndTheBoiz.DAL.Models.Entities
 {
     internal class UserEntity
     {
-        [Key]
-        public int Id { get; set; }
+        [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
+        public string Id { get; set; }
+
         [Required]
         [StringLength(maximumLength: 55, MinimumLength = 2, ErrorMessage = "We Need A Name That Is At least 2 Characters Long And Less than 55 Characters.")]
         public string FirstName { get; set; }
@@ -28,5 +32,12 @@ namespace PhurmanAndTheBoiz.DAL.Models.Entities
         [MinLength(128, ErrorMessage = "Password salt is not the expected length.")]
         public byte[] PasswordSalt { get; set; }
 
+
+        public List<string> Roles { get; set; }
+
+        public UserEntity()
+        {
+            Roles = new List<string>();
+        }
     }
 }

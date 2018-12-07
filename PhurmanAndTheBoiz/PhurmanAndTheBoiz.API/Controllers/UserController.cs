@@ -6,6 +6,7 @@ using PhurmanAndTheBoiz.DAL.Services;
 using PhurmanAndTheBoiz.DAL.Services.Exceptions;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
@@ -16,15 +17,15 @@ namespace PhurmanAndTheBoiz.API.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private IUserService _service;
-        public UserController(IUserService service)
+        private IUserManager _service;
+        public UserController(IUserManager service)
         {
             _service = service;
         }
         [AllowAnonymous]
         [HttpPost]
         [Route("[action]")]
-        public IActionResult Authenticate([FromBody]UserAuthetication userDto)
+        public IActionResult Authenticate([FromBody]UserAuthentication userDto)
         {
             var user = _service.AuthenticateUser(userDto.Username, userDto.Password);
 
@@ -35,12 +36,11 @@ namespace PhurmanAndTheBoiz.API.Controllers
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes("okay fermin lets get super cereal this time around");
+            var claims = user.Roles.Select((role) => new Claim(ClaimTypes.Role, role)).ToList();
+            claims.Add(new Claim(ClaimTypes.Name, user.Id));
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
-                }),
+                Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
@@ -50,7 +50,7 @@ namespace PhurmanAndTheBoiz.API.Controllers
             userDto.Password = null;
             return Ok(new
             {
-                user = userDto,
+                user,
                 token = Token
             });
         }
@@ -75,6 +75,33 @@ namespace PhurmanAndTheBoiz.API.Controllers
         }
 
 
+        [HttpPost]
+        [Authorize(Policy = "Admin")]
+        [Route("[action]")]
+        public IActionResult AddRoleToUser([FromBody]User userDto)
+        {
+            var actionResult = default(IActionResult);
+            try
+            {
+                foreach (var role in userDto.Roles)
+                {
+                    if (role != null)
+                    {
+                        _service.AddUserToRole(userDto.Id, role);
+                    }
+                }
+
+                userDto.Password = null;
+                actionResult = StatusCode(201, userDto);
+            }
+            catch (AppException e)
+            {
+                actionResult = BadRequest(e);
+            }
+
+            return actionResult;
+        }
+
         // GET: api/User
         [AllowAnonymous]
         [HttpGet]
@@ -86,7 +113,7 @@ namespace PhurmanAndTheBoiz.API.Controllers
 
         // GET: api/User/5
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public IActionResult Get(string id)
         {
             var user = _service.GetUserById(id);
             return Ok(user);
@@ -94,7 +121,7 @@ namespace PhurmanAndTheBoiz.API.Controllers
 
         // PUT: api/User/5
         [HttpPut("{id}")]
-        public IActionResult UpdateUser(int id, [FromBody] User userDto)
+        public IActionResult Update(string id, [FromBody] User userDto)
         {
             var actionResult = default(IActionResult);
             try
@@ -114,10 +141,10 @@ namespace PhurmanAndTheBoiz.API.Controllers
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(string id)
         {
             var actionResult = default(IActionResult);
-            if (id == 0)
+            if (string.IsNullOrWhiteSpace(id))
             {
                 actionResult = StatusCode(204);
             }
