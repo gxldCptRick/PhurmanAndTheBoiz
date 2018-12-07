@@ -18,6 +18,7 @@ export class Login extends Component {
  }
  handleLoginAttempt(){
   LoginUser(this.state)
+  .then(promise => console.log(promise));
  }
 
  render() {

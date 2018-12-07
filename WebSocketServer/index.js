@@ -61,7 +61,7 @@ function sendPoint({ lineId, x, y, dbConnection }) {
   console.log(`Line id: ${lineId}`);
   return r
     .table("lines")
-    .get(`${lineId}`)
+    .getAll(`${lineId}`, { index: "lineId" })
     .update({
       points: r.row("points").append({x, y})
     })
@@ -84,14 +84,16 @@ function generateUUID(dbConnection, client){
 
 function sendLine({dbConnection, newLine, client}){
   var date = new Date().toLocaleTimeString();
+  console.log(newLine);
   return r
     .table("lines")
     .insert({
+      lineId: newLine.id,
       points: newLine.points,
       timestamp: date
     })
     .run(dbConnection, (err, res) =>{
-      client.send(res.generated_keys[0]);
+      //client.send(res.generated_keys[0]);
       console.log(res.generated_keys[0]);
     })
     .then(() => console.log("Sent line to DB"));
@@ -105,6 +107,44 @@ function nukeMap({ dbConnection }){
     .run(dbConnection);
 }
 
+function getAllLines({ dbConnection, client }){
+  return r.table("lines")
+  .run(dbConnection)
+  .then(cursor => {
+    cursor.each((err, line) => {
+      client.emit("linesFromDB", line);
+    })
+  });
+}
+
+
+
+
+
+function sendGeneratedMap({dbConnection, client, commands}) {
+  var date = new Date();
+  return r.table("generated_maps")
+  .insert({
+    generatedMap: commands,
+    timestamp: date    
+  })
+  .run(dbConnection);  
+}
+
+
+function subscribeToGeneratedMapsCommands({ dbConnection, client }) {  
+  return r.table("generated_maps")
+  .changes({ include_initial: true })
+  .run(dbConnection)
+  .then(cursor => {
+    cursor.each((err, generatedMap) => {
+      console.log("Emitting generated map");
+      console.log(generatedMap);
+      client.emit("generatedMapRecieved", generatedMap.new_val);
+    })
+  })
+}
+
 r.connect({
   host: "73.20.98.246",
   //host: "localhost",
@@ -114,6 +154,7 @@ r.connect({
   //  r.table('chat_messages').delete().run(dbConnection);
   //r.table('drawing').delete().run(dbConnection);
   io.on("connection", client => {
+    console.log("Client connected");
     client.on("subscribeToChatMessages", () => {
       subscribeToChatMessages({ client, dbConnection });
     });
@@ -143,6 +184,17 @@ r.connect({
       nukeMap({ dbConnection });
     })
 
+    client.on("getAllLines", () => {
+      getAllLines({ dbConnection, client });
+    })
+
+    client.on("sendGeneratedMap", ({ commands }) => {
+      sendGeneratedMap({dbConnection, client, commands})
+    });
+
+    client.on("subscribeToGeneratedMapCommands", () => {
+      subscribeToGeneratedMapsCommands({ dbConnection, client });
+    })
 
   });
 });

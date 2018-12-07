@@ -1,26 +1,89 @@
 import React, { Component } from "react";
 import Line from "../../models/Line";
 import * as RethinkAPI from '../../rethinkAPI';
+//import * as BoizAPI from '../../helpers/ApiService';
+import * as CanvasRecorder from './CanvasContextRecorder'
 
+var recordContext = null;
 class Canvas extends Component {
-  state = {
-    lines: []
-  }
   constructor(props) {
     super(props);
     this.isDrawing = false;
     this.currentLineId = null;
+    this.currentUser = JSON.parse(localStorage.getItem("user"));
+
+    this.currentLineFromServer = null;
+    this.firstTimeFromServer = true;
+    this.lastIndexOfPointDrawn = 0;
+
+    this.lines = [];
+    
 
     RethinkAPI.subscribeToMessageFromServer((uuid) => {
-      console.log(uuid);
       this.currentLineId = uuid;
     })
 
     RethinkAPI.subscribeToPointDraw((line) => {
+      if (this.firstTimeFromServer){
+        this.currentLineFromServer = line.lineId;
+        this.firstTimeFromServer = false;
+      }
       this.drawLine(line);
+      console.log(line);
     })
 
     RethinkAPI.generateUUID();
+
+    // RethinkAPI.subscribeToLinesFromDB((line) => {
+    //   console.log("Is this shit ever getting called");
+      
+      
+    //   this.state.lines.push(line)
+    // })
+
+    RethinkAPI.subscribeToGeneratedMapCommands((generatedMap) => {
+      this.drawGeneratedMap(generatedMap);
+    })
+  }
+
+  drawGeneratedMap(generatedMap){
+    let ctx = this.drawingCanvas.getContext("2d");
+    let length = generatedMap.generatedMap.length;
+    let command = null;
+    for (var i = 0; i < length; i++){
+      command = generatedMap.generatedMap[i];
+
+      switch(command){
+        case "beginPath":
+        ctx.beginPath();
+        break;
+
+        case "moveTo":
+        i++;
+        command = generatedMap.generatedMap[i];
+        ctx.moveTo(command[0], command[1]);
+        break;
+
+        case "lineTo":
+        i++;
+        command = generatedMap.generatedMap[i];
+        ctx.lineTo(command[0], command[1]);
+        break;
+
+        case "stroke":
+        ctx.stroke();
+        break;
+
+        default:
+        break;
+      }
+      
+    }
+    var replayContext =  new CanvasRecorder.WatchedContext(this.drawingCanvas.getContext("2d"));
+    replayContext.commands = generatedMap.generatedMap;
+
+    
+    // replayContext.replay();
   }
 
   drawLine(line){
@@ -34,16 +97,28 @@ class Canvas extends Component {
     }
 
     if (!this.isDrawing){
-      let arrayLength = line.points.length;
-      console.log("Drawing Line from server");
+
+      if (line.lineId !== this.currentLineFromServer){
+        this.currentLineFromServer = line.lineId;
+        this.lastIndexOfPointDrawn = 0;
+      }
+
+      let index = this.lastIndexOfPointDrawn;
+
+      let arrayLength = line.points.length;      
       let ctx = this.drawingCanvas.getContext("2d");
       ctx.fillStyle = "#fff";
-      ctx.beginPath();
-      ctx.moveTo(line.points[0].x, line.points[0].y);
-      for(let i = 1; i < arrayLength; i++){
+      ctx.beginPath();  
+      ctx.lineWidth = 1;    
+      ctx.moveTo(line.points[index].x, line.points[index].y);
+
+      for(let i = (index + 1); i < arrayLength; i++){
+        console.log("Drawing from server");
         ctx.lineTo(line.points[i].x, line.points[i].y);
         ctx.stroke();
       }
+
+      this.lastIndexOfPointDrawn = arrayLength - 1;
     }
   }
 
@@ -128,7 +203,7 @@ class Canvas extends Component {
     var maxDoorCount = 0;
 
     if (!(newRoom.top - 50 <= 25)) {
-      if (roomWidth == (6 * 25)) {
+      if (roomWidth === (6 * 25)) {
         maxDoorCount += 2;
       } else {
         maxDoorCount += 1;
@@ -136,7 +211,7 @@ class Canvas extends Component {
     }
 
     if (!(newRoom.right + 50 >= 875)) {
-      if (roomHeight == (6 * 25)) {
+      if (roomHeight === (6 * 25)) {
         maxDoorCount += 2;
       } else {
         maxDoorCount += 1;
@@ -144,7 +219,7 @@ class Canvas extends Component {
     }
 
     if (!(newRoom.bottom + 50 >= 475)) {
-      if (roomWidth == (6 * 25)) {
+      if (roomWidth === (6 * 25)) {
         maxDoorCount += 2;
       } else {
         maxDoorCount += 1;
@@ -152,14 +227,14 @@ class Canvas extends Component {
     }
 
     if (!(newRoom.left - 50 <= 25)) {
-      if (roomHeight == (6 * 25)) {
+      if (roomHeight === (6 * 25)) {
         maxDoorCount += 2;
       } else {
         maxDoorCount += 1;
       }
     }
 
-    if (doorCount == 0) {
+    if (doorCount === 0) {
       doorCount = 1;
     }
 
@@ -183,7 +258,7 @@ class Canvas extends Component {
             } else {
               validSide = true;
 
-              if (roomWidth == 6 * 25){
+              if (roomWidth === 6 * 25){
                 if (takenDoors.includes("00") && takenDoors.includes("01")) {
                   validSide = false;
                   doorSide = Math.floor(Math.random() * 4);
@@ -194,7 +269,7 @@ class Canvas extends Component {
                 } else {
                   var door = Math.floor(Math.random() * 2);
 
-                  if (door == 0){
+                  if (door === 0){
                     takenDoors.push("00");
                   } else {
                     takenDoors.push("01");
@@ -220,7 +295,7 @@ class Canvas extends Component {
             } else {
               validSide = true;
 
-              if (roomHeight == 6 * 25){
+              if (roomHeight === 6 * 25){
                 if (takenDoors.includes("10") && takenDoors.includes("11")) {
                   validSide = false;
                   doorSide = Math.floor(Math.random() * 4);
@@ -229,9 +304,10 @@ class Canvas extends Component {
                 } else if (takenDoors.includes("11")) {
                   takenDoors.push("10");
                 } else {
-                  var door = Math.floor(Math.random() * 2);
+                  //var door = Math.floor(Math.random() * 2);
+                  door = Math.floor(Math.random() * 2);
 
-                  if (door == 0){
+                  if (door === 0){
                     takenDoors.push("10");
                   } else {
                     takenDoors.push("11");
@@ -257,7 +333,7 @@ class Canvas extends Component {
             } else {
               validSide = true;
 
-              if (roomWidth == 6 * 25){
+              if (roomWidth === 6 * 25){
                 if (takenDoors.includes("20") && takenDoors.includes("21")) {
                   validSide = false;
                   doorSide = Math.floor(Math.random() * 4);
@@ -266,9 +342,10 @@ class Canvas extends Component {
                 } else if (takenDoors.includes("21")) {
                   takenDoors.push("20");
                 } else {
-                  var door = Math.floor(Math.random() * 2);
+                  //var door = Math.floor(Math.random() * 2);
+                  door = Math.floor(Math.random() * 2);
 
-                  if (door == 0){
+                  if (door === 0){
                     takenDoors.push("20");
                   } else {
                     takenDoors.push("21");
@@ -294,7 +371,7 @@ class Canvas extends Component {
             } else {
               validSide = true;
 
-              if (roomHeight == 6 * 25){
+              if (roomHeight === 6 * 25){
                 if (takenDoors.includes("30") && takenDoors.includes("31")) {
                   validSide = false;
                   doorSide = Math.floor(Math.random() * 4);
@@ -303,9 +380,10 @@ class Canvas extends Component {
                 } else if (takenDoors.includes("31")) {
                   takenDoors.push("30");
                 } else {
-                  var door = Math.floor(Math.random() * 2);
+                  //var door = Math.floor(Math.random() * 2);
+                  door = Math.floor(Math.random() * 2);
 
-                  if (door == 0){
+                  if (door === 0){
                     takenDoors.push("30");
                   } else {
                     takenDoors.push("31");
@@ -324,46 +402,45 @@ class Canvas extends Component {
             break;
 
           default:
-
-            throw "Unreachable Code: Door is generated on a non-existant side!";
+            throw new Error ("Unreachable Code: Door is generated on a non-existant side!");
         }
       } while(!validSide);
     }
 
-    let ctx = this.drawingCanvas.getContext("2d");
-    ctx.beginPath();
-    ctx.moveTo(roomXPoint, roomYPoint);
+    
+    recordContext.beginPath();
+    recordContext.moveTo(roomXPoint, roomYPoint);
 
 
-    ctx.lineTo(roomXPoint + 25, roomYPoint);
-    ctx.moveTo(roomXPoint + 50, roomYPoint);
+    recordContext.lineTo(roomXPoint + 25, roomYPoint);
+    recordContext.moveTo(roomXPoint + 50, roomYPoint);
 
-    var doorPoints
+    var doorPoints = [];
 
     if (takenDoors.includes("00")) {
       switch (roomWidth / 25) {
 
-        case 3, 6:
-
+        case 3:
+        case 6:
           doorPoints.push({"door" : "00", "doorStart" : roomXPoint + 25, "doorEnd" : roomXPoint + 50, "doorAxis" : "X", "connected" : false});
 
-          ctx.lineTo(roomXPoint + 25, roomYPoint);
-          ctx.moveTo(roomXPoint + 50, roomYPoint);
+          recordContext.lineTo(roomXPoint + 25, roomYPoint);
+          recordContext.moveTo(roomXPoint + 50, roomYPoint);
 
           break;
 
         case 4:
 
-          if (Math.floor(Math.random() * 2) == 0) {
+          if (Math.floor(Math.random() * 2) === 0) {
             doorPoints.push({"door" : "00", "doorStart" : roomXPoint + 25, "doorEnd" : roomXPoint + 50, "doorAxis" : "X", "connected" : false});
 
-            ctx.lineTo(roomXPoint + 25, roomYPoint);
-            ctx.moveTo(roomXPoint + 50, roomYPoint);
+            recordContext.lineTo(roomXPoint + 25, roomYPoint);
+            recordContext.moveTo(roomXPoint + 50, roomYPoint);
           } else {
             doorPoints.push({"door" : "00", "doorStart" : roomXPoint + 50, "doorEnd" : roomXPoint + 75, "doorAxis" : "X", "connected" : false});
 
-            ctx.lineTo(roomXPoint + 50, roomYPoint);
-            ctx.moveTo(roomXPoint + 75, roomYPoint);
+            recordContext.lineTo(roomXPoint + 50, roomYPoint);
+            recordContext.moveTo(roomXPoint + 75, roomYPoint);
           }
 
           break;
@@ -372,9 +449,12 @@ class Canvas extends Component {
 
           doorPoints.push({"door" : "00", "doorStart" : roomXPoint + 50, "doorEnd" : roomXPoint + 75, "doorAxis" : "X", "connected" : false});
 
-          ctx.lineTo(roomXPoint + 50, roomYPoint);
-          ctx.moveTo(roomXPoint + 75, roomYPoint);
+          recordContext.lineTo(roomXPoint + 50, roomYPoint);
+          recordContext.moveTo(roomXPoint + 75, roomYPoint);
 
+          break;
+
+          default:
           break;
       }
     }
@@ -382,36 +462,37 @@ class Canvas extends Component {
     if (takenDoors.includes("01")) {
       doorPoints.push({"door" : "01", "doorStart" : roomXPoint + roomWidth - 50, "doorEnd" : roomXPoint + roomWidth - 25, "doorAxis" : "X", "connected" : false});
 
-      ctx.lineTo(roomXPoint + roomWidth - 50, roomYPoint);
-      ctx.moveTo(roomXPoint + roomWidth - 25, roomYPoint);
+      recordContext.lineTo(roomXPoint + roomWidth - 50, roomYPoint);
+      recordContext.moveTo(roomXPoint + roomWidth - 25, roomYPoint);
     }
 
-    ctx.lineTo(roomXPoint + roomWidth, roomYPoint);
+    recordContext.lineTo(roomXPoint + roomWidth, roomYPoint);
 
     if (takenDoors.includes("10")) {
       switch (roomHeight / 25) {
 
-        case 3, 6:
+        case 3:
+        case 6:
 
           doorPoints.push({"door" : "10", "doorStart" : roomYPoint + 25, "doorEnd" : roomYPoint + 50, "doorAxis" : "Y", "connected" : false});
 
-          ctx.lineTo(roomXPoint + roomWidth, roomYPoint + 25);
-          ctx.moveTo(roomXPoint + roomWidth, roomYPoint + 50);
+          recordContext.lineTo(roomXPoint + roomWidth, roomYPoint + 25);
+          recordContext.moveTo(roomXPoint + roomWidth, roomYPoint + 50);
 
           break;
 
         case 4:
 
-          if (Math.floor(Math.random() * 2) == 0) {
+          if (Math.floor(Math.random() * 2) === 0) {
             doorPoints.push({"door" : "10", "doorStart" : roomYPoint + 25, "doorEnd" : roomYPoint + 50, "doorAxis" : "Y", "connected" : false});
 
-            ctx.lineTo(roomXPoint + roomWidth, roomYPoint + 25);
-            ctx.moveTo(roomXPoint + roomWidth, roomYPoint + 50);
+            recordContext.lineTo(roomXPoint + roomWidth, roomYPoint + 25);
+            recordContext.moveTo(roomXPoint + roomWidth, roomYPoint + 50);
           } else {
             doorPoints.push({"door" : "10", "doorStart" : roomYPoint + 50, "doorEnd" : roomYPoint + 75, "doorAxis" : "Y", "connected" : false});
 
-            ctx.lineTo(roomXPoint + roomWidth, roomYPoint + 50);
-            ctx.moveTo(roomXPoint + roomWidth, roomYPoint + 75);
+            recordContext.lineTo(roomXPoint + roomWidth, roomYPoint + 50);
+            recordContext.moveTo(roomXPoint + roomWidth, roomYPoint + 75);
           }
 
           break;
@@ -420,9 +501,12 @@ class Canvas extends Component {
 
           doorPoints.push({"door" : "10", "doorStart" : roomYPoint + 50, "doorEnd" : roomYPoint + 75, "doorAxis" : "Y", "connected" : false});
 
-          ctx.lineTo(roomXPoint + roomWidth, roomYPoint + 50);
-          ctx.moveTo(roomXPoint + roomWidth, roomYPoint + 75);
+          recordContext.lineTo(roomXPoint + roomWidth, roomYPoint + 50);
+          recordContext.moveTo(roomXPoint + roomWidth, roomYPoint + 75);
 
+          break;
+
+          default:
           break;
       }
     }
@@ -430,36 +514,37 @@ class Canvas extends Component {
     if (takenDoors.includes("11")) {
       doorPoints.push({"door" : "11", "doorStart" : roomYPoint + roomHeight - 50, "doorEnd" : roomYPoint + roomHeight - 25, "doorAxis" : "Y", "connected" : false});
 
-      ctx.lineTo(roomXPoint + roomWidth, roomYPoint + roomHeight - 50);
-      ctx.moveTo(roomXPoint + roomWidth, roomYPoint + roomHeight - 25);
+      recordContext.lineTo(roomXPoint + roomWidth, roomYPoint + roomHeight - 50);
+      recordContext.moveTo(roomXPoint + roomWidth, roomYPoint + roomHeight - 25);
     }
 
-    ctx.lineTo(roomXPoint + roomWidth, roomYPoint + roomHeight);
+    recordContext.lineTo(roomXPoint + roomWidth, roomYPoint + roomHeight);
 
     if (takenDoors.includes("20")) {
       switch (roomWidth / 25) {
 
-        case 3, 6:
+        case 3:
+        case 6:
 
          doorPoints.push({"door" : "20", "doorStart" : roomXPoint + roomWidth - 25, "doorEnd" : roomXPoint + roomWidth - 50, "doorAxis" : "X", "connected" : false});
 
-          ctx.lineTo(roomXPoint + roomWidth - 25, roomYPoint + roomHeight);
-          ctx.moveTo(roomXPoint + roomWidth - 50, roomYPoint + roomHeight);
+          recordContext.lineTo(roomXPoint + roomWidth - 25, roomYPoint + roomHeight);
+          recordContext.moveTo(roomXPoint + roomWidth - 50, roomYPoint + roomHeight);
 
           break;
 
         case 4:
 
-          if (Math.floor(Math.random() * 2) == 0) {
+          if (Math.floor(Math.random() * 2) === 0) {
             doorPoints.push({"door" : "20", "doorStart" : roomXPoint + roomWidth - 25, "doorEnd" : roomXPoint + roomWidth - 50, "doorAxis" : "X", "connected" : false});
 
-            ctx.lineTo(roomXPoint + roomWidth - 25, roomYPoint + roomHeight);
-            ctx.moveTo(roomXPoint + roomWidth - 50, roomYPoint + roomHeight);
+            recordContext.lineTo(roomXPoint + roomWidth - 25, roomYPoint + roomHeight);
+            recordContext.moveTo(roomXPoint + roomWidth - 50, roomYPoint + roomHeight);
           } else {
             doorPoints.push({"door" : "20", "doorStart" : roomXPoint + roomWidth - 50, "doorEnd" : roomXPoint + roomWidth - 75, "doorAxis" : "X", "connected" : false});
 
-            ctx.lineTo(roomXPoint + roomWidth - 50, roomYPoint + roomHeight);
-            ctx.moveTo(roomXPoint + roomWidth - 75, roomYPoint + roomHeight);
+            recordContext.lineTo(roomXPoint + roomWidth - 50, roomYPoint + roomHeight);
+            recordContext.moveTo(roomXPoint + roomWidth - 75, roomYPoint + roomHeight);
           }
 
           break;
@@ -468,9 +553,12 @@ class Canvas extends Component {
 
         doorPoints.push({"door" : "20", "doorStart" : roomXPoint + roomWidth - 50, "doorEnd" : roomXPoint + roomWidth - 75, "doorAxis" : "X", "connected" : false});
 
-          ctx.lineTo(roomXPoint + roomWidth - 50, roomYPoint + roomHeight);
-          ctx.moveTo(roomXPoint + roomWidth - 75, roomYPoint + roomHeight);
+          recordContext.lineTo(roomXPoint + roomWidth - 50, roomYPoint + roomHeight);
+          recordContext.moveTo(roomXPoint + roomWidth - 75, roomYPoint + roomHeight);
 
+          break;
+
+          default:
           break;
       }
     }
@@ -478,36 +566,37 @@ class Canvas extends Component {
     if (takenDoors.includes("21")) {
       doorPoints.push({"door" : "21", "doorStart" : roomXPoint + 50, "doorEnd" : roomXPoint + 25, "doorAxis" : "X", "connected" : false});
 
-      ctx.lineTo(roomXPoint + 50, roomYPoint + roomHeight);
-      ctx.moveTo(roomXPoint + 25, roomYPoint + roomHeight);
+      recordContext.lineTo(roomXPoint + 50, roomYPoint + roomHeight);
+      recordContext.moveTo(roomXPoint + 25, roomYPoint + roomHeight);
     }
 
-    ctx.lineTo(roomXPoint, roomYPoint + roomHeight);
+    recordContext.lineTo(roomXPoint, roomYPoint + roomHeight);
 
     if (takenDoors.includes("30")) {
       switch (roomWidth / 25) {
 
-        case 3, 6:
+        case 3:
+        case 6:
 
           doorPoints.push({"door" : "30", "doorStart" : roomYPoint + roomHeight - 25, "doorEnd" : roomYPoint + roomHeight - 50, "doorAxis" : "Y", "connected" : false});
 
-          ctx.lineTo(roomXPoint, roomYPoint + roomHeight - 25);
-          ctx.moveTo(roomXPoint, roomYPoint + roomHeight - 50);
+          recordContext.lineTo(roomXPoint, roomYPoint + roomHeight - 25);
+          recordContext.moveTo(roomXPoint, roomYPoint + roomHeight - 50);
 
           break;
 
         case 4:
 
-          if (Math.floor(Math.random() * 2) == 0) {
+          if (Math.floor(Math.random() * 2) === 0) {
             doorPoints.push({"door" : "30", "doorStart" : roomYPoint + roomHeight - 25, "doorEnd" : roomYPoint + roomHeight - 50, "doorAxis" : "Y", "connected" : false});
 
-            ctx.lineTo(roomXPoint, roomYPoint + roomHeight - 25);
-            ctx.moveTo(roomXPoint, roomYPoint + roomHeight - 50);
+            recordContext.lineTo(roomXPoint, roomYPoint + roomHeight - 25);
+            recordContext.moveTo(roomXPoint, roomYPoint + roomHeight - 50);
           } else {
             doorPoints.push({"door" : "30", "doorStart" : roomYPoint + roomHeight - 50, "doorEnd" : roomYPoint + roomHeight - 75, "doorAxis" : "Y", "connected" : false});
 
-            ctx.lineTo(roomXPoint, roomYPoint + roomHeight - 50);
-            ctx.moveTo(roomXPoint, roomYPoint + roomHeight - 75);
+            recordContext.lineTo(roomXPoint, roomYPoint + roomHeight - 50);
+            recordContext.moveTo(roomXPoint, roomYPoint + roomHeight - 75);
           }
 
           break;
@@ -516,21 +605,24 @@ class Canvas extends Component {
 
         doorPoints.push({"door" : "30", "doorStart" : roomYPoint + roomHeight - 50, "doorEnd" : roomYPoint + roomHeight - 75, "doorAxis" : "Y", "connected" : false});
 
-          ctx.lineTo(roomXPoint, roomYPoint + roomHeight - 50);
-          ctx.moveTo(roomXPoint, roomYPoint + roomHeight - 75);
+          recordContext.lineTo(roomXPoint, roomYPoint + roomHeight - 50);
+          recordContext.moveTo(roomXPoint, roomYPoint + roomHeight - 75);
 
+          break;
+
+          default:
           break;
       }
     }
 
     if (takenDoors.includes("31")) {
       doorPoints.push({"door" : "31", "doorStart" : roomYPoint + 50, "doorEnd" : roomYPoint + 25, "doorAxis" : "Y", "connected" : false});
-      ctx.lineTo(roomXPoint, roomYPoint + 50);
-      ctx.moveTo(roomXPoint, roomYPoint + 25);
+      recordContext.lineTo(roomXPoint, roomYPoint + 50);
+      recordContext.moveTo(roomXPoint, roomYPoint + 25);
     }
 
-    ctx.lineTo(roomXPoint, roomYPoint);
-    ctx.stroke();
+    recordContext.lineTo(roomXPoint, roomYPoint);
+    recordContext.stroke();
 
     var returnRoom = {"top" : newRoom.top, "left" : newRoom.left, "bottom" : newRoom.bottom, "right" : newRoom.right, "doorPoints" : doorPoints, "doorCount" : doorCount, "connctedDoors" : 0};
 
@@ -542,12 +634,13 @@ class Canvas extends Component {
   }
 
   generateMap() {
-    this.clearDrawing();
-    let ctx = this.drawingCanvas.getContext("2d");
-    ctx.beginPath();
-    ctx.rect(25, 25, 850, 450);
-    ctx.stroke();
+    //this.clearDrawing();
+    // let ctx = this.drawingCanvas.getContext("2d");
+    // ctx.beginPath();
+    // ctx.rect(25, 25, 850, 450);
+    // ctx.stroke();
 
+    recordContext = new CanvasRecorder.WatchedContext(this.drawingCanvas.getContext("2d"));
     var roomCount = Math.floor(Math.random() * 5) + 3;
     var rooms = [];
     var i;
@@ -557,11 +650,14 @@ class Canvas extends Component {
     }
 
     this.connectRooms();
+    var commands = recordContext.commands;
+
+    RethinkAPI.sendGeneratedMapCommands({ commands });
   }
 
   clearDrawing() {
-    let ctx = this.drawingCanvas.getContext("2d");
-    ctx.clearRect(0, 0, this.drawingCanvas.width, this.drawingCanvas.height);
+      let ctx = this.drawingCanvas.getContext("2d");
+      ctx.clearRect(0, 0, this.drawingCanvas.width, this.drawingCanvas.height);
   }
 
   startDrawing(event) {
@@ -573,13 +669,16 @@ class Canvas extends Component {
     ctx.moveTo(point.x, point.y);
     let newLine = new Line();
     newLine.setId(this.currentLineId);
-    this.state.lines.push(newLine);
+    //this.state.lines.push(newLine);
     RethinkAPI.sendLine({ newLine });
-    console.log("Sent line " + newLine.id);
+    //console.log("Sent line " + newLine.id);
   }
 
-  finishDrawing() {
-    this.isDrawing = false;
+  finishDrawing(event) {
+    if (this.isDrawing){
+      this.isDrawing = false;
+      RethinkAPI.generateUUID();
+    }
   }
 
   drawingOnTheCanvas(event) {
@@ -593,22 +692,47 @@ class Canvas extends Component {
 
   updateCanvas({ x, y }) {
     if (this.isDrawing) {
-      let index = this.state.lines.length - 1;
+      //let index = this.state.lines.length - 1;
       let ctx = this.drawingCanvas.getContext("2d");
       ctx.fillStyle = "#fff";
       ctx.lineTo(x, y);
       ctx.stroke();
       
       let lineId = this.currentLineId;
-      this.state.lines[index].points.push({x, y})
-      console.log(lineId);
+      //this.state.lines[index].points.push({x, y})
+      //console.log("Current line id, should be same as line sent: " + lineId);
       RethinkAPI.sendPointToDraw({x, y, lineId});
     }
+  }
+
+  saveToMongo(){
+    // this.setState({
+    //   lines: []
+    // });
+
+    // RethinkAPI.getAllLines();
+    // var nameOfMap = this.nameOfMap.value;
+    // setTimeout(() => {
+    //   var mapLines = this.state.lines;
+    //   var userName = this.currentUser.user.username;
+
+    //   BoizAPI.PostToResource("map", { MapName: nameOfMap,
+    //                                   UserId: 1234,
+    //                                   CreatedBy: userName,
+    //                                   Lines: mapLines})
+    //   .then((res) => {
+    //     console.log(res);
+    //   });
+    //   console.log("post to mongo");
+    // }, 1500)
   }
 
   render() {
     return (
       <div>
+        <input type="text" ref={name => (this.nameOfMap = name)}/>
+      <div>
+      </div>
         <canvas
           ref={c => (this.drawingCanvas = c)}
           onMouseMove={event => this.drawingOnTheCanvas(event)}
@@ -625,8 +749,8 @@ class Canvas extends Component {
         <button type="button" onClick={_ => RethinkAPI.nukeMap()}>
           Clear
         </button>
-        <button type="button" onClick={_ => this.reDrawLines()}>
-          ReDraw
+        <button type="button" onClick={_ => this.saveToMongo()}>
+          Save Map
         </button>
       </div>
     );
