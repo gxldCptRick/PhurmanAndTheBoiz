@@ -37,7 +37,7 @@ namespace PhurmanAndTheBoiz.API.Controllers
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes("okay fermin lets get super cereal this time around");
             var claims = user.Roles.Select((role) => new Claim(ClaimTypes.Role, role)).ToList();
-            claims.Add(new Claim(ClaimTypes.Name, user.Id.ToString()));
+            claims.Add(new Claim(ClaimTypes.Name, user.Id));
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
