@@ -27,7 +27,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
         }
 
         [HttpGet("user/{userId}")]
-        public IActionResult Get(int userId)
+        public IActionResult Get(string userId)
         {
             IActionResult result = null;
             var items = _service.GetAllItemsForUser(userId);

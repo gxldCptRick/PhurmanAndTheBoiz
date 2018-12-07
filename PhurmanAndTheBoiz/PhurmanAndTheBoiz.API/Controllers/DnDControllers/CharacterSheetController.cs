@@ -25,7 +25,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
         }
 
         [HttpGet("user/{userId}")]
-        public IActionResult Get(int userId)
+        public IActionResult Get(string userId)
         {
             var characterSheets = _service.GetAllCharacterSheetsForUser(userId);
             if (characterSheets is null)

@@ -48,7 +48,7 @@ componentWillMount(){
 
 componentDidMount(){
   if(this.state.c.characterId !== ''){
-    GetResource('id passed',Resource.Characters,this.state.characterId)
+    console.log('id given:',this.state.characterId)
   }
 }
 
