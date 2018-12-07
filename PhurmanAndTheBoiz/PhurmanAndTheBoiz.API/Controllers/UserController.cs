@@ -17,7 +17,7 @@ namespace PhurmanAndTheBoiz.API.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private IUserService _service;
+        private IUserManager _service;
         public UserController(IUserManager service)
         {
             _service = service;
@@ -50,7 +50,7 @@ namespace PhurmanAndTheBoiz.API.Controllers
             userDto.Password = null;
             return Ok(new
             {
-                user = userDto,
+                user,
                 token = Token
             });
         }
@@ -83,7 +83,14 @@ namespace PhurmanAndTheBoiz.API.Controllers
             var actionResult = default(IActionResult);
             try
             {
-                
+                foreach (var role in userDto.Roles)
+                {
+                    if (role != null)
+                    {
+                        _service.AddUserToRole(userDto.Id, role);
+                    }
+                }
+
                 userDto.Password = null;
                 actionResult = StatusCode(201, userDto);
             }
@@ -106,7 +113,7 @@ namespace PhurmanAndTheBoiz.API.Controllers
 
         // GET: api/User/5
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public IActionResult Get(string id)
         {
             var user = _service.GetUserById(id);
             return Ok(user);
@@ -114,7 +121,7 @@ namespace PhurmanAndTheBoiz.API.Controllers
 
         // PUT: api/User/5
         [HttpPut("{id}")]
-        public IActionResult UpdateUser(int id, [FromBody] User userDto)
+        public IActionResult Update(string id, [FromBody] User userDto)
         {
             var actionResult = default(IActionResult);
             try
@@ -134,10 +141,10 @@ namespace PhurmanAndTheBoiz.API.Controllers
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(string id)
         {
             var actionResult = default(IActionResult);
-            if (id == 0)
+            if (string.IsNullOrWhiteSpace(id))
             {
                 actionResult = StatusCode(204);
             }

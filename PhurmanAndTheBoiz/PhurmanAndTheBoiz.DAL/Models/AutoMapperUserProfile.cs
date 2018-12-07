@@ -10,9 +10,8 @@ namespace PhurmanAndTheBoiz.DAL.Models
     {
         public AutoMapperUserProfile()
         {
-            CreateMap<UserEntity, User>().ForMember(dest => dest.Roles, opts => opts.Ignore());
-            CreateMap<User, UserEntity>().ForMember(dest => dest.Roles, opts => opts.Ignore());
-            CreateMap<RoleEntity, Role>();
+            CreateMap<UserEntity, User>();
+            CreateMap<User, UserEntity>();
         }
     }
 }

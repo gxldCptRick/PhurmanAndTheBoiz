@@ -54,7 +54,7 @@ namespace PhurmanAndTheBoiz.API
                     OnTokenValidated = context =>
                     {
                         var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-                        var userId = int.Parse(context.Principal.Identity.Name);
+                        var userId = context.Principal.Identity.Name;
                         var user = userService.GetUserById(userId);
                         if (user == null)
                         {
@@ -76,11 +76,15 @@ namespace PhurmanAndTheBoiz.API
             });
 
             var mongoDbService = new MongoDnDService(mongoConnectionString: Configuration["connections:mongo_connection:string"], database: Configuration["connections:mongo_connection:database"]);
-            services.AddSingleton<IUserManager>(new SqlUserManager(connectionString: Configuration["connections:sql_connection"]));
+            var mangoUserService = new MongoUserService(mongoConnectionString: Configuration["connections:mongo_connection:string"], database: Configuration["connections:mongo_connection:database"]);
+            services.AddSingleton<IUserManager>(mangoUserService);
             services.AddSingleton<IDnDService>(mongoDbService);
+            services.AddSingleton<IUserService>(mangoUserService);
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("Admin", policy => policy.RequireClaim(ClaimTypes.Role, new string[] { "Admin" }));
+                options.AddPolicy("GameMaster", policy => policy.RequireClaim(ClaimTypes.Role, new string[] { "DM", "GameMaster" }));
+                options.AddPolicy("Players", policy => policy.RequireClaim(ClaimTypes.Role, new string[] { "Player" }));
             });
 
             // In production, the React files will be served from this directory
@@ -119,40 +123,26 @@ namespace PhurmanAndTheBoiz.API
 
         private void CreateDefaultAdminAccounts()
         {
-            IUserManager userManager = new SqlUserManager(Configuration["connections:sql_connection"]);
-            var roles = userManager.GetAllRoles();
-
-            if (!roles.Any(r => r.RoleName == "Admin"))
+            IUserManager userManager = new MongoUserService(mongoConnectionString: Configuration["connections:mongo_connection:string"], database: Configuration["connections:mongo_connection:database"]);
+            var users = userManager.GetAllUsers();
+            if (!users.Any(u => u.Username == "SUPER KAMI GURU"))
             {
-                var role = userManager.AddRole("Admin");
-                var users = userManager.GetAllUsers();
-                if (!users.Any(u => u.Username == "SUPER KAMI GURU"))
+                var user = new User()
                 {
-                    var user = new User()
-                    {
-                        FirstName = "Piccolo",
-                        LastName = "Kami",
-                        Username = "SUPER KAMI GURU",
-                        Password = "#Team3Star"
-                    };
+                    FirstName = "Piccolo",
+                    LastName = "Kami",
+                    Username = "SUPER KAMI GURU",
+                    Password = "#Team3Star"
+                };
 
-                    var createdUser = userManager.CreateUser(user, user.Password);
-                    if (createdUser.Id != 0)
-                    {
-                        userManager.AddUserToRole(createdUser.Id, role.Id);
-                    }
+                userManager.CreateUser(user, user.Password);
+                var createdUser = userManager.GetAllUsers().Single(u => u.Username == user.Username);
+                if (createdUser.Id != null)
+                {
+                    userManager.AddUserToRole(createdUser.Id, "Admin");
                 }
             }
-
-            if (!roles.Any(r => r.RoleName == "DM"))
-            {
-                userManager.AddRole("DM");
-            }
-
-            if (!roles.Any(r => r.RoleName == "Player"))
-            {
-                userManager.AddRole("Player");
-            }
         }
+
     }
 }
