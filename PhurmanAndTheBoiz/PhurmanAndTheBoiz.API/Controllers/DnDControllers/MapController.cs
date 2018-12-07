@@ -24,8 +24,8 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             return Ok(allMaps);
         }
 
-        [HttpGet("user/{userId}")]
-        public IActionResult Get(string userId)
+        [HttpGet("[action]/{userId}")]
+        public IActionResult GetUser(string userId)
         {
             IActionResult result = null;
             var maps = _service.GetAllMapsForUser(userId);
