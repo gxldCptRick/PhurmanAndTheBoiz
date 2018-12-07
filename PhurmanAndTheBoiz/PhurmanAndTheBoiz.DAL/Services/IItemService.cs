@@ -8,7 +8,7 @@ namespace PhurmanAndTheBoiz.DAL.Services
     public interface IItemService
     {
         IEnumerable<Item> GetAllItems();
-        IEnumerable<Item> GetAllItemsForUser(int userId);
+        IEnumerable<Item> GetAllItemsForUser(string userId);
         Item GetItemById(string itemId);
         void UpdateItem(Item updatedItem);
         Item SaveItem(Item newItem);

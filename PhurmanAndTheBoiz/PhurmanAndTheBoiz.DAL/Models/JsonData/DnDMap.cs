@@ -18,7 +18,7 @@ namespace PhurmanAndTheBoiz.DAL.Models.JsonData
         public List<string> Tags { get; set; }
 
         [JsonProperty("userId", NullValueHandling = NullValueHandling.Ignore)]
-        public int? UserId { get; set; }
+        public string UserId { get; set; }
 
         [JsonProperty("createdBy", NullValueHandling = NullValueHandling.Ignore)]
         public string CreatedBy { get; set; }

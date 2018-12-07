@@ -8,7 +8,7 @@ namespace PhurmanAndTheBoiz.DAL.Services
     public interface ICharacterSheetService
     {
         IEnumerable<CharacterSheet> GetAllCharacterSheets();
-        IEnumerable<CharacterSheet> GetAllCharacterSheetsForUser(int userId);
+        IEnumerable<CharacterSheet> GetAllCharacterSheetsForUser(string userId);
         CharacterSheet GetCharacterSheetById(string characterSheetId);
         void UpdateCharacter(CharacterSheet updatedCharacter);
         CharacterSheet SaveCharacter(CharacterSheet newCharacter);

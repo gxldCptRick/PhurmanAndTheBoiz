@@ -42,17 +42,17 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
             return itemsList;
         }
 
-        public IEnumerable<CharacterSheet> GetAllCharacterSheetsForUser(int userId)
+        public IEnumerable<CharacterSheet> GetAllCharacterSheetsForUser(string userId)
         {
             return GetAllCharacterSheets().Where(cs => cs.UserId == userId);
         }
 
-        public IEnumerable<Item> GetAllItemsForUser(int userId)
+        public IEnumerable<Item> GetAllItemsForUser(string userId)
         {
             return GetAllItems().Where(i => i.UserId == userId);
         }
 
-        public IEnumerable<DnDMap> GetAllMapsForUser(int userId)
+        public IEnumerable<DnDMap> GetAllMapsForUser(string userId)
         {
             return GetAllDnDMaps().Where(m => m.UserId == userId);
         }
@@ -127,7 +127,7 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
             updatedItem.ItemName = updatedItem.ItemName ?? item.ItemName;
             updatedItem.ItemType = updatedItem.ItemType ?? item.ItemType;
             updatedItem.Stats = updatedItem.Stats ?? item.Stats;
-            updatedItem.UserId = updatedItem.UserId == 0 ? item.UserId : updatedItem.UserId;
+            updatedItem.UserId = updatedItem.UserId == null ? item.UserId : updatedItem.UserId;
             items.ReplaceOne(i => i.ItemId == updatedItem.ItemId, updatedItem);
         }
 

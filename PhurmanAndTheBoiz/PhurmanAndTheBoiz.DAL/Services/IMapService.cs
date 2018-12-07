@@ -8,7 +8,7 @@ namespace PhurmanAndTheBoiz.DAL.Services
     public interface IMapService
     {
         IEnumerable<DnDMap> GetAllDnDMaps();
-        IEnumerable<DnDMap> GetAllMapsForUser(int userId);
+        IEnumerable<DnDMap> GetAllMapsForUser(string userId);
         DnDMap GetMapById(string mapId);
         void UpdateMap(DnDMap updatedMap);
         DnDMap SaveMap(DnDMap newMap);
