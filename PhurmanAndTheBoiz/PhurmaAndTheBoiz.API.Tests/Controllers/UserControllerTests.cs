@@ -5,6 +5,7 @@ using PhurmanAndTheBoiz.API.Controllers;
 using PhurmanAndTheBoiz.DAL.Models;
 using PhurmanAndTheBoiz.DAL.Services;
 using PhurmanAndTheBoiz.DAL.Services.Exceptions;
+using System.Collections.Generic;
 
 namespace PhurmaAndTheBoiz.API.Tests.Controllers
 {
@@ -15,7 +16,7 @@ namespace PhurmaAndTheBoiz.API.Tests.Controllers
         public void AuthenticateReturnsOkWhenCredentialsPass()
         {
             var dependency = new Mock<IUserManager>();
-            dependency.Setup(obj => obj.AuthenticateUser(It.IsAny<string>(), It.IsAny<string>())).Returns(new User());
+            dependency.Setup(obj => obj.AuthenticateUser(It.IsAny<string>(), It.IsAny<string>())).Returns(new User() { Id =""});
             var controller = new UserController(dependency.Object);
             var result = controller.Authenticate(new UserAuthentication());
             Assert.IsNotNull(result);
@@ -26,7 +27,7 @@ namespace PhurmaAndTheBoiz.API.Tests.Controllers
         public void TheOkReturnedHasANonNullToken()
         {
             var dependency = new Mock<IUserManager>();
-            dependency.Setup(obj => obj.AuthenticateUser(It.IsAny<string>(), It.IsAny<string>())).Returns(new User());
+            dependency.Setup(obj => obj.AuthenticateUser(It.IsAny<string>(), It.IsAny<string>())).Returns(new User() { Id =""});
             var controller = new UserController(dependency.Object);
             var result = controller.Authenticate(new UserAuthentication());
             Assert.IsNotNull(result);
