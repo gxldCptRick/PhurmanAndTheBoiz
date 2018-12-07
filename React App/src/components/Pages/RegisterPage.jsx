@@ -1,4 +1,5 @@
 ﻿import React, { Component } from 'react';
+import { Redirect } from "react-router";
 import { RegisterUser } from '../../helpers/ApiService';
 
 export class RegisterPage extends Component {
@@ -29,7 +30,8 @@ export class RegisterPage extends Component {
       password: this.state.Password
 
     }
-    RegisterUser(user);
+    RegisterUser(user)
+    .then(response => {return <Redirect to={'/Profile'}/>})
   }
 
   handleFirstNameChange(event) {

@@ -1,5 +1,6 @@
 /* eslint-disable no-console, no-unused-vars */
 import * as Path from "path";
+import {} from 'react'
 import AuthHeader from "./AuthHeader";
 import fetch from "node-fetch";
 const rootPath = "https://gxldcptrick-demo-app.herokuapp.com/api/dnd";
@@ -91,13 +92,13 @@ const SpecialPaths = {
   Register: "User/Register",
   Login: "User/Authenticate",
 };
-export function LoginUser(user): Promise<any> {
+export function LoginUser(user:any): Promise<any> {
   return PostToResource(SpecialPaths.Login, user)
     .then(response => response.json())
     .then(json => {
       localStorage.setItem("user", JSON.stringify(json));
-      return json;
-    });
+      return json
+    })
 }
 
 function RegisterUser(user: any): Promise<any> {
@@ -110,12 +111,12 @@ const Resource = {
   Characters: "CharacterSheet",
   Maps: "Map",
   Items: "Item",
-  UserCharacter: 'Charactersheet/User',
+  UserCharacter: "Charactersheet/User",
+  UserItem: "Item/User"
 };
 export {
   Resource,
   RegisterUser,
-  LoginUser,
   GetResource,
   PostToResource,
   PutToResource,

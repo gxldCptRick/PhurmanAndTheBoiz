@@ -5,20 +5,49 @@ import {Login} from './Login'
 export class Account extends Component{
   constructor(props){
     super(props);
-    this.state={};
+    this.state={
+      loggedIn: false,
+    };
+
+    this.showPrompts = this.showPrompts.bind(this);
   }
-  render(){
-    return(
-    <div>
-      <div className='row'>
-        <div className='col-md-6'>
+
+  componentWillMount(){
+    var thisuser = JSON.parse(localStorage.getItem("user"));
+    if(thisuser === null){
+      this.setState({loggedIn: false})
+    }else{
+      this.setState({loggedIn: true})
+    }
+  }
+
+  showPrompts(){
+    if(this.state.loggedIn){
+      return(
+        <div>
           <RegisterPage/>
+          <button onClick={()=> {localStorage.removeItem("user"); this.setState({loggedIn: false})}}>Log Out</button>
         </div>
-        <div className='col-md-6'>
-          <Login/>
+      )
+    }else{
+      return(
+        <div>
+        <div className='row'>
+          <div className='col-md-6'>
+            <RegisterPage/>
+          </div>
+          <div className='col-md-6'>
+            <Login/>
+          </div>
         </div>
       </div>
-    </div>
+      )
+    }
+  }
+
+  render(){
+    return(
+      <this.showPrompts/>
     );
   }
 }
