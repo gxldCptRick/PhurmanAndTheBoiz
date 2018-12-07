@@ -91,7 +91,7 @@ const SpecialPaths = {
   Register: "User/Register",
   Login: "User/Authenticate",
 };
-export function LoginUser(user): Promise<any> {
+function LoginUser(user): Promise<any> {
   return PostToResource(SpecialPaths.Login, user)
     .then(response => response.json())
     .then(json => {
