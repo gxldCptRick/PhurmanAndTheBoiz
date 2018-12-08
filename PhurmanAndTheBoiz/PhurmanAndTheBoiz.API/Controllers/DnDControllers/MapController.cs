@@ -23,7 +23,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             var allMaps = _service.GetAllDnDMaps();
             return Ok(allMaps);
         }
-
+        
         [HttpGet("[action]/{userId}")]
         public IActionResult GetUser(string userId)
         {
@@ -31,7 +31,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             var maps = _service.GetAllMapsForUser(userId);
             if (maps is null)
             {
-                result = BadRequest($"There is no maps for user with id {userId}");
+                result = BadRequest(new { message = $"There is no maps for user with id {userId}"} );
             }
             else
             {

@@ -46,6 +46,9 @@ function PutToResource(
   }).then(function(response){
     if(response.status === 401) throw new Error("Must Login Before Attempting To Post.");
     return response;
+  }).then(function(response){
+    if(response.status === 200) return response;
+    else throw new Error("Response was not okay.")
   });
 }
 
@@ -68,6 +71,9 @@ function PostToResource(
   }).then(function(response){
     if(response.status === 401) throw new Error("Must Login Before Attempting To Post.");
     return response;
+  }).then(function(response){
+    if(response.status === 201) return response;
+    else throw new Error("Response was not created.")
   });
 }
 
@@ -85,6 +91,9 @@ function GetResource(
     headers: {
       ...AuthHeader()
     }
+  }).then(function(response){
+    if(response.status === 200) return response;
+    else throw new Error("The response was not okay.");
   });
 }
 
@@ -111,8 +120,9 @@ const Resource = {
   Characters: "CharacterSheet",
   Maps: "Map",
   Items: "Item",
-  UserCharacter: "Charactersheet/User",
-  UserItem: "Item/User"
+  UserCharacter: "Charactersheet/GetUser",
+  UserItem: "Item/GetUser",
+  UserMap: "Map/GetUser"
 };
 export {
   Resource,

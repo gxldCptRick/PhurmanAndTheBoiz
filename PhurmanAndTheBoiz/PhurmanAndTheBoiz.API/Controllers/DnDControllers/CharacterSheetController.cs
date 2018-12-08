@@ -30,7 +30,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             var characterSheets = _service.GetAllCharacterSheetsForUser(userId);
             if (characterSheets is null)
             {
-                return BadRequest($"There is no character sheets for user with id {userId}");
+                return BadRequest( new { message = $"There is no character sheets for user with id {userId}" });
             }
             return Ok(characterSheets);
         }
@@ -41,7 +41,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             var characterSheet = _service.GetCharacterSheetById(id);
             if (characterSheet is null)
             {
-                return BadRequest($"There is no character sheet wtih id of {id}");
+                return BadRequest(new { message = $"There is no character sheet with id of {id}" });
             }
 
             return Ok(characterSheet);
@@ -53,7 +53,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             IActionResult result = null;
             if (_service.GetCharacterSheetById(id) is null)
             {
-                result = BadRequest($"There is no character sheet with the id of {id}");
+                result = BadRequest(new { message = $"There is no character sheet with the id of {id}" });
             }
             else
             {
@@ -71,7 +71,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             IActionResult result = null;
             if (characterSheet is null)
             {
-                result = BadRequest("Character sheet could not be saved to database");
+                result = BadRequest(new { message = "Character sheet could not be saved to database." });
             }
             else
             { 
@@ -88,7 +88,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             IActionResult result = null;
             if (_service.GetCharacterSheetById(id) is null)
             {
-                result = BadRequest($"There is no character sheet with the id of {id}");
+                result = BadRequest(new { message = $"There is no character sheet with the id of {id}" });
             }
             else
             {
