@@ -4,8 +4,10 @@ export default class Line {
     this.points = [];
     this.id = null;
   }
-  addPoint(point: { x: number, y: number }) {
-    this.points.push(point);
+  addPoint({ x, y}) {
+    this.points.push({ x, y });
+    console.log("X: " + x);
+    console.log("Y: " + y);
   }
 
   setId(id){

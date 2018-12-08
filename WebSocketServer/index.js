@@ -49,7 +49,6 @@ function subscribeToDrawingPoint(dbConnection, client) {
     .run(dbConnection)
     .then(cursor => {
       cursor.each((err, pointRow) => {
-        console.log(pointRow);
         client.emit("drawingPointRecieved", pointRow.new_val);
         console.log("object read from database");
       });
@@ -99,27 +98,15 @@ function sendLine({dbConnection, newLine, client}){
     .then(() => console.log("Sent line to DB"));
 }
 
-function nukeMap({ dbConnection }){
-  console.log("NUKED RETHINK DB LINES")
-  return r
-    .table("lines")
-    .delete()
-    .run(dbConnection);
+function nukeMap({ dbConnection, client }){
+  console.log("NUKED RETHINK DB LINES");
+  console.log("NUKED RETHINK GENERATED MAP");
+  
+  return r.do(
+    r.table("lines").delete(),
+    r.table("generated_maps").delete() 
+  ).run(dbConnection);
 }
-
-function getAllLines({ dbConnection, client }){
-  return r.table("lines")
-  .run(dbConnection)
-  .then(cursor => {
-    cursor.each((err, line) => {
-      client.emit("linesFromDB", line);
-    })
-  });
-}
-
-
-
-
 
 function sendGeneratedMap({dbConnection, client, commands}) {
   var date = new Date();
@@ -139,7 +126,6 @@ function subscribeToGeneratedMapsCommands({ dbConnection, client }) {
   .then(cursor => {
     cursor.each((err, generatedMap) => {
       console.log("Emitting generated map");
-      console.log(generatedMap);
       client.emit("generatedMapRecieved", generatedMap.new_val);
     })
   })
@@ -181,12 +167,8 @@ r.connect({
     });
 
     client.on("nukeMap", () => {
-      nukeMap({ dbConnection });
-    })
-
-    client.on("getAllLines", () => {
-      getAllLines({ dbConnection, client });
-    })
+      nukeMap({ dbConnection, client });
+    });
 
     client.on("sendGeneratedMap", ({ commands }) => {
       sendGeneratedMap({dbConnection, client, commands})
@@ -194,8 +176,7 @@ r.connect({
 
     client.on("subscribeToGeneratedMapCommands", () => {
       subscribeToGeneratedMapsCommands({ dbConnection, client });
-    })
-
+    });
   });
 });
 

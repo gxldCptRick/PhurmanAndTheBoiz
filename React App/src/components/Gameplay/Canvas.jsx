@@ -17,6 +17,9 @@ class Canvas extends Component {
     this.lastIndexOfPointDrawn = 0;
 
     this.lines = [];
+    this.mapCommands = [];
+    this.saveLine = new Line();
+    this.saveLineIndex = 0;
     
 
     RethinkAPI.subscribeToMessageFromServer((uuid) => {
@@ -27,22 +30,28 @@ class Canvas extends Component {
       if (this.firstTimeFromServer){
         this.currentLineFromServer = line.lineId;
         this.firstTimeFromServer = false;
+        this.saveLine.setId(line.lineId);
+        this.lines.push(this.saveLine);
       }
       this.drawLine(line);
+      console.log("--------------Line Recieved--------------------");
       console.log(line);
+      console.log("----------------------------------");
     })
 
     RethinkAPI.generateUUID();
 
-    // RethinkAPI.subscribeToLinesFromDB((line) => {
-    //   console.log("Is this shit ever getting called");
-      
-      
-    //   this.state.lines.push(line)
-    // })
-
     RethinkAPI.subscribeToGeneratedMapCommands((generatedMap) => {
-      this.drawGeneratedMap(generatedMap);
+      this.mapCommands = [];
+      //this.clearDrawing();
+
+      if (generatedMap != null){
+        this.drawGeneratedMap(generatedMap);      
+        this.mapCommands = generatedMap.generatedMap;
+      }
+      else {
+        this.clearDrawing();
+      }
     })
   }
 
@@ -74,19 +83,21 @@ class Canvas extends Component {
         ctx.stroke();
         break;
 
+        case "rect":
+        i++;
+        command = generatedMap.generatedMap[i];
+        ctx.rect(command[0], command[1], command[2], command[3]);
+        break;
+
         default:
         break;
       }
       
     }
-    var replayContext =  new CanvasRecorder.WatchedContext(this.drawingCanvas.getContext("2d"));
-    replayContext.commands = generatedMap.generatedMap;
-
-    
-    // replayContext.replay();
   }
 
   drawLine(line){
+    console.log(line);
     if (line === null){
       this.clearDrawing();
       return;
@@ -98,22 +109,31 @@ class Canvas extends Component {
 
     if (!this.isDrawing){
 
+      
       if (line.lineId !== this.currentLineFromServer){
         this.currentLineFromServer = line.lineId;
+        this.saveLine = new Line();
+        this.saveLine.setId(line.lindId);
         this.lastIndexOfPointDrawn = 0;
+        this.saveLineIndex++;
+        this.lines.push(this.saveLine);
       }
 
       let index = this.lastIndexOfPointDrawn;
+      let lineIndex = this.saveLineIndex;
 
       let arrayLength = line.points.length;      
       let ctx = this.drawingCanvas.getContext("2d");
       ctx.fillStyle = "#fff";
       ctx.beginPath();  
-      ctx.lineWidth = 1;    
+      ctx.lineWidth = 1.5;
+
       ctx.moveTo(line.points[index].x, line.points[index].y);
 
       for(let i = (index + 1); i < arrayLength; i++){
         console.log("Drawing from server");
+        console.log(this.lines);
+        this.lines[lineIndex].addPoint({ x: line.points[i].x, y: line.points[i].y })
         ctx.lineTo(line.points[i].x, line.points[i].y);
         ctx.stroke();
       }
@@ -634,13 +654,13 @@ class Canvas extends Component {
   }
 
   generateMap() {
-    //this.clearDrawing();
-    // let ctx = this.drawingCanvas.getContext("2d");
-    // ctx.beginPath();
-    // ctx.rect(25, 25, 850, 450);
-    // ctx.stroke();
+    RethinkAPI.nukeMap();
 
     recordContext = new CanvasRecorder.WatchedContext(this.drawingCanvas.getContext("2d"));
+
+    recordContext.beginPath();
+    recordContext.rect(25, 25, 850, 450);
+    recordContext.stroke();
     var roomCount = Math.floor(Math.random() * 5) + 3;
     var rooms = [];
     var i;
@@ -656,6 +676,7 @@ class Canvas extends Component {
   }
 
   clearDrawing() {
+    console.log("Clear Called");
       let ctx = this.drawingCanvas.getContext("2d");
       ctx.clearRect(0, 0, this.drawingCanvas.width, this.drawingCanvas.height);
   }
@@ -706,25 +727,6 @@ class Canvas extends Component {
   }
 
   saveToMongo(){
-    // this.setState({
-    //   lines: []
-    // });
-
-    // RethinkAPI.getAllLines();
-    // var nameOfMap = this.nameOfMap.value;
-    // setTimeout(() => {
-    //   var mapLines = this.state.lines;
-    //   var userName = this.currentUser.user.username;
-
-    //   BoizAPI.PostToResource("map", { MapName: nameOfMap,
-    //                                   UserId: 1234,
-    //                                   CreatedBy: userName,
-    //                                   Lines: mapLines})
-    //   .then((res) => {
-    //     console.log(res);
-    //   });
-    //   console.log("post to mongo");
-    // }, 1500)
   }
 
   render() {
@@ -746,7 +748,7 @@ class Canvas extends Component {
         <button type="button" onClick={_ => this.generateMap()}>
           Generate Map
         </button>
-        <button type="button" onClick={_ => RethinkAPI.nukeMap()}>
+        <button type="button" onClick={_ => { RethinkAPI.nukeMap(); this.clearDrawing()} }>
           Clear
         </button>
         <button type="button" onClick={_ => this.saveToMongo()}>
