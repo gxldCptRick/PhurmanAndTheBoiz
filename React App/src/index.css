@@ -51,7 +51,35 @@
     font-size: 9px;
 }
 
-.flex-space-between{
-    display: flex;
-    justify-content: space-between;
+.leftOfPage{
+    height:500px;
+    width: 400px;
+    float: left;
+    position: fixed 10px;
+    border: 5px groove #50535b;
+    background-color:#cc2c1e;
+    box-shadow: 5px 8px;
+}
+.rightOfPage{
+    border: 5px groove #50535b;
+    background-color:#cc2c1e;
+    box-shadow: 5px 8px;
+}
+
+.loginBox{
+    height:200px;
+    width: 200px;
+    float: left;
+    position: fixed 10px;
+    border: 5px groove black ;
+    background-color: #50535b;
+    box-shadow: 5px 8px;
+}
+
+.smallButton{
+    height: 100px;
+}
+
+.smallTweak{
+   width: inherit;
 }

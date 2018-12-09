@@ -4,9 +4,12 @@ import {Login} from './Login'
 import { Route, Link } from 'react-router-dom'
 
 function LoginDisplay(){
-  return (<div>
-    <Login/>
-    <Link to="/Login/SignUp">Register</Link>
+  return (
+    <div className='rightOfPage'>
+      <div>
+        <Login/>
+        <Link to="/Login/SignUp">Register</Link>
+      </div>
     </div>);
 }
 
