@@ -34,11 +34,14 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
         {
             var users = GetUserCollection();
             var user = users.Find(u => u.Id == userId).FirstOrDefault();
-            user.Roles =  user.Roles ?? new List<string>();
-            if (user != null && !user.Roles.Contains(role))
+            if (user != null)
             {
-                user.Roles.Add(role);
-                users.ReplaceOne((u) => u.Username == user.Username, user);
+                user.Roles = user.Roles ?? new List<string>();
+                if (!user.Roles.Contains(role))
+                {
+                    user.Roles.Add(role);
+                    users.ReplaceOne((u) => u.Username == user.Username, user);
+                }
             }
         }
 
@@ -60,6 +63,7 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
             ValidateUserName(user.Username);
             var users = GetUserCollection();
             users.InsertOne(dbUser);
+            dbUser = users.Find(u => u.Username == user.Username).Single();
             return Mapper.Map<User>(dbUser);
         }
 
@@ -115,6 +119,21 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
             PasswordHasher.CreatePasswordHash(password, out var passwordHash, out var passwordSalt);
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
+        }
+
+        public void RemoveUserFromRoll(string userId, string role)
+        {
+            var users = GetUserCollection();
+            var user = users.Find(u => u.Id == userId).FirstOrDefault();
+            if (user != null)
+            {
+                user.Roles = user.Roles ?? new List<string>();
+                if (user.Roles.Contains(role))
+                {
+                    user.Roles.Remove(role);
+                    users.ReplaceOne((u) => u.Username == user.Username, user);
+                }
+            }
         }
     }
 }
