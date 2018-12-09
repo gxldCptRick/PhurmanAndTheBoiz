@@ -1,6 +1,6 @@
 import React from "react";
 import CharacterSheet from "../Sheet/CharacterSheet";
-import {RenderCharacterList, RenderItemList,options, compare, RenderComboForChars} from '../../helpers/ProfileHelper'
+import {RenderCharacterList, RenderItemList,options, RenderComboForChars} from '../../helpers/ProfileHelper'
 import { GetResource,Resource } from "../../helpers/ApiService";
 import { ItemForm } from "../Sheet/NewItemForm";
 import { Redirect } from "react-router";
