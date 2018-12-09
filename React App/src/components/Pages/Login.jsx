@@ -28,7 +28,6 @@ export class Login extends Component {
         this.setState({error: json, toNavigate: false});
       })
     }else {
-      this.setState({toNavigate: true})
       return response.json();
     }
   }
@@ -41,6 +40,8 @@ export class Login extends Component {
    }
   LoginUser(creds)
   .then(this.handleResponse())
+  .then((json) => localStorage.setItem("user", JSON.stringify(json)))
+  .then(_ => this.setState({toNavigate: true}))
   .catch(err => console.log(err));
  }
 
