@@ -60,7 +60,7 @@ namespace PhurmaAndTheBoiz.API.Tests.Controllers
         public void RegisterReturnsOkayWithGoodCredentials()
         {
             var dependency = new Mock<IUserManager>();
-            dependency.Setup(obj => obj.CreateUser(It.IsNotNull<User>(), It.IsNotNull<string>()));
+            dependency.Setup(obj => obj.CreateUser(It.IsNotNull<User>(), It.IsNotNull<string>())).Returns(new User());
             var controller = new UserController(dependency.Object);
             var result = controller.Register(new User() { Password = "null" });
             Assert.IsInstanceOfType(result, typeof(ObjectResult));
