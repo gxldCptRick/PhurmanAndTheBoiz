@@ -96,10 +96,8 @@ class Canvas extends Component {
       ctx.fillStyle = "#fff";
       ctx.lineTo(x, y);
       ctx.stroke();
-
-      let lineId = this.currentLineId;
-      this.state.lines[index].points.push({ x, y });
-      console.log(lineId);
+      let lineId = this.currentLine.id;
+      this.state.currentLine.points.push({ x, y });
       RethinkAPI.sendPointToDraw({ x, y, lineId });
     }
   }
