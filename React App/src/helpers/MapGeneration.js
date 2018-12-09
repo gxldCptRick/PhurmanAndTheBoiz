@@ -1,9 +1,8 @@
-import Line from "../models/Line";
 import Map from "../models/Map";
 const offset = 50;
 const sides = { top: 0, bottom: 2, right: 1, left: 3 };
 const minDistanceFromSide = 25;
-function IsRectangleInsideOtherRectangle(rect1, rect2) {
+function isRectangleInsideOtherRectangle(rect1, rect2) {
   return (
     rect2.left >= rect1.left &&
     rect2.right <= rect1.right &&
@@ -13,21 +12,20 @@ function IsRectangleInsideOtherRectangle(rect1, rect2) {
 }
 
 function isRectangleIntersectingWithRoom(r1, r2) {
-  return !(
-    r2.left > r1.right ||
-    r2.right < r1.left ||
-    r2.top > r1.bottom ||
-    r2.bottom < r1.top
+  return (
+    r1.left <= r2.right &&
+    r1.right >= r2.left &&
+    r1.top <= r2.bottom &&
+    r1.bottom >= r2.top
   );
 }
 
-function willOverlap(room, rooms) {
+function isOverlapping(room, rooms) {
   let r2 = room;
   let isOverlapping = false;
   rooms.some(function(r1) {
-    let isContained =
-      IsRectangleInsideOtherRectangle(r1, r2) ||
-      IsRectangleInsideOtherRectangle(r2, r1);
+    console.log(r1);
+    let isContained = isRectangleInsideOtherRectangle(r1, r2) || isRectangleInsideOtherRectangle(r2, r1);
     if (isRectangleIntersectingWithRoom(r1, r2) || isContained) {
       isOverlapping = true;
     }
@@ -187,7 +185,7 @@ function generateDoorBasedOnSize({
 
 function drawNewestRoom(rooms, roomCount, currentRoom) {
   let newRoom = generateNewRoom();
-  while (willOverlap(newRoom, rooms)) {
+  while (isOverlapping(newRoom, rooms)) {
     newRoom = generateNewRoom();
   }
   let maxDoorCount = calculateMaxDoorCount(newRoom);

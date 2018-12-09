@@ -166,6 +166,8 @@ class Canvas extends Component {
     ctx.fillStyle = "#fff";
     ctx.beginPath();
     ctx.moveTo(point.x, point.y);
+    this.lines.push(newLine);
+    this.currentLine =  newLine;
     RethinkAPI.sendLine({ newLine });
     //console.log("Sent line " + newLine.id);
   }
@@ -193,12 +195,13 @@ class Canvas extends Component {
       ctx.lineTo(x, y);
       ctx.stroke();
       let lineId = this.currentLine.id;
+      this.currentLine.points.push({ x, y });
       RethinkAPI.sendPointToDraw({ x, y, lineId });
     }
   }
 
   saveToMongo(){
-    
+
   }
 
   render() {
