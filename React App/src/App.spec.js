@@ -3,6 +3,8 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import { MemoryRouter } from "react-router-dom";
 import { JSDOM } from "jsdom";
+import { LocalStorage } from "node-localstorage";
+global.localStorage = new LocalStorage("./yes");
 
 const { window } = new JSDOM();
 const { document } = window;
