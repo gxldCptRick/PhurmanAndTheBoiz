@@ -129,6 +129,7 @@ UserItems(){
   cSelect(event){
     this.setState({resourceIndex: event.target.value})
     this.setState({option: options.EditCharacter})
+    this.setState({characterItemData: this.state.characterData[this.state.resourceIndex].inventory})
   }
 
   iSelect(event){
