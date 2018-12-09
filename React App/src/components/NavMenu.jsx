@@ -3,7 +3,10 @@ import { Link } from "react-router-dom";
 import { Glyphicon, Nav, Navbar, NavItem } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import "./NavMenu.css";
-
+function GetStatus(){
+  if(localStorage.getItem("user")) return "Logout";
+  return "Login";
+}
 export class NavMenu extends Component {
   displayName = NavMenu.name;
 
@@ -23,15 +26,21 @@ export class NavMenu extends Component {
                 <Glyphicon glyph="home" /> Home
               </NavItem>
             </LinkContainer>
-            <LinkContainer to={"/RegisterPage"}>
+            <LinkContainer to={"/Login/SignIn"}>
               <NavItem>
-                <Glyphicon glyph="bookmark" /> Register
+                <Glyphicon glyph="bookmark" /> {GetStatus()}
               </NavItem>
             </LinkContainer>
-            <LinkContainer to={"/game"}>
+            <LinkContainer to={"/Game"}>
               <NavItem>
                 <Glyphicon glyph="heart" />
                 Game
+              </NavItem>
+            </LinkContainer>
+            <LinkContainer to={"/Profile"}>
+              <NavItem>
+                <Glyphicon glyph="user" />
+                Profile Page
               </NavItem>
             </LinkContainer>
           </Nav>

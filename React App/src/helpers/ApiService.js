@@ -1,24 +1,36 @@
+/* eslint-disable no-console, no-unused-vars */
 import * as Path from "path";
+import {} from 'react'
 import AuthHeader from "./AuthHeader";
-const rootPath = "http://gxldcptrick-demo-app.heroku/api/dnd";
+import fetch from "node-fetch";
+const rootPath = "https://gxldcptrick-demo-app.herokuapp.com/api/dnd";
 
-function DeleteResource(resource: string, id:string){
-    return fetch(Path.join(rootPath, resource, id), {
-        method: "DELETE",
-        mode: "cors",
-        cache: "no-cache",
-        redirect: "follow",
-        credentials: "include",
-        body: JSON.stringify(data),
-        headers:{
-           "Content-Type": "application/json; charset=utf-8",
-           ...AuthHeader()
-        }
-    })
+
+function DeleteResource(resourceName: string, id: string = "") {
+  let path = `${rootPath}/${resourceName}/${id}`;
+  return fetch(path, {
+    method: "DELETE",
+    mode: "cors",
+    cache: "no-cache",
+    redirect: "follow",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      ...AuthHeader()
+    }
+  }).then(response => {return response})
 }
 
-function PutToResource(resource: string, data): Promise<Response> {
-  return fetch(Path.join(rootPath, resource), {
+function PutToResource(
+  resourceName: string,
+  id: string = "",
+  data: any
+): Promise<Response> {
+  if (data === undefined || data === null) {
+    throw new TypeError("Cannot Put an undefined object");
+  }
+  let path = `${rootPath}/${resourceName}/${id}`;
+  return fetch(path, {
     method: "PUT",
     mode: "cors",
     cache: "no-cache",
@@ -29,11 +41,16 @@ function PutToResource(resource: string, data): Promise<Response> {
       "Content-Type": "application/json; charset=utf-8",
       ...AuthHeader()
     }
-  });
+  }).then(response => {return response})
 }
 
-function PostToResource(resource: string, data): Promise<Response> {
-  return fetch(Path.join(rootPath, resource), {
+function PostToResource(
+  resourceName: string,
+  data: any
+): Promise<Response> {
+  let path = `${rootPath}/${resourceName}`;
+  console.log('this is exaclty how its sent',JSON.stringify(data))
+  return fetch(path, {
     method: "POST",
     mode: "cors",
     cache: "no-cache",
@@ -44,11 +61,18 @@ function PostToResource(resource: string, data): Promise<Response> {
       "Content-Type": "application/json; charset=utf-8",
       ...AuthHeader()
     }
-  });
+  }).then(function(response){
+    if(response.status === 401) throw new Error("Must Login Before Attempting To Post.");
+    return response;
+  })
 }
 
-function GetResource(resourceName: string, id = "": string): Promise<Response> {
-  fetch(Path.join(rootPath, resourceName), {
+function GetResource(
+  resourceName: string,
+  id: string = ""
+): Promise<Response> {
+  let path = `${rootPath}/${resourceName}/${id}`;
+  return fetch(path, {
     method: "GET",
     mode: "cors",
     redirect: "follow",
@@ -57,43 +81,39 @@ function GetResource(resourceName: string, id = "": string): Promise<Response> {
     headers: {
       ...AuthHeader()
     }
-  });
+  }).then(response => {return response})
 }
 
-export function GetAllTheUsers(): Promise<void | Response> {
-  return GetResource("User").catch(err => console.warn(err));
+const SpecialPaths = {
+  Register: "User/Register",
+  Login: "User/Authenticate",
+};
+export function LoginUser(user:any): Promise<any> {
+  return PostToResource(SpecialPaths.Login, user)
+    .then(json => {
+      localStorage.setItem("user", JSON.stringify(json));
+      return json
+    })
 }
 
-export function GetSpecificUser(id: number): Promise<void | Response> {
-  return GetResource(`User`, id.toString()).catch(err => console.warn(err));
+function RegisterUser(user: any): Promise<any> {
+  return PostToResource(SpecialPaths.Register, user)
 }
 
-export function Login(login: {
-  userName: string,
-  password: string
-}): void {
-  PostToResource("User/Authenticate", login)
-  .then(function(response){
-    if(response.status === 200){
-      return response.json();
-    }else {
-      throw new TypeError(response.json());
-    }
-  })
-  .then(function(user){
-    localStorage.setItem("user", JSON.stringify(user));
-  })
-  .catch(function(err){
-    console.log(err);
-    throw err;
-  });
-}
-
-export function RegisterUser(newUser): Promise<void | Response> {
-  return PostToResource("User/Register", newUser).catch(err => console.warn(err));
-}
-
-
-export function DeleteUser(id): Promise<void | Response>{
-
+const Resource = {
+  Users: "User",
+  Characters: "CharacterSheet",
+  Maps: "Map",
+  Items: "Item",
+  UserCharacter: "Charactersheet/GetUser",
+  UserItem: "Item/GetUser",
+  UserMap: "Map/GetUser"
+};
+export {
+  Resource,
+  RegisterUser,
+  GetResource,
+  PostToResource,
+  PutToResource,
+  DeleteResource
 }

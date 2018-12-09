@@ -1,19 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PhurmanAndTheBoiz.DAL.Models.JsonData;
 using PhurmanAndTheBoiz.DAL.Services;
 
 namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
 {
+    [Authorize]
     [Route("api/DnD/[controller]")]
     [ApiController]
     public class MapController : ControllerBase
     {
-        private IDnDService _service;
+        private IMapService _service;
         public MapController(IDnDService service)
         {
             _service = service;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Get()
         {
@@ -21,14 +24,14 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             return Ok(allMaps);
         }
 
-        [HttpGet("user/{userId}")]
-        public IActionResult Get(int userId)
+        [HttpGet("[action]/{userId}")]
+        public IActionResult GetUser(string userId)
         {
             IActionResult result = null;
             var maps = _service.GetAllMapsForUser(userId);
             if (maps is null)
             {
-                result = BadRequest($"There is no maps for user with id {userId}");
+                result = BadRequest(new { message = $"There is no maps for user with id {userId}" });
             }
             else
             {
@@ -45,7 +48,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             var map = _service.GetMapById(id);
             if (map is null)
             {
-                result = BadRequest($"There was no Map by the id {id}");
+                result = BadRequest(new { message = $"There was no Map by the id {id}" });
             }
             else
             {
@@ -59,7 +62,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
         public IActionResult Post([FromBody] DnDMap value)
         {
             value.MapId = null;
-            _service.SaveMap(value);
+            value = _service.SaveMap(value);
             return Ok(value);
         }
 
@@ -71,7 +74,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             var map = _service.GetMapById(id);
             if (map is null)
             {
-                result = BadRequest($"There was no by by the id {id}");
+                result = BadRequest(new { message = $"There was no by by the id {id}" });
             }
             else
             {
@@ -88,7 +91,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             var map = _service.GetMapById(id);
             if (map is null)
             {
-                result = BadRequest($"There was no by by the id {id}");
+                result = BadRequest(new { message = $"There was no by by the id {id}" });
             }
             else
             {

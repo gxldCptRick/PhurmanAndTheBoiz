@@ -29,6 +29,7 @@
     padding: 3px;
     background: grey;
     margin-bottom: 3px;
+    color: #ffffff;
 }
 
 .user-typing {
@@ -40,3 +41,15 @@
 .user-typing > p {
     margin: 0;
 }
+<<<<<<< HEAD
+=======
+
+.message-small {
+    font-size: 9px;
+}
+
+.flex-space-between{
+    display: flex;
+    justify-content: space-between;
+}
+>>>>>>> cb880dc0642f60c83b04fafab2856b60f0fb05c7

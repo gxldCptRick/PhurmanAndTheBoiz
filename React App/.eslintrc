@@ -1,0 +1,40 @@
+{
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true,
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "settings": {
+    "react": {
+      "createClass": "createReactClass",
+      "pragma": "React",
+      "version": "latest",
+      "flowVersion": "latest"
+    }
+  },
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true,
+    "mocha": true
+  },
+  "parser": "babel-eslint",
+  "rules": {
+    "valid-jsdoc": 2,
+    "react/jsx-uses-react": 1,
+    "react/jsx-no-undef": 2,
+    "react/jsx-wrap-multilines": 2,
+    "react/no-string-refs": 0,
+    "react/no-unknown-property": "warn" ,
+    "no-console": "warn",
+    "react/prop-types": 0,
+    "no-unused-vars": "off",
+    "react/no-find-dom-node": "off",
+    "react/no-unescaped-entities": "off"
+  },
+  "plugins": ["import", "react"]
+}

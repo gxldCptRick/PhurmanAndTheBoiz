@@ -1,19 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PhurmanAndTheBoiz.DAL.Models.JsonData;
 using PhurmanAndTheBoiz.DAL.Services;
 
 namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
 {
+    [Authorize]
     [Route("api/DnD/[controller]")]
     [ApiController]
     public class CharacterSheetController : ControllerBase
     {
-        private IDnDService _service;
+        private ICharacterSheetService _service;
         public CharacterSheetController(IDnDService service)
         {
             _service = service;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Get()
         {
@@ -21,13 +24,13 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             return Ok(allCharacterSheets);
         }
 
-        [HttpGet("user/{userId}")]
-        public IActionResult Get(int userId)
+        [HttpGet("[action]/{userId}")]
+        public IActionResult GetUser(string userId)
         {
             var characterSheets = _service.GetAllCharacterSheetsForUser(userId);
             if (characterSheets is null)
             {
-                return BadRequest($"There is no character sheets for user with id {userId}");
+                return BadRequest( new { message = $"There is no character sheets for user with id {userId}" });
             }
             return Ok(characterSheets);
         }
@@ -38,7 +41,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             var characterSheet = _service.GetCharacterSheetById(id);
             if (characterSheet is null)
             {
-                return BadRequest($"There is no character sheet wtih id of {id}");
+                return BadRequest(new { message = $"There is no character sheet with id of {id}" });
             }
 
             return Ok(characterSheet);
@@ -50,7 +53,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             IActionResult result = null;
             if (_service.GetCharacterSheetById(id) is null)
             {
-                result = BadRequest($"There is no character sheet with the id of {id}");
+                result = BadRequest(new { message = $"There is no character sheet with the id of {id}" });
             }
             else
             {
@@ -68,11 +71,11 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             IActionResult result = null;
             if (characterSheet is null)
             {
-                result = BadRequest("Character sheet could not be saved to database");
+                result = BadRequest(new { message = "Character sheet could not be saved to database." });
             }
             else
             { 
-                _service.SaveCharacter(characterSheet);
+               characterSheet = _service.SaveCharacter(characterSheet);
                 result = Ok(characterSheet);
             }
 
@@ -85,11 +88,11 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             IActionResult result = null;
             if (_service.GetCharacterSheetById(id) is null)
             {
-                result = BadRequest($"There is no character sheet with the id of {id}");
+                result = BadRequest(new { message = $"There is no character sheet with the id of {id}" });
             }
             else
             {
-                _service.DeleteItem(id);
+                _service.DeleteCharacter(id);
                 result = Ok();
             }
             return result;
