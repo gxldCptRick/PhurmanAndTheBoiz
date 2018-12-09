@@ -1,4 +1,5 @@
 import Line from "../models/Line";
+import Map from "../models/Map";
 const offset = 50;
 const sides = { top: 0, bottom: 2, right: 1, left: 3 };
 const minDistanceFromSide = 25;
@@ -59,6 +60,8 @@ function generateNewRoom() {
   let roomHeight = generateSize(roomXPoint, 850);
   let roomWidth = generateSize(roomYPoint, 450);
   return {
+    x: roomXPoint,
+    y: roomYPoint,
     width: roomWidth,
     height: roomHeight,
     left: roomXPoint,
@@ -289,9 +292,7 @@ function drawNewestRoom(rooms, roomCount, currentRoom) {
   return returnRoom;
 }
 
-function connectRooms(rooms) {
-
-}
+function connectRooms(rooms) {}
 
 export function generateMap() {
   let roomCount = Math.floor(Math.random() * 5) + 3;
@@ -301,5 +302,5 @@ export function generateMap() {
     rooms.push(newRoom);
   }
   connectRooms(rooms);
-  return { rooms };
+  return new Map(rooms);
 }

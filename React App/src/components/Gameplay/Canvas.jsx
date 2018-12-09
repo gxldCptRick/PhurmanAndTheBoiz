@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Line from "../../models/Line";
 import * as RethinkAPI from "../../rethinkAPI";
-//import * as MapGeneration from '../../helpers/MapGeneration';
+import * as MapGeneration from '../../helpers/MapGeneration';
 class Canvas extends Component {
   state = {
     lines: []
@@ -47,15 +47,9 @@ class Canvas extends Component {
     ctx.beginPath();
     ctx.rect(25, 25, 850, 450);
     ctx.stroke();
-    let roomCount = Math.floor(Math.random() * 5) + 3;
-    let rooms = [];
-    for (let i = 0; i < roomCount; i++) {
-      let totalDoorCount = 0;
-      let newRoom = this.drawNewestRoom(rooms, roomCount, i, totalDoorCount);
-      rooms.push(newRoom);
-      totalDoorCount += newRoom.doorCount;
-    }
-    this.connectRooms(rooms);
+    let map = MapGeneration.generateMap();
+    map.draw(ctx);
+   
   }
 
   clearDrawing() {
@@ -105,29 +99,25 @@ class Canvas extends Component {
   render() {
     return (
       <div>
-        <div className='CanvasEdit'>
-          <canvas
-            ref={c => (this.drawingCanvas = c)}
-            onMouseMove={event => this.drawingOnTheCanvas(event)}
-            onMouseDown={event => this.startDrawing(event)}
-            onMouseUp={event => this.finishDrawing(event)}
-            onMouseLeave={event => this.finishDrawing(event)}
-            style={this.props.style}
-            width="900px"
-            height="500px"
-          />
-          <div className='CanvasButton'>
-          <button type="button" onClick={_ => this.generateMap()}>
-            Generate Map
-          </button>
-          <button type="button" onClick={_ => RethinkAPI.nukeMap()}>
-            Clear
-          </button>
-          <button type="button" onClick={_ => this.reDrawLines()}>
-            ReDraw
-          </button>
-          </div>
-        </div>
+        <canvas
+          ref={canvas => (this.drawingCanvas = canvas)}
+          onMouseMove={event => this.drawingOnTheCanvas(event)}
+          onMouseDown={event => this.startDrawing(event)}
+          onMouseUp={event => this.finishDrawing(event)}
+          onMouseLeave={event => this.finishDrawing(event)}
+          style={this.props.style}
+          width="900px"
+          height="500px"
+        />
+        <button type="button" onClick={_ => this.generateMap()}>
+          Generate Map
+        </button>
+        <button type="button" onClick={_ => RethinkAPI.nukeMap()}>
+          Clear
+        </button>
+        <button type="button" onClick={_ => this.reDrawLines()}>
+          ReDraw
+        </button>
       </div>
     );
   }
