@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import Line from "../../models/Line";
-import * as RethinkAPI from '../../rethinkAPI';
-//import * as BoizAPI from '../../helpers/ApiService';
-import * as CanvasRecorder from './CanvasContextRecorder'
-//import * as MapGeneration from '../../helpers/MapGeneration';
+import * as RethinkAPI from "../../rethinkAPI";
+import * as MapGeneration from '../../helpers/MapGeneration';
+import * as CanvasRecorder from './CanvasContextRecorder';
 
 var recordContext = null;
+
 class Canvas extends Component {
   constructor(props) {
     super(props);
@@ -143,8 +143,8 @@ class Canvas extends Component {
     recordContext.rect(25, 25, 850, 450);
     recordContext.stroke();
 
-    //let map = MapGeneration.generationMap();
-    //map.draw(recordContext);
+    let map = MapGeneration.generateMap();
+    map.draw(recordContext);
 
     this.connectRooms();
     var commands = recordContext.commands;
@@ -198,6 +198,7 @@ class Canvas extends Component {
   }
 
   saveToMongo(){
+    
   }
 
   render() {
@@ -221,8 +222,8 @@ class Canvas extends Component {
             <button type="button" onClick={_ => RethinkAPI.nukeMap()}>
               Clear
             </button>
-            <button type="button" onClick={_ => { RethinkAPI.nukeMap(); this.clearDrawing()} }>
-            Clear
+            <button type="button" onClick={_ => this.saveToMongo() }>
+              Save Map
             </button>
           </div>
         </div>

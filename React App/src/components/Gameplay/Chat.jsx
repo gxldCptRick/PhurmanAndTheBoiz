@@ -8,13 +8,13 @@ import { sendMessage, subscribeToChatMessages,
 import * as ReactDOM from 'react-dom';
 
 var typingTimer;
-var listOfNames = ["Adalberto", "Leeanna", "Rico", "Barbar", "Claudette", "Tanja", "Kelly", "Gerry", "Kerri", "Chau"];
 var doneTypingInterval = 500;
 var emmitedCurrentlyTypingEvent = false;
 var dateFormatOptions = { hour: 'numeric', minute: 'numeric', hour12: true };
+var currentUser = JSON.parse(localStorage.getItem("user"));
 export default class Chat extends React.Component{
     state = {
-        user: listOfNames[Math.floor(Math.random()*listOfNames.length)],
+        user: currentUser.user.username,
         chatMessages: [],
         message: '',
         usersThatAreTyping: []
@@ -80,7 +80,6 @@ export default class Chat extends React.Component{
     }
 
     componentDidMount(){
-        console.log("chat mounted");
         subscribeToUserTyping(({ user }) => {
             console.log(this.state.usersThatAreTyping);
             console.log(`user that is typing: ${user}`);
