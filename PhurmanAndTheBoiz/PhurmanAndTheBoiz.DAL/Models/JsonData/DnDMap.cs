@@ -18,12 +18,15 @@ namespace PhurmanAndTheBoiz.DAL.Models.JsonData
         public List<string> Tags { get; set; }
 
         [JsonProperty("userId", NullValueHandling = NullValueHandling.Ignore)]
-        public int? UserId { get; set; }
+        public string UserId { get; set; }
 
         [JsonProperty("createdBy", NullValueHandling = NullValueHandling.Ignore)]
         public string CreatedBy { get; set; }
 
         [JsonProperty("lines", NullValueHandling = NullValueHandling.Ignore)]
         public List<Line> Lines { get; set; }
+
+        [JsonProperty("mapCommands", NullValueHandling = NullValueHandling.Ignore)]
+        public List<MapCommand> MapCommands { get; set; }
     }
 }

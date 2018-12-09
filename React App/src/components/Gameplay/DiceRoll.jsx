@@ -20,19 +20,21 @@ export class DiceRoll extends Component {
 
   render() {
     return (
-      <div className="bod">
-        <h2>
-          Rolls:
-          {this.state.allTheDiceRolls.map(element => ` [${element}] `)}
-        </h2>
-        <h3>{this.state.totalAmount}</h3>
-        <input
-          value={this.state.roll}
-          onSubmit={this.handleStuff}
-          type="text"
-          onChange={event => this.setState({ roll: event.target.value })}
-        />
-        <button onClick={this.handleRoll}>Roll</button>
+      <div>
+        <div className='navItems'>
+          <h2>
+            Rolls:
+            {this.state.allTheDiceRolls.map(element => ` [${element}] `)}
+          </h2>
+          <h3>{this.state.totalAmount}</h3>
+          <input
+            value={this.state.roll}
+            onSubmit={this.handleStuff}
+            type="text"
+            onChange={event => this.setState({ roll: event.target.value })}
+          />
+          <button onClick={this.handleRoll}>Roll</button>
+        </div>
       </div>
     );
   }

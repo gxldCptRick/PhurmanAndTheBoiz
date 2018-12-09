@@ -2,6 +2,7 @@
 using PhurmanAndTheBoiz.DAL.Models.JsonData;
 using PhurmanAndTheBoiz.DAL.Services;
 using PhurmanAndTheBoiz.DAL.Services.Implementations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,10 +16,11 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
         {
             var service = CreateDnDService();
             var map = GenerateMap();
-            var initial = service.GetAllMapsForUser(1).Count();
+            map.UserId = "1";
+            map.MapName = Guid.NewGuid().ToString();
             service.SaveMap(map);
-            var after = service.GetAllMapsForUser(1).Count();
-            Assert.IsTrue(initial < after);
+            var after = service.GetAllMapsForUser("1").Any();
+            Assert.IsTrue(after);
         }
 
         [TestMethod]
@@ -27,13 +29,13 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
             //arrange
             var service = CreateDnDService();
             var addedmap = GenerateMap();
-            addedmap.UserId = 2;
+            addedmap.UserId = "2";
 
             //act
             service.SaveMap(addedmap);
-            var map = service.GetAllMapsForUser(2).FirstOrDefault();
+            var map = service.GetAllMapsForUser("2").FirstOrDefault();
             service.DeleteMap(map?.MapId);
-            var deletedMap = service.GetAllMapsForUser(2).FirstOrDefault();
+            var deletedMap = service.GetAllMapsForUser("2").FirstOrDefault();
 
             //assert
             Assert.IsNull(deletedMap);
@@ -43,19 +45,19 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
         public void UpdatingMapUpdatesInTheDatabase()
         {
             var service = CreateDnDService();
-            if (service.GetAllMapsForUser(3).Count() == 0)
+            if (!service.GetAllMapsForUser("3").Any())
             {
                 var mapObj = GenerateMap();
-                mapObj.UserId = 3;
+                mapObj.UserId = "3";
                 service.SaveMap(mapObj);
             }
-            var map = service.GetAllMapsForUser(3).FirstOrDefault();
+            var map = service.GetAllMapsForUser("3").FirstOrDefault();
             var initialName = "Hello";
             var afterName = "Milo";
             map.MapName = initialName;
             service.UpdateMap(map);
 
-            var updatedMap = service.GetAllMapsForUser(3).FirstOrDefault();
+            var updatedMap = service.GetAllMapsForUser("3").FirstOrDefault();
             Assert.AreEqual(initialName, updatedMap.MapName);
 
             //clean-up
@@ -67,14 +69,14 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
         public void ReadingMapReturnsANonNullRecord()
         {
             var service = CreateDnDService();
-            if (service.GetAllMapsForUser(4).Count() == 0)
+            if (!service.GetAllMapsForUser("4").Any())
             {
                 var map = GenerateMap();
-                map.UserId = 4;
+                map.UserId = "4";
                 service.SaveMap(map);
             }
 
-            var mapInDB = service.GetAllMapsForUser(4).Single();
+            var mapInDB = service.GetAllMapsForUser("4").Single();
 
             Assert.IsNotNull(mapInDB);
         }
@@ -84,8 +86,10 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
         {
             var service = CreateDnDService();
             var characterSheet = GenerateCharacter();
+            characterSheet.UserId = "1";
+            characterSheet.CharacterName = Guid.NewGuid().ToString();
             service.SaveCharacter(characterSheet);
-            var characterRetrieved = service.GetAllCharacterSheetsForUser(1).FirstOrDefault();
+            var characterRetrieved = service.GetAllCharacterSheetsForUser("1").FirstOrDefault();
             Assert.IsNotNull(characterRetrieved);
         }
 
@@ -95,30 +99,30 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
             //arrange
             var service = CreateDnDService();
             var characterToAdd = GenerateCharacter();
-            characterToAdd.UserId = 2;
+            characterToAdd.UserId = "2";
 
             //act
             service.SaveCharacter(characterToAdd);
-            var characterRetrieved = service.GetAllCharacterSheetsForUser(2).FirstOrDefault();
+            var characterRetrieved = service.GetAllCharacterSheetsForUser("2").FirstOrDefault();
             service.DeleteCharacter(characterRetrieved.CharacterId);
-            var deletedCharacter = service.GetAllCharacterSheetsForUser(2).FirstOrDefault();
+            var deletedCharacter = service.GetAllCharacterSheetsForUser("2").FirstOrDefault();
 
             //assert
             Assert.IsNull(deletedCharacter);
         }
 
         [TestMethod]
-        public void ReadingCharcterReturnsANonNullRecord()
+        public void ReadingCharacterReturnsANonNullRecord()
         {
             var service = CreateDnDService();
-            if (service.GetAllCharacterSheetsForUser(4).Count() == 0)
+            if (!service.GetAllCharacterSheetsForUser("4").Any())
             {
                 var map = GenerateCharacter();
-                map.UserId = 4;
+                map.UserId = "4";
                 service.SaveCharacter(map);
             }
 
-            var mapInDB = service.GetAllCharacterSheetsForUser(4).First();
+            var mapInDB = service.GetAllCharacterSheetsForUser("4").First();
 
             Assert.IsNotNull(mapInDB);
         }
@@ -127,19 +131,19 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
         public void UpdatingCharacterUpdatesInDatabase()
         {
             var service = CreateDnDService();
-            if (service.GetAllCharacterSheetsForUser(3).Count() == 0)
+            if (!service.GetAllCharacterSheetsForUser("3").Any())
             {
                 var characterObj = GenerateCharacter();
-                characterObj.UserId = 3;
+                characterObj.UserId = "3";
                 service.SaveCharacter(characterObj);
             }
-            var character = service.GetAllCharacterSheetsForUser(3).FirstOrDefault();
+            var character = service.GetAllCharacterSheetsForUser("3").FirstOrDefault();
             var initialName = "Hello";
             var afterName = "Milo";
             character.CharacterName = initialName;
             service.UpdateCharacter(character);
 
-            var updatedMap = service.GetAllCharacterSheetsForUser(3).FirstOrDefault();
+            var updatedMap = service.GetAllCharacterSheetsForUser("3").FirstOrDefault();
             Assert.AreEqual(initialName, updatedMap.CharacterName);
 
             //clean-up
@@ -152,8 +156,10 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
         {
             var service = CreateDnDService();
             var item = GenerateItem();
+            item.UserId = "1";
+            item.ItemName = Guid.NewGuid().ToString();
             service.SaveItem(item);
-            var itemRetrieved = service.GetAllItems().FirstOrDefault(i => i.UserId == 1);
+            var itemRetrieved = service.GetAllItems().FirstOrDefault(i => i.UserId == "1");
             Assert.IsNotNull(itemRetrieved);
         }
 
@@ -163,13 +169,12 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
             //arrange
             var service = CreateDnDService();
             var itemToAdd = GenerateItem();
-            itemToAdd.UserId = 2;
+            itemToAdd.UserId = "2";
 
             //act
-            service.SaveItem(itemToAdd);
-            var item = service.GetAllItems().FirstOrDefault(i => i.UserId == 2);
+            var item = service.SaveItem(itemToAdd);
             service.DeleteItem(item.ItemId);
-            var deletedItem = service.GetAllItems().FirstOrDefault(i => i.UserId == 2);
+            var deletedItem = service.GetAllItems().FirstOrDefault(i => i.UserId == "2");
 
             //assert
             Assert.IsNull(deletedItem);
@@ -179,14 +184,14 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
         public void ReadingItemReturnsANonNullRecord()
         {
             var service = CreateDnDService();
-            if (service.GetAllItems().Where(i => i.UserId == 4).Count() == 0)
+            if (!service.GetAllItems().Any(i => i.UserId == "4"))
             {
                 var map = GenerateItem();
-                map.UserId = 4;
+                map.UserId = "4";
                 service.SaveItem(map);
             }
 
-            var mapInDB = service.GetAllItems().First(i => i.UserId == 4);
+            var mapInDB = service.GetAllItems().First(i => i.UserId == "4");
 
             Assert.IsNotNull(mapInDB);
         }
@@ -195,19 +200,19 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
         public void UpdatingItemUpdatesInDatabase()
         {
             var service = CreateDnDService();
-            if (service.GetAllItems().Where(i => i.UserId == 3).Count() == 0)
-            {
-                var item = GenerateItem();
-                item.UserId = 3;
-                service.SaveItem(item);
-            }
-            var itemUpdates = service.GetAllItems().FirstOrDefault(i => i.UserId == 3);
             var initialName = "Sword Of A Thousand Truths";
             var afterName = "Iron Sword";
+            if (!service.GetAllItems().Any(i => i.UserId == "3"))
+            {
+                var item = GenerateItem();
+                item.UserId = "3";
+                service.SaveItem(item);
+            }
+            var itemUpdates = service.GetAllItems().FirstOrDefault(i => i.UserId == "3");
             itemUpdates.ItemName = initialName;
             service.UpdateItem(itemUpdates);
 
-            var updatedMap = service.GetAllItems().FirstOrDefault(i => i.UserId == 3);
+            var updatedMap = service.GetAllItems().FirstOrDefault(i => i.UserId == "3");
             Assert.AreEqual(initialName, updatedMap.ItemName);
 
             //clean-up
@@ -225,9 +230,9 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
         {
             return new DnDMap
             {
-                MapName = "Dali Schllama",
+                MapName = Guid.NewGuid().ToString(),
                 CreatedBy = "The Batman",
-                UserId = 1,
+                UserId = null,
                 Lines = new List<Line>
                 {
                     new Line{
@@ -261,8 +266,8 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
         {
             return new CharacterSheet
             {
-                CharacterName = "The Cooler Man",
-                UserId = 1,
+                CharacterName = Guid.NewGuid().ToString(),
+                UserId = "",
                 Alignment = "Chaotic Neutral",
                 Class = "Dragon Slayer",
                 Description = "Get some better stuff on things.",
@@ -281,8 +286,8 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
         {
             return new Item
             {
-                UserId = 1,
-                ItemName = "The Iron Sword",
+                UserId = null,
+                ItemName = Guid.NewGuid().ToString(),
                 ItemType = "Equip",
                 Stats = new ItemStats
                 {
