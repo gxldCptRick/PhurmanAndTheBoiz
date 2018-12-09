@@ -1,6 +1,5 @@
 .flex {
   display: flex;
- 
 }
 
 .toolbar {
@@ -11,22 +10,22 @@
 nav > ul {
   height: 500px;
   width: 200px;
+
   display: flex;
   flex-direction: column;
-  margin: 10px;
   border: 5px groove #50535b;
-  background-color:#cc2c1e;
+  background-color: #cc2c1e;
   box-shadow: 5px 8px;
 }
 nav > ul > li {
-  height:150px; 
+  height: 150px;
   padding-top: 30px;
   list-style: none;
   width: 100%;
   margin: 10px;
 }
-nav > ul > li a { 
-  width:100px; 
+nav > ul > li a {
+  width: 100px;
   padding: 20%;
   margin-right: 20px;
   background-color: #50535b;
@@ -43,7 +42,6 @@ nav > ul > li:last-child a {
   border-bottom-right-radius: 15%;
 } */
 
-
 nav > ul > li > a {
   text-decoration: none;
   color: #dadbdf;
@@ -53,4 +51,39 @@ nav > ul > li > a:hover {
   background: white;
   text-decoration: none;
   color: black;
+}
+
+.CanvasEdit {
+  text-align: center;
+  float: left;
+  margin-left: 2%;
+  position: fixed 10px;
+  border: 5px groove black;
+  background-color: #cc2c1e;
+  box-shadow: 5px 8px;
+}
+
+.CanvasButton {
+  margin-top: 20px;
+  margin-right: 100px;
+}
+
+.navFix {
+  margin-left: 175px;
+}
+
+.navItems {
+  float: left;
+  margin-left: 55%;
+  border: 5px groove black;
+  background-color: #cc2c1e;
+  box-shadow: 5px 8px;
+}
+
+.navChars {
+  float: left;
+  margin-right: 45%;
+  border: 5px groove black;
+  background-color: #cc2c1e;
+  box-shadow: 5px 8px;
 }

@@ -5,9 +5,18 @@ import { Route, Link } from "react-router-dom";
 
 function LoginDisplay() {
   return (
-    <div className="rightOfPage">
-        <Login />
-        <Link to="/Login/SignUp">Register</Link>      
+    <div>
+      <Login />
+      <div className="rightOfPage">
+        <p className="Ptag">
+          If you are new to our website please click this button to make an
+          account for our page. By doing this you will be able to save all you
+          progress from this point forward.
+        </p>
+        <form action="/Login/SignUp">
+          <input type="submit" value="Register" />
+        </form>
+      </div>
     </div>
   );
 }
@@ -16,7 +25,16 @@ function RegisterDisplay() {
   return (
     <div>
       <RegisterPage />
-      <Link to="/Login/SignIn">Sign In</Link>
+      <div className="rightOfPage">
+        <p className="Ptag">
+          If you have an account with us please click this link to be taken to
+          the login page where you can acces all of your items attached to your
+          account.
+        </p>
+        <form action="/Login/SignIn">
+          <input type="submit" value="Sign up" />
+        </form>
+      </div>
     </div>
   );
 }

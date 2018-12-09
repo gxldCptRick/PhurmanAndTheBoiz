@@ -145,7 +145,7 @@ export default class Chat extends React.Component{
         }
 
         return (
-        <div className="chat-box">
+        <div className="navItems">
             <div 
                 ref="message_container"
                 className="messages-container"

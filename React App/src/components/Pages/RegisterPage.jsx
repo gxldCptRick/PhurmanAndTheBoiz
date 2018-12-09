@@ -51,71 +51,85 @@ export class RegisterPage extends Component {
     return (
       <div className="bod">
         <h1>Register for DungeonRollers</h1>
-
-        <div className="row">
-          <div className="col-md-4">
-            <label className="control-label col-md-12">Username</label>
-            <input
-              className="col-md-12"
-              value={this.state.Username}
-              onChange={this.handleUserNameChange}
-              pattern=".{1,55}"
-              required
-              title="Must be between 1 and 55 characters long"
-            />
+        <div className="leftOfPage">
+          <div className="smallTweak">
+            <p className="Ptag">
+              If you are new to our page before feel free to sign up for an account here
+            </p>
           </div>
-          <div className="col-md-4">
-            <label className="control-label col-md-12">First Name</label>
-            <input
-              className="col-md-12"
-              type="text"
-              value={this.state.FirstName}
-              onChange={this.handleFirstNameChange}
-              pattern=".{2,55}"
-              required
-              title="Must be between 2 and 55 characters long"
-            />
-          </div>
-          <div className="col-md-4">
-            <label className="control-label col-md-12"> Last Name </label>
-            <input
-              className="col-md-12"
-              type="text"
-              value={this.state.LastName}
-              onChange={this.handleLastNameChange}
-              pattern=".{2,55}"
-              required
-              title="Must be between 2 and 55 characters long"
-            />
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-md-6">
-            <label className="control-label col-md-12">Password</label>
-            <input
-              className="col-md-12"
-              type="Password"
-              value={this.state.Password}
-              onChange={this.handlePasswordChange}
-              pattern=".{8,55}"
-              required
-              title="Must be between 8 and 55 characters long"
-            />
-          </div>
-          <div className="col-md-6">
-            <label className="control-label col-md-12">Confirm Password</label>
-            <input
-              className="col-md-12"
-              type="Password"
-              value={this.state.p2}
-              onChange={this.handleConfirmPassword}
-            />
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-md-4">
-            <br />
-            <input type="submit" value="Submit" onClick={this.handleSubmit} />
+          <div className="RegisterBox">
+            <div className="row">
+              <div className="col-md-4">
+                <label className="control-label col-md-12">Username</label>
+                <input
+                  className="col-md-12"
+                  value={this.state.Username}
+                  onChange={this.handleUserNameChange}
+                  pattern=".{1,55}"
+                  required
+                  title="Must be between 1 and 55 characters long"
+                />
+              </div>
+              <div className="col-md-5">
+                <label className="control-label col-md-12">First Name</label>
+                <input
+                  className="col-md-12"
+                  type="text"
+                  value={this.state.FirstName}
+                  onChange={this.handleFirstNameChange}
+                  pattern=".{2,55}"
+                  required
+                  title="Must be between 2 and 55 characters long"
+                />
+              </div>
+              <div className="col-md-6">
+                <label className="control-label col-md-12"> Last Name </label>
+                <input
+                  className="col-md-12"
+                  type="text"
+                  value={this.state.LastName}
+                  onChange={this.handleLastNameChange}
+                  pattern=".{2,55}"
+                  required
+                  title="Must be between 2 and 55 characters long"
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-md-7">
+                <label className="control-label col-md-12">Password</label>
+                <input
+                  className="col-md-12"
+                  type="Password"
+                  value={this.state.Password}
+                  onChange={this.handlePasswordChange}
+                  pattern=".{8,55}"
+                  required
+                  title="Must be between 8 and 55 characters long"
+                />
+              </div>
+              <div className="col-md-8">
+                <label className="control-label col-md-12">
+                  Confirm Password
+                </label>
+                <input
+                  className="col-md-12"
+                  type="Password"
+                  value={this.state.p2}
+                  onChange={this.handleConfirmPassword}
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-md-9">
+                <br />
+                <input
+                  type="submit"
+                  value="Submit"
+                  onClick={this.handleSubmit}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
