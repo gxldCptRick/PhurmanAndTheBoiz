@@ -45,7 +45,7 @@ export class Account extends Component{
   showPrompts(){
     if(this.state.loggedIn){
       return(
-        <div>
+        <div className='bod'>
           <h1>Logout</h1>
           <button onClick={this.logout.bind(this)}>Log Out</button>
         </div>

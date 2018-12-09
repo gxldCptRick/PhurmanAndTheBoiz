@@ -51,7 +51,7 @@ export class RegisterPage extends Component {
   }
   render() {
     return (
-      <div>
+      <div className='bod'>
         <h1>Register for DungeonRollers</h1>
           <div className='row'>
             <div className='col-md-4'>
