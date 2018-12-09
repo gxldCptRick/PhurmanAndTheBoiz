@@ -5,6 +5,7 @@ import AuthHeader from "./AuthHeader";
 import fetch from "node-fetch";
 const rootPath = "https://gxldcptrick-demo-app.herokuapp.com/api/dnd";
 
+
 function DeleteResource(resourceName: string, id: string = "") {
   let path = `${rootPath}/${resourceName}/${id}`;
   return fetch(path, {
@@ -17,10 +18,7 @@ function DeleteResource(resourceName: string, id: string = "") {
       "Content-Type": "application/json",
       ...AuthHeader()
     }
-  }).then(function(response){
-    if(response.status === 401) throw new Error("Must Login Before Attempting To Post.");
-    return response;
-  });
+  }).then(response => {return response})
 }
 
 function PutToResource(
@@ -43,13 +41,7 @@ function PutToResource(
       "Content-Type": "application/json; charset=utf-8",
       ...AuthHeader()
     }
-  }).then(function(response){
-    if(response.status === 401) throw new Error("Must Login Before Attempting To Post.");
-    return response;
-  }).then(function(response){
-    if(response.status === 200) return response;
-    else throw new Error("Response was not okay.")
-  });
+  }).then(response => {return response})
 }
 
 function PostToResource(
@@ -57,6 +49,7 @@ function PostToResource(
   data: any
 ): Promise<Response> {
   let path = `${rootPath}/${resourceName}`;
+  console.log('this is exaclty how its sent',JSON.stringify(data))
   return fetch(path, {
     method: "POST",
     mode: "cors",
@@ -88,10 +81,7 @@ function GetResource(
     headers: {
       ...AuthHeader()
     }
-  }).then(function(response){
-    if(response.status === 200) return response;
-    else throw new Error("The response was not okay.");
-  });
+  }).then(response => {return response})
 }
 
 const SpecialPaths = {
