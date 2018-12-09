@@ -1,6 +1,6 @@
 const r = require("rethinkdb");
 const io = require("socket.io")();
-
+io.origins('*:*');
 function subscribeToChatMessages({ dbConnection, client }) {
   console.log("subscribeToChatMessages");
   return r
