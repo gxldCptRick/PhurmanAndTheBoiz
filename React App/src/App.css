@@ -39,7 +39,9 @@ body {
         }
         h1 {
           padding: 15px;
-          border: 5px groove #cc2c1e;
+          border: 5px groove #50535b;
+          background-color:#cc2c1e;
+          box-shadow: 5px 8px;
         }
         .bod {
           padding-top: 50px;

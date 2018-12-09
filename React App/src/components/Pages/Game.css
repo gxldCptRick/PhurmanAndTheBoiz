@@ -1,5 +1,6 @@
 .flex {
   display: flex;
+ 
 }
 
 .toolbar {
@@ -8,21 +9,30 @@
 }
 
 nav > ul {
+  height: 500px;
+  width: 200px;
   display: flex;
   flex-direction: column;
-}
-
-nav > ul > li a {
-  padding: 16px;
-  background: black;
+  margin: 10px;
+  border: 5px groove #50535b;
+  background-color:#cc2c1e;
+  box-shadow: 5px 8px;
 }
 nav > ul > li {
+  height:250px; 
+  padding-top: 30px;
   list-style: none;
   width: 100%;
   margin: 10px;
 }
+nav > ul > li >a { 
+  width:100px; 
+  padding: 20px;
+  background-color: #50535b;
+  border: 5px groove #50535b;
+}
 
-nav > ul > li:first-child a {
+/* nav > ul > li:first-child a {
   border-top-left-radius: 15%;
   border-top-right-radius: 15%;
 }
@@ -30,11 +40,8 @@ nav > ul > li:first-child a {
 nav > ul > li:last-child a {
   border-bottom-left-radius: 15%;
   border-bottom-right-radius: 15%;
-}
+} */
 
-nav > ul > li a:hover {
-  background: yellow;
-}
 
 nav > ul > li > a {
   text-decoration: none;
@@ -42,6 +49,7 @@ nav > ul > li > a {
 }
 
 nav > ul > li > a:hover {
+  background: white;
   text-decoration: none;
-  color: white;
+  color: black;
 }

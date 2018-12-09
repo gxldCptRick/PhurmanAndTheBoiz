@@ -49,7 +49,7 @@ export class Login extends Component {
     return <Redirect to={'/Profile'}/>
    }else{
      return(
-       <div className='form-horizontal'>
+       <div className='bod'>
        <h1>Login</h1>
        {
          Object.keys(this.state.error).map(e => <p className="error" key={e}>{this.state.error[e]}</p>)

@@ -16,8 +16,13 @@
 {
     padding-left: 200px;
     padding-right: 200px;
+    font-size: 45px;
     font-size: 18px;
     font-family: fantasy;
+    padding: 15px;
+    border: 5px groove #50535b;
+    background-color:#cc2c1e;
+    box-shadow: 5px 8px;
 }
 .messages-container{
     overflow-y: scroll;
@@ -41,8 +46,6 @@
 .user-typing > p {
     margin: 0;
 }
-<<<<<<< HEAD
-=======
 
 .message-small {
     font-size: 9px;
@@ -52,4 +55,3 @@
     display: flex;
     justify-content: space-between;
 }
->>>>>>> cb880dc0642f60c83b04fafab2856b60f0fb05c7
