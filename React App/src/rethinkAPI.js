@@ -3,7 +3,7 @@ import openSocket from "socket.io-client";
 //import Rx from "rxjs/Rx";
 const port = 5585;
 const socket = openSocket(`http://73.20.98.246:${port}`);
-// const socket = openSocket(`http://localhost:${port}`);
+//const socket = openSocket(`http://localhost:${port}`);
 function subscribeToChatMessages(callback) {
   // const messagesStream = Rx.Observable.fromEventPattern(
   //     h => socket.on('messageSent', h),

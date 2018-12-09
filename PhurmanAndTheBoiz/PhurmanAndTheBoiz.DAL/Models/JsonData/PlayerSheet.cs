@@ -12,7 +12,7 @@ namespace PhurmanAndTheBoiz.DAL.Models.JsonData
         public string CharacterId { get; set; }
 
         [JsonProperty("userId", NullValueHandling = NullValueHandling.Ignore)]
-        public int? UserId { get; set; }
+        public string UserId { get; set; }
 
         [JsonProperty("level", NullValueHandling= NullValueHandling.Ignore)]
         public int? Level { get; set; }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace PhurmanAndTheBoiz.DAL.Models
 {
-    public class UserAuthetication
+    public class UserAuthentication
     {
         [Required]
         [StringLength(maximumLength: 55, MinimumLength = 1, ErrorMessage = "We need a username that is at least 2 characters long and less than 55 characters.")]

@@ -20,11 +20,6 @@ export default class Chat extends React.Component{
         usersThatAreTyping: []
     };
 
-    constructor(props){
-        super(props);
-
-    }
-
     handleSendMessage = () =>{
         var userMessage  = this.state.message.replace(/^\s+/, '').replace(/\s+$/, '');
         
@@ -150,7 +145,7 @@ export default class Chat extends React.Component{
         }
 
         return (
-        <div className="chat-box">
+        <div className="navItems">
             <div 
                 ref="message_container"
                 className="messages-container"

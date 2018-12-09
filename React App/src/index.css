@@ -1,17 +1,34 @@
-@media (max-width: 767px) {
-    /* On small screens, the nav menu spans the full width of the screen. Leave a space for it. */
-    .bod {
-        padding-top: 50px;
-        margin-top: 30%;
-        width: 100%;
-        height: 100%;
-    }
-    .footer {
-        display: fixed;
-        bottom:0;     
-    }
+/* On small screens, the nav menu spans the full width of the screen. Leave a space for it. */
+.bod 
+{
+    padding-top: 20px;
+    width: 100%;
+    height: 100%;
+}
+.footer 
+{
+    display: fixed;
+    bottom:0;     
 }
 
+.home{
+    text-align: center;
+    height:500px;
+    border: 5px groove #50535b;
+    background-color:#cc2c1e;
+    box-shadow: 5px 8px;
+}
+
+.Ptag
+{
+    color:black;
+    font-size: 15px;
+    font-family: fantasy;
+    padding: 15px;
+    border: 5px groove black ;
+    background-color: #50535b;
+    box-shadow: 5px 8px;
+}
 .messages-container{
     overflow-y: scroll;
     height: 100px;
@@ -39,7 +56,50 @@
     font-size: 9px;
 }
 
-.flex-space-between{
-    display: flex;
-    justify-content: space-between;
+.rightOfPage{
+    text-align: center;
+    height:500px;
+    width:68%;
+    margin-left: 10px;
+    float: right;
+    border: 5px groove #50535b;
+    background-color:#cc2c1e;
+    box-shadow: 5px 8px;
+}
+.leftOfPage{
+    text-align: center;
+    height:500px;
+    width: 30%;
+    float: left;
+    position: fixed 10px;
+    border: 5px groove #50535b;
+    background-color:#cc2c1e;
+    box-shadow: 5px 8px;
+}
+
+.loginBox{
+    height:200px;
+    width: 200px;
+    float: left;
+    position: fixed 10px;
+    border: 5px groove black ;
+    background-color: #50535b;
+    box-shadow: 5px 8px;
+}
+.RegisterBox{
+    height:400px;
+    width: 300px;
+    float: left;
+    position: fixed 10px;
+    border: 5px groove black ;
+    background-color: #50535b;
+    box-shadow: 5px 8px;
+}
+
+.smallButton{
+    height: 100px;
+}
+
+.smallTweak{
+   width: 80%;
 }

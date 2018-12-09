@@ -1,14 +1,15 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using PhurmanAndTheBoiz.DAL.Models;
 using PhurmanAndTheBoiz.DAL.Services;
 using PhurmanAndTheBoiz.DAL.Services.Implementations;
+using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,24 +24,30 @@ namespace PhurmanAndTheBoiz.API
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        private JwtBearerEvents GenereateJWTEvents()
         {
-
-            services.AddCors(options =>
+            return new JwtBearerEvents
             {
-                options.AddPolicy("CorsPolicy",
-                    builder => builder.WithOrigins(@"*")
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowCredentials());
-            });
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+                OnTokenValidated = context =>
+                {
+                    var userService = context.HttpContext.RequestServices.GetRequiredService<IUserManager>();
+                    var userId = context.Principal.Identity.Name;
+                    var user = userService.GetUserById(userId);
+                    if (user == null)
+                    {
+                        // return unauthorized if user no longer exists
+                        context.Fail("Unauthorized");
+                    }
+                    return Task.CompletedTask;
+                }
+            };
+        }
 
+        private string Secret { get; } = "okay fermin lets get super cereal this time around";
 
-            //secret: "okay fermin lets get super cereal this time around"
-
-            var key = Encoding.ASCII.GetBytes("okay fermin lets get super cereal this time around");
+        private void AddJWTAuthentication(IServiceCollection services)
+        {
+            var key = Encoding.ASCII.GetBytes(Secret);
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -48,21 +55,7 @@ namespace PhurmanAndTheBoiz.API
             })
             .AddJwtBearer(x =>
             {
-                x.Events = new JwtBearerEvents
-                {
-                    OnTokenValidated = context =>
-                    {
-                        var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-                        var userId = int.Parse(context.Principal.Identity.Name);
-                        var user = userService.GetUserById(userId);
-                        if (user == null)
-                        {
-                            // return unauthorized if user no longer exists
-                            context.Fail("Unauthorized");
-                        }
-                        return Task.CompletedTask;
-                    }
-                };
+                x.Events = GenereateJWTEvents();
                 x.RequireHttpsMetadata = false;
                 x.SaveToken = true;
                 x.TokenValidationParameters = new TokenValidationParameters
@@ -73,17 +66,43 @@ namespace PhurmanAndTheBoiz.API
                     ValidateAudience = false
                 };
             });
+        }
 
+        private void AddSecurityPolicies(IServiceCollection services)
+        {
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin", policy => policy.RequireClaim(ClaimTypes.Role, new string[] { "Admin" }));
+                options.AddPolicy("GameMaster", policy => policy.RequireClaim(ClaimTypes.Role, new string[] { "DM", "GameMaster" }));
+                options.AddPolicy("Players", policy => policy.RequireClaim(ClaimTypes.Role, new string[] { "Player" }));
+            });
+        }
 
-            services.AddSingleton<IUserService>(new SqlUserService(connectionString: Configuration["connections:sql_connection"]));
-            services.AddSingleton<IDnDService>(new MongoDnDService(mongoConnectionString: Configuration["connections:mongo_connection:string"], database: Configuration["connections:mongo_connection:database"]));
-            
-            
-            // In production, the React files will be served from this directory
-            //services.AddSpaStaticFiles(configuration =>
-            //{
-            //    configuration.RootPath = "../ClientApp/build";
-            //});
+        private void ConfigureCors(IServiceCollection services)
+        {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.WithOrigins(@"*")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+            });
+        }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            ConfigureCors(services);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            AddJWTAuthentication(services);
+            AddSecurityPolicies(services);
+            var mongoDbService = new MongoDnDService(mongoConnectionString: Configuration["connections:mongo_connection:string"], database: Configuration["connections:mongo_connection:database"]);
+            var mangoUserService = new MongoUserService(mongoConnectionString: Configuration["connections:mongo_connection:string"], database: Configuration["connections:mongo_connection:database"]);
+            services.AddSingleton<IUserManager>(mangoUserService);
+            services.AddSingleton<IDnDService>(mongoDbService);
+            CreateDefaultAdminAccounts(mangoUserService);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -109,5 +128,28 @@ namespace PhurmanAndTheBoiz.API
                     template: "{controller}/{action=Index}/{id?}");
             });
         }
+
+        private void CreateDefaultAdminAccounts(IUserManager userManager)
+        {
+            var users = userManager.GetAllUsers();
+            if (!users.Any(u => u.Username == "SUPER KAMI GURU"))
+            {
+                var user = new User()
+                {
+                    FirstName = "Piccolo",
+                    LastName = "Kami",
+                    Username = "SUPER KAMI GURU",
+                    Password = "#Team3Star"
+                };
+
+                userManager.CreateUser(user, user.Password);
+                var createdUser = userManager.GetAllUsers().Single(u => u.Username == user.Username);
+                if (createdUser.Id != null)
+                {
+                    userManager.AddUserToRole(createdUser.Id, "Admin");
+                }
+            }
+        }
+
     }
 }

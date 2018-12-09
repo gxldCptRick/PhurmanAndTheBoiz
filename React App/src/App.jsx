@@ -18,7 +18,7 @@ export default class App extends Component {
         <Layout>
           <Route exact path="/" component={Home} />
           <Route path="/Game" component={Game} />
-          <Route path="/Account" component={Account} />
+          <Route path="/Login" component={Account}/>
           <Route path="/Profile" component={ProfilePage}/>
         </Layout>
         <footer>Phurman and The Boiz @2018</footer>

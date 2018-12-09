@@ -42,17 +42,17 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
             return itemsList;
         }
 
-        public IEnumerable<CharacterSheet> GetAllCharacterSheetsForUser(int userId)
+        public IEnumerable<CharacterSheet> GetAllCharacterSheetsForUser(string userId)
         {
             return GetAllCharacterSheets().Where(cs => cs.UserId == userId);
         }
 
-        public IEnumerable<Item> GetAllItemsForUser(int userId)
+        public IEnumerable<Item> GetAllItemsForUser(string userId)
         {
             return GetAllItems().Where(i => i.UserId == userId);
         }
 
-        public IEnumerable<DnDMap> GetAllMapsForUser(int userId)
+        public IEnumerable<DnDMap> GetAllMapsForUser(string userId)
         {
             return GetAllDnDMaps().Where(m => m.UserId == userId);
         }
@@ -73,28 +73,41 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
             return GetAllDnDMaps().SingleOrDefault(m => m.MapId == mapId);
         }
 
-        public void SaveCharacter(CharacterSheet newCharacter)
+        public CharacterSheet SaveCharacter(CharacterSheet newCharacter)
         {
             var client = new MongoClient(_mongoConnectionString);
             var database = client.GetDatabase(_database);
             var characterSheets = database.GetCollection<CharacterSheet>("CharacterSheets");
             characterSheets.InsertOne(newCharacter);
+            return characterSheets.Find((e) => e.UserId == newCharacter.UserId &&
+            e.Level == newCharacter.Level &&
+            e.CharacterName == newCharacter.CharacterName &&
+            e.Class == newCharacter.Class && 
+            e.Description == newCharacter.Description).Single();
         }
 
-        public void SaveItem(Item newItem)
+        public Item SaveItem(Item newItem)
         {
             var client = new MongoClient(_mongoConnectionString);
             var database = client.GetDatabase(_database);
             var Items = database.GetCollection<Item>("Items");
             Items.InsertOne(newItem);
+            return Items.Find((e) => e.ItemType == newItem.ItemType &&
+            e.ItemName == newItem.ItemName  &&
+            e.UserId == newItem.UserId).Single();
         }
 
-        public void SaveMap(DnDMap newMap)
+        public DnDMap SaveMap(DnDMap newMap)
         {
             var client = new MongoClient(_mongoConnectionString);
             var database = client.GetDatabase(_database);
             var Maps = database.GetCollection<DnDMap>("Maps");
             Maps.InsertOne(newMap);
+
+            return Maps.Find((e) => e.MapName == newMap.MapName &&
+            e.Tags == newMap.Tags &&
+            e.CreatedBy == newMap.CreatedBy
+            && e.UserId == newMap.UserId).Single();
         }
 
         public void UpdateCharacter(CharacterSheet updatedCharacter)
@@ -114,7 +127,7 @@ namespace PhurmanAndTheBoiz.DAL.Services.Implementations
             updatedItem.ItemName = updatedItem.ItemName ?? item.ItemName;
             updatedItem.ItemType = updatedItem.ItemType ?? item.ItemType;
             updatedItem.Stats = updatedItem.Stats ?? item.Stats;
-            updatedItem.UserId = updatedItem.UserId == 0 ? item.UserId : updatedItem.UserId;
+            updatedItem.UserId = updatedItem.UserId == null ? item.UserId : updatedItem.UserId;
             items.ReplaceOne(i => i.ItemId == updatedItem.ItemId, updatedItem);
         }
 

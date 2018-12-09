@@ -10,7 +10,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
     [ApiController]
     public class ItemController : ControllerBase
     {
-        private IDnDService _service;
+        private IItemService _service;
         public ItemController(IDnDService service)
         {
             _service = service;
@@ -26,14 +26,14 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             return result;
         }
 
-        [HttpGet("user/{userId}")]
-        public IActionResult Get(int userId)
+        [HttpGet("[action]/{userId}")]
+        public IActionResult GetUser(string userId)
         {
             IActionResult result = null;
             var items = _service.GetAllItemsForUser(userId);
             if (items is null)
             {
-                result = BadRequest($"There is no items for user with id {userId}");
+                result = BadRequest(new { message = $"There is no items for user with id {userId}" });
             }
             else
             {
@@ -50,7 +50,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             var item = _service.GetItemById(id);
             if (item is null)
             {
-                result = BadRequest($"There was no item with the id of {id}");
+                result = BadRequest(new { message = $"There was no item with the id of {id}" });
             }
             else
             {
@@ -66,7 +66,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             IActionResult result = null;
             if (value is null)
             {
-                result = BadRequest("Item Could not be saved into the database.");
+                result = BadRequest(new { message = "Item Could not be saved into the database." });
             }
             else
             {
@@ -83,7 +83,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             IActionResult result = null;
             if (_service.GetItemById(id) is null)
             {
-                result = BadRequest($"There is no item with the id of {id}");
+                result = BadRequest(new { message = $"There is no item with the id of {id}" });
             }
             else
             {
@@ -101,7 +101,7 @@ namespace PhurmanAndTheBoiz.API.Controllers.DnDControllers
             IActionResult result = null;
             if (_service.GetItemById(id) is null)
             {
-                result = BadRequest($"There is no item with the id of {id}");
+                result = BadRequest(new { message = $"There is no item with the id of {id}" });
             }
             else
             {

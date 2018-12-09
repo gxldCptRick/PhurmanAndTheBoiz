@@ -1,8 +1,7 @@
-// @flow
 export default class Line {
-  constructor() {
+  constructor(lineId) {
     this.points = [];
-    this.id = null;
+    this.id = lineId;
   }
   addPoint(point: { x: number, y: number }) {
     this.points.push(point);

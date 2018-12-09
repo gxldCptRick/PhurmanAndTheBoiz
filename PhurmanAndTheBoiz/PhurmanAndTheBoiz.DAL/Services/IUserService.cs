@@ -27,7 +27,7 @@ namespace PhurmanAndTheBoiz.DAL.Services
         /// </summary>
         /// <param name="id">id for the user</param>
         /// <returns></returns>
-        User GetUserById(int id);
+        User GetUserById(string id);
 
         /// <summary>
         /// Creates A User with the given User configurations.
@@ -55,6 +55,6 @@ namespace PhurmanAndTheBoiz.DAL.Services
         /// Deletes a user with a given id if found.
         /// </summary>
         /// <param name="id">the id of the deleted user</param>
-        bool DeleteUser(int id);
+        bool DeleteUser(string id);
     }
 }
