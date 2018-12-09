@@ -25,5 +25,8 @@ namespace PhurmanAndTheBoiz.DAL.Models.JsonData
 
         [JsonProperty("lines", NullValueHandling = NullValueHandling.Ignore)]
         public List<Line> Lines { get; set; }
+
+        [JsonProperty("mapCommands", NullValueHandling = NullValueHandling.Ignore)]
+        public List<MapCommand> MapCommands { get; set; }
     }
 }

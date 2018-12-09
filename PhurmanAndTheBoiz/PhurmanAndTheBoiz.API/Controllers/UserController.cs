@@ -22,6 +22,21 @@ namespace PhurmanAndTheBoiz.API.Controllers
         {
             _service = service;
         }
+        public string Secret { get; } = "okay fermin lets get super cereal this time around";
+
+        private SecurityTokenDescriptor GenerateTokenDescriptor(User user)
+        {
+            var key = Encoding.ASCII.GetBytes(Secret);
+            var claims = user.Roles.Select((role) => new Claim(ClaimTypes.Role, role)).ToList();
+            claims.Add(new Claim(ClaimTypes.Name, user.Id));
+            return new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+        }
+
         [AllowAnonymous]
         [HttpPost]
         [Route("[action]")]
@@ -31,20 +46,11 @@ namespace PhurmanAndTheBoiz.API.Controllers
 
             if (user == null)
             {
-                return BadRequest("Username or password is incorrect");
+                return BadRequest(new { message = "Username or password is incorrect." });
             }
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("okay fermin lets get super cereal this time around");
-            var claims = user.Roles.Select((role) => new Claim(ClaimTypes.Role, role)).ToList();
-            claims.Add(new Claim(ClaimTypes.Name, user.Id));
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-
+            var tokenDescriptor = GenerateTokenDescriptor(user);
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var Token = tokenHandler.WriteToken(token);
             userDto.Password = null;
@@ -54,6 +60,7 @@ namespace PhurmanAndTheBoiz.API.Controllers
                 token = Token
             });
         }
+
         [AllowAnonymous]
         [HttpPost]
         [Route("[action]")]
@@ -62,9 +69,10 @@ namespace PhurmanAndTheBoiz.API.Controllers
             var actionResult = default(IActionResult);
             try
             {
-                _service.CreateUser(userDto, userDto.Password);
+                var createdUser = _service.CreateUser(userDto, userDto.Password);
                 userDto.Password = null;
-                actionResult = StatusCode(201, userDto);
+                _service.AddUserToRole(createdUser.Id, "Player");
+                actionResult = StatusCode(201, createdUser);
             }
             catch (AppException e)
             {
@@ -75,8 +83,8 @@ namespace PhurmanAndTheBoiz.API.Controllers
         }
 
 
-        [HttpPost]
         [Authorize(Policy = "Admin")]
+        [HttpPost]
         [Route("[action]")]
         public IActionResult AddRoleToUser([FromBody]User userDto)
         {
@@ -92,13 +100,32 @@ namespace PhurmanAndTheBoiz.API.Controllers
                 }
 
                 userDto.Password = null;
-                actionResult = StatusCode(201, userDto);
+                actionResult = StatusCode(200, userDto);
             }
             catch (AppException e)
             {
                 actionResult = BadRequest(e);
             }
 
+            return actionResult;
+        }
+
+        [Authorize(Policy = "Admin")]
+        [HttpPost("[action]")]
+        public IActionResult RemoveRoll([FromBody]User userDto, string role)
+        {
+            var actionResult = default(IActionResult);
+            try
+            {
+                if (userDto.Username == "SUPER KAMI GURU" && role == "Admin") throw new AppException("The Global Admin cannot be demoted from admin.");
+                _service.RemoveUserFromRoll(userDto.Id, role);
+                userDto.Password = null;
+                actionResult = StatusCode(200, userDto);
+            }
+            catch (AppException e)
+            {
+                actionResult = BadRequest(e);
+            }
             return actionResult;
         }
 

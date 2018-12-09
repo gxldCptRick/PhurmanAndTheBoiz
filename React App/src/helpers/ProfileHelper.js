@@ -30,10 +30,10 @@ export function RenderComboForItems(itemlist){
 export function RenderCharacterList(characterList)
 {
   characterList = Array.from(characterList);
-  var renderedCharacters = characterList.map((i) =>
-    <div>
-      <p>{i.characterName} ({i.level})</p>
-    </div>
+  let renderedCharacters = characterList.map((i) =>
+    (<div key={i.id}>
+      <p>{i.class}</p>
+    </div>)
   );
   return renderedCharacters;
 }

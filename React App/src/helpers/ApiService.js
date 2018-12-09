@@ -60,7 +60,10 @@ function PostToResource(
       "Content-Type": "application/json; charset=utf-8",
       ...AuthHeader()
     }
-  }).then(response => {return response});
+  }).then(function(response){
+    if(response.status === 401) throw new Error("Must Login Before Attempting To Post.");
+    return response;
+  })
 }
 
 function GetResource(
@@ -84,10 +87,12 @@ const SpecialPaths = {
   Register: "User/Register",
   Login: "User/Authenticate",
 };
-export function LoginUser(user:any): Promise<any> {
+
+function LoginUser(user): Promise<any> {
+
   return PostToResource(SpecialPaths.Login, user)
-    .then(response => response.json())
     .then(json => {
+      console.log(JSON.stringify(json));
       localStorage.setItem("user", JSON.stringify(json));
       return json
     })
@@ -95,7 +100,6 @@ export function LoginUser(user:any): Promise<any> {
 
 function RegisterUser(user: any): Promise<any> {
   return PostToResource(SpecialPaths.Register, user)
-  .then(response => response.json())
 }
 
 const Resource = {
@@ -113,5 +117,6 @@ export {
   GetResource,
   PostToResource,
   PutToResource,
-  DeleteResource
+  DeleteResource,
+  LoginUser
 }

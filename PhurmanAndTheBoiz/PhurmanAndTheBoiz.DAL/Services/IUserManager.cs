@@ -11,5 +11,6 @@ namespace PhurmanAndTheBoiz.DAL.Services
         /// <param name="userId">The user to add the role to</param>
         /// <param name="roleId">The role that will be given</param>
         void AddUserToRole(string userId, string role);
+        void RemoveUserFromRoll(string userId, string role);
     }
 }

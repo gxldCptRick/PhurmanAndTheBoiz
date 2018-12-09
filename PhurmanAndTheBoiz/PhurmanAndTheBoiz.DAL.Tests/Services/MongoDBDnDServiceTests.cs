@@ -2,6 +2,7 @@
 using PhurmanAndTheBoiz.DAL.Models.JsonData;
 using PhurmanAndTheBoiz.DAL.Services;
 using PhurmanAndTheBoiz.DAL.Services.Implementations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,9 +17,10 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
             var service = CreateDnDService();
             var map = GenerateMap();
             map.UserId = "1";
+            map.MapName = Guid.NewGuid().ToString();
             service.SaveMap(map);
             var after = service.GetAllMapsForUser("1").Any();
-            Assert.IsTrue(!after);
+            Assert.IsTrue(after);
         }
 
         [TestMethod]
@@ -43,7 +45,7 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
         public void UpdatingMapUpdatesInTheDatabase()
         {
             var service = CreateDnDService();
-            if (service.GetAllMapsForUser("3").Any())
+            if (!service.GetAllMapsForUser("3").Any())
             {
                 var mapObj = GenerateMap();
                 mapObj.UserId = "3";
@@ -67,7 +69,7 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
         public void ReadingMapReturnsANonNullRecord()
         {
             var service = CreateDnDService();
-            if (service.GetAllMapsForUser("4").Any())
+            if (!service.GetAllMapsForUser("4").Any())
             {
                 var map = GenerateMap();
                 map.UserId = "4";
@@ -85,6 +87,7 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
             var service = CreateDnDService();
             var characterSheet = GenerateCharacter();
             characterSheet.UserId = "1";
+            characterSheet.CharacterName = Guid.NewGuid().ToString();
             service.SaveCharacter(characterSheet);
             var characterRetrieved = service.GetAllCharacterSheetsForUser("1").FirstOrDefault();
             Assert.IsNotNull(characterRetrieved);
@@ -109,10 +112,10 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
         }
 
         [TestMethod]
-        public void ReadingCharcterReturnsANonNullRecord()
+        public void ReadingCharacterReturnsANonNullRecord()
         {
             var service = CreateDnDService();
-            if (service.GetAllCharacterSheetsForUser("4").Any())
+            if (!service.GetAllCharacterSheetsForUser("4").Any())
             {
                 var map = GenerateCharacter();
                 map.UserId = "4";
@@ -128,7 +131,7 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
         public void UpdatingCharacterUpdatesInDatabase()
         {
             var service = CreateDnDService();
-            if (service.GetAllCharacterSheetsForUser("3").Any())
+            if (!service.GetAllCharacterSheetsForUser("3").Any())
             {
                 var characterObj = GenerateCharacter();
                 characterObj.UserId = "3";
@@ -154,6 +157,7 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
             var service = CreateDnDService();
             var item = GenerateItem();
             item.UserId = "1";
+            item.ItemName = Guid.NewGuid().ToString();
             service.SaveItem(item);
             var itemRetrieved = service.GetAllItems().FirstOrDefault(i => i.UserId == "1");
             Assert.IsNotNull(itemRetrieved);
@@ -168,8 +172,7 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
             itemToAdd.UserId = "2";
 
             //act
-            service.SaveItem(itemToAdd);
-            var item = service.GetAllItems().FirstOrDefault(i => i.UserId == "2");
+            var item = service.SaveItem(itemToAdd);
             service.DeleteItem(item.ItemId);
             var deletedItem = service.GetAllItems().FirstOrDefault(i => i.UserId == "2");
 
@@ -181,7 +184,7 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
         public void ReadingItemReturnsANonNullRecord()
         {
             var service = CreateDnDService();
-            if (service.GetAllItems().Any(i => i.UserId == "4"))
+            if (!service.GetAllItems().Any(i => i.UserId == "4"))
             {
                 var map = GenerateItem();
                 map.UserId = "4";
@@ -197,15 +200,15 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
         public void UpdatingItemUpdatesInDatabase()
         {
             var service = CreateDnDService();
-            if (service.GetAllItems().Any(i => i.UserId == "3"))
+            var initialName = "Sword Of A Thousand Truths";
+            var afterName = "Iron Sword";
+            if (!service.GetAllItems().Any(i => i.UserId == "3"))
             {
                 var item = GenerateItem();
                 item.UserId = "3";
                 service.SaveItem(item);
             }
             var itemUpdates = service.GetAllItems().FirstOrDefault(i => i.UserId == "3");
-            var initialName = "Sword Of A Thousand Truths";
-            var afterName = "Iron Sword";
             itemUpdates.ItemName = initialName;
             service.UpdateItem(itemUpdates);
 
@@ -227,7 +230,7 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
         {
             return new DnDMap
             {
-                MapName = "Dali Schllama",
+                MapName = Guid.NewGuid().ToString(),
                 CreatedBy = "The Batman",
                 UserId = null,
                 Lines = new List<Line>
@@ -263,7 +266,7 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
         {
             return new CharacterSheet
             {
-                CharacterName = "The Cooler Man",
+                CharacterName = Guid.NewGuid().ToString(),
                 UserId = "",
                 Alignment = "Chaotic Neutral",
                 Class = "Dragon Slayer",
@@ -284,7 +287,7 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
             return new Item
             {
                 UserId = null,
-                ItemName = "The Iron Sword",
+                ItemName = Guid.NewGuid().ToString(),
                 ItemType = "Equip",
                 Stats = new ItemStats
                 {

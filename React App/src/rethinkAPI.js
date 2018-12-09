@@ -2,8 +2,8 @@
 import openSocket from "socket.io-client";
 //import Rx from "rxjs/Rx";
 const port = 5585;
-const socket = openSocket(`http://73.20.98.246:${port}`);
-// const socket = openSocket(`http://localhost:${port}`);
+//const socket = openSocket(`http://73.20.98.246:${port}`);
+const socket = openSocket(`http://localhost:${port}`);
 function subscribeToChatMessages(callback) {
   // const messagesStream = Rx.Observable.fromEventPattern(
   //     h => socket.on('messageSent', h),
@@ -62,6 +62,7 @@ function sendLine({ newLine }){
 }
 
 function nukeMap(){
+  console.log("Emmited nukMap event");
   socket.emit("nukeMap");
 }
 
@@ -76,6 +77,17 @@ function unsubscribeToChatMessages(){
 function unsubscribeToUserDoneTyping(){
   socket.off("subscribeToUserDoneTyping");
 }
+
+function sendGeneratedMapCommands({ commands }){
+  console.log(commands)
+  socket.emit("sendGeneratedMap", { commands });
+}
+
+function subscribeToGeneratedMapCommands(callback){
+  socket.on("generatedMapRecieved", generatedMap  => callback(generatedMap));
+  socket.emit("subscribeToGeneratedMapCommands");
+}
+
 export {
   subscribeToChatMessages,
   sendMessage,
@@ -91,5 +103,7 @@ export {
   nukeMap,
   unsubscribeToUserTyping,
   unsubscribeToChatMessages,
-  unsubscribeToUserDoneTyping
+  unsubscribeToUserDoneTyping,
+  sendGeneratedMapCommands,
+  subscribeToGeneratedMapCommands
 };
