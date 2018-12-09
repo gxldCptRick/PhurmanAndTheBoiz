@@ -17,25 +17,29 @@ export function RenderItemList(items){
   return renderedItems;
 }
 
+export function RenderComboForChars(characterList){
+  characterList = Array.from(characterList);
+  var renderedCharacters = characterList.map((i) =>
+      <option selected value={i.characterId}> {i.characterName} ({i.level})</option>
+  );
+  return renderedCharacters;
+}
+
 export function RenderCharacterList(characterList)
 {
   characterList = Array.from(characterList);
-  var counter = 0;
   var renderedCharacters = characterList.map((i) =>
     <div>
-      <p>{i.class}</p>
+      <p>{i.characterName} ({i.level})</p>
     </div>
   );
   return renderedCharacters;
 }
 
-
-const options={
+export const options={
   CreateCharacter: 'createC',
   EditCharacter: 'editC',
   CreateItem: 'createI',
   EditItem: 'editI',
 };
-            export{
-              options
-            }
+

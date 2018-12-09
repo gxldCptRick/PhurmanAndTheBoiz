@@ -7,12 +7,14 @@ export default class CharacterSheet extends Component {
   super(props)
   this.state= {
     c:{
-    characterId: '',
+      characterId: '',
       userId: '',
       characterName: '',
       class: '',
       alignment: '',
       experiencePoints: '',
+      level: '1',
+      inspiration: '1',
       stats: {
         strength: '',
         dexterity: '',
@@ -33,7 +35,7 @@ export default class CharacterSheet extends Component {
       inventory: [
       ],
       gold: 0,
-      description: ""      
+      description: "Description"      
     }
 
     };
@@ -42,21 +44,24 @@ export default class CharacterSheet extends Component {
 }
 
 componentWillMount(){
+  console.log('will mount xd')
   this.setState({c:{...this.state.c, userId: this.props.uID}})
-  this.setState({c:{...this.state.c,characterId: this.props.uID}})
 }
 
 componentDidMount(){
-  if(this.state.c.characterId !== ''){
-    console.log('id given:',this.state.characterId)
+  console.log('Did mount')
+  if(this.props.rID !== ''){
+    GetResource(Resource.Characters, this.props.rID)
+    .then(Response => Response.json())
+    .then(json => this.setState({c: json}))
   }
 }
 
 handleButtonPush(){
   if(this.state.c.characterId !== ''){
-    PutToResource(Resource.Characters, this.state.c.characterId,this.state.c)
+    PutToResource(Resource.Characters,this.state.c.characterId,this.state.c)
   }else{
-    PostToResource(Resource.Characters,this.state.c.userId);
+    PostToResource(Resource.Characters,this.state.c);
   }
   this.props.callback();
 }
@@ -93,55 +98,68 @@ renderButton(){
   }
 
   changeStrength(event){
-    this.setState({c:{...this.state.c, stats:{stregth: event.target.value}} })
+    let stats = Object.assign({},this.state.c.stats)
+    stats.strength = event.target.value;
+    this.setState({c:{...this.state.c, stats}})
   }
 
   changeDexterity(event){
-    this.setState({c:{...this.state.c, stats:{dexterity:event.target.value}} })
-  }
+    let stats = Object.assign({},this.state.c.stats)
+    stats.dexterity = event.target.value;
+    this.setState({c:{...this.state.c, stats}})  }
 
   changeConstitution(event){
-    this.setState({c:{...this.state.c, stats:{constitution:event.target.value}} })
-  }
+    let stats = Object.assign({},this.state.c.stats)
+    stats.constitution = event.target.value;
+    this.setState({c:{...this.state.c, stats}})  }
 
   changeIntelligence(event){
-    this.setState({c:{...this.state.c, stats:{intelligence:event.target.value}} })
-  }
+    let stats = Object.assign({},this.state.c.stats)
+    stats.intelligence = event.target.value;
+    this.setState({c:{...this.state.c, stats}})  }
 
   changeWisdom(event){
-    this.setState({c:{...this.state.c,stats:{wisdom:event.target.value}}})
-  }
+    let stats = Object.assign({},this.state.c.stats)
+    stats.wisdom = event.target.value;
+    this.setState({c:{...this.state.c, stats}})  }
 
   changeCharisma(event){
-    this.setState({c:{...this.state.c,stats:{charisma:event.target.value}}})
-  }
+    let stats = Object.assign({},this.state.c.stats)
+    stats.charisma = event.target.value;
+    this.setState({c:{...this.state.c, stats}})  }
 
   changeSavingStrength(event){
-    this.setState({c:{...this.state.c, savingThrows:{strength:event.target.value}}})
-  }
+    let savingThrows = Object.assign({},this.state.c.savingThrows)
+    savingThrows.strength = event.target.value;
+    this.setState({c:{...this.state.c, savingThrows}})  }
 
   changeSavingDexterity(event){
-    this.setState({c:{...this.state.c, savingThrows:{dexterity:event.target.value}} })
-  }
+    let savingThrows = Object.assign({},this.state.c.savingThrows)
+    savingThrows.dexterity = event.target.value;
+    this.setState({c:{...this.state.c, savingThrows}})  }
 
   changeSavingConstitution(event){
-    this.setState({c:{...this.state.c, savingThrows:{constitution:event.target.value}}})
-  }
+    let savingThrows = Object.assign({},this.state.c.savingThrows)
+    savingThrows.constitution = event.target.value;
+    this.setState({c:{...this.state.c, savingThrows}})  }
 
   changeSavingIntelligence(event){
-    this.setState({c:{...this.state.c,savingThrows:{intelligence:event.target.value}}})
-  }
+    let savingThrows = Object.assign({},this.state.c.savingThrows)
+    savingThrows.intelligence = event.target.value;
+    this.setState({c:{...this.state.c, savingThrows}})  }
 
   changeSavingWisdom(event){
-    this.setState({c:{...this.state.c, savingThrows:{ wisdom:event.target.value}} })
-  }
+    let savingThrows = Object.assign({},this.state.c.savingThrows)
+    savingThrows.wisdom = event.target.value;
+    this.setState({c:{...this.state.c, savingThrows}})  }
 
   changeSavingCharisma(event){
-    this.setState({c:{...this.state.c, savingThrows:{charisma:event.target.value}}})
-  }
+    let savingThrows = Object.assign({},this.state.c.savingThrows)
+    savingThrows.charisma = event.target.value;
+    this.setState({c:{...this.state.c, savingThrows}})  }
 
   render() {
-    console.log('character sheet state', this.state)
+    console.log('state',this.state)
   return (
   <div className='col-md-12'>
     <h2> Character Sheet </h2>

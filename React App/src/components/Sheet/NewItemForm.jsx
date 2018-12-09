@@ -1,14 +1,14 @@
 
 import React, {Component} from 'react';
-import { Resource, PutToResource, PostToResource } from '../../helpers/ApiService';
+import { Resource, PutToResource, PostToResource, GetResource } from '../../helpers/ApiService';
 export class ItemForm extends Component{
   constructor(props){
     super(props);
     this.state = {
       isNew: true,
       iID: 0,
-      cID: 0,
       uID: 0,
+      itemData: {},
       name: '',
       type:'',
       damageRoll: '',
@@ -24,8 +24,15 @@ export class ItemForm extends Component{
   }
 
   componentWillMount(){
-    this.setState({isNew: this.props.isNew})
     this.setState({uID: this.props.uID})
+  }
+
+  componentDidMount(){
+    if(this.props.rID !== ''){
+      GetResource(Resource.Items, this.props.rID)
+      .then(response => response.json())
+      .then(json => this.setState({item: json}))
+    }
   }
 
   handleAddItem(){
@@ -38,15 +45,16 @@ export class ItemForm extends Component{
         AttackBonus: this.state.attackBonus
       }
     }
-    if(this.state.isNew){
+    if(this.state.iID === ''){
       PostToResource(Resource.Items,item)
     }else{
       PutToResource(Resource.Items,this.state.uID,item)
     }
+    this.props.callback();
   }
 
   renderButton(){
-    if(this.state.isNew){
+    if(this.state.iID === ''){
         return <button onClick={this.handleAddItem}>Add</button>
     }else{
         return <button onClick={this.handleAddItem}>Update</button>
