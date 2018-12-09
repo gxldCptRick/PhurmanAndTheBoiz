@@ -1,6 +1,6 @@
 import React from "react";
 import CharacterSheet from "../Sheet/CharacterSheet";
-import {RenderCharacterList, RenderItemList,options, compare, RenderComboForChars} from '../../helpers/ProfileHelper'
+import {RenderCharacterList, RenderItemList,options, compare, RenderComboForChars, RenderComboForItems} from '../../helpers/ProfileHelper'
 import { GetResource,Resource } from "../../helpers/ApiService";
 import { ItemForm } from "../Sheet/NewItemForm";
 import { Redirect } from "react-router";
@@ -15,7 +15,7 @@ export default class ProfilePage extends React.Component {
       characterData: [],
       characterItemData:[],
       itemData: [],
-      resourceId: '',
+      resourceIndex: 0,
       option: ''
     }
     this.changeMain = this.changeMain.bind(this);
@@ -26,6 +26,7 @@ export default class ProfilePage extends React.Component {
     this.UpdateCharList = this.UpdateCharList.bind(this);
     this.UpdateItemList = this.UpdateItemList.bind(this);
     this.ComboChar = this.ComboChar.bind(this);
+    this.ComboItem = this.ComboItem.bind(this);
   }
   componentWillMount(){
     var user = JSON.parse(localStorage.getItem('user'));
@@ -37,29 +38,57 @@ export default class ProfilePage extends React.Component {
 }
 
   componentDidMount(){
-
-    GetResource(Resource.Characters);
     if(this.state.isValid){
       this.UpdateCharList();
       this.UpdateItemList();
     }
   }
 
-  UpdateCharList(){
+  UpdateCharList(changeEvent){
     GetResource(Resource.UserCharacter,this.state.uID)
     .then(response => response.json())
     .then(json =>{
       this.setState({characterData: json})
+    }).then(()=>{
+      switch(changeEvent){
+        case 'edit':
+          this.changeMain(options.EditCharacter)
+          break;
+        case 'add':
+          this.changeMain(options.EditCharacter)
+          break;
+        case 'remove':
+          this.changeMain(options.CreateCharacter)
+          break;
+        default:
+          this.changeMain()
+          break; 
+      }
     })
   }
 
-  UpdateItemList(){
+  UpdateItemList(changeEvent){
     GetResource(Resource.UserItem,this.state.uID)
     .then(response => response.json())
     .then(json =>{
       this.setState({itemData: json})
+    }).then(()=>{
+      switch(changeEvent){
+        case 'edit':
+          this.changeMain(options.EditCharacter)
+          break;
+        case 'add':
+          this.changeMain(options.EditCharacter)
+          break;
+        case 'remove':
+          this.changeMain(options.CreateCharacter)
+          break;
+        default:
+          this.changeMain()
+          break; 
+      }
     })
-  }
+}
 UserItems(){
   return RenderItemList(this.state.itemData);
 }
@@ -78,25 +107,33 @@ UserItems(){
   ComboChar(){
     return RenderComboForChars(this.state.characterData)
   }
+  ComboItem(){
+    return RenderComboForItems(this.state.itemData)
+  }
 
   renderMain(){
     switch(this.state.option){
       case 'createI':
-        return <ItemForm       key={this.state.resourceId} rID=''                      uID={this.state.uID} callback={this.UpdateItemList}/>
+        return <ItemForm       key='1' rID='' data='' uID={this.state.uID} callback={this.UpdateItemList}/>
       case 'createC':
-        return <CharacterSheet key={this.state.resourceId} rID=''                      uID={this.state.uID} callback={this.UpdateCharList}/>
+        return <CharacterSheet key='0' rID='' data='' uID={this.state.uID} callback={this.UpdateCharList}/>
       case 'editC':
-        return <CharacterSheet key={this.state.resourceId}  rID={this.state.resourceId} uID={this.state.uID} callback={this.UpdateCharList}/>
+        return <CharacterSheet key={this.state.characterData[this.state.resourceIndex].characterId} rID='' data={this.state.characterData[this.state.resourceIndex]} uID={this.state.uID} callback={this.UpdateCharList}/>
       case 'editI':
-        return <ItemForm       key={this.state.resourceId} rID={this.state.resourceId} uID={this.state.uID} callback={this.UpdateItemList}/>
+        return <ItemForm       key={this.state.itemData[this.state.resourceIndex].itemId}      rID='' data={this.state.itemData[this.state.resourceIndex]} uID={this.state.uID} callback={this.UpdateItemList}/>
       default:
         return(<p>Edit Characters and weapoons Here</p>)
     }
   }
 
   cSelect(event){
-    this.setState({resourceId: event.target.value})
+    this.setState({resourceIndex: event.target.value})
     this.setState({option: options.EditCharacter})
+  }
+
+  iSelect(event){
+    this.setState({resourceIndex: event.target.value})
+    this.setState({option: options.EditItem})
   }
 
   render() {
@@ -106,7 +143,10 @@ UserItems(){
       <div className='row'>
         <div className="col-md-3">
           <img src="https://via.placeholder.com/300x250.png?text=Milo+Screws+everybody+over" alt='Img'/>
-
+          <select size='10' value={this.state.resourceIndex} onClick={this.cSelect.bind(this)}>
+            <this.ComboChar />
+          </select>
+          <button onClick={this.changeMain.bind(this,options.CreateCharacter)}>Create Character</button>
         </div>
         <div className="col-md-6">
             <div>
@@ -130,34 +170,28 @@ UserItems(){
 
             <this.renderMain/>
         </div>
-          <select size='10' value={this.state.resourceId} onClick={this.cSelect.bind(this)}>
-            <this.ComboChar />
-          </select>
-
         <div className="col-md-3 ">
           <h3>Maps</h3>
-          <button onClick={this.changeMain.bind(this,options.CreateCharacter)}>Create Character</button>
           <div className="list-box">
           </div>
-
           <h3>All Items</h3>
-          <div  className='list-box'>
-            <this.UserItems/>
-            <this.CharsList/>
+          <div className='list-box'>
+            <select size='10' value={this.state.resourceIndex} onClick={this.iSelect.bind(this)}>
+              <this.ComboItem />
+            </select>
           </div>
-          </div>
-
           <h3>Character Item List</h3>
           <div className='row'>
-            <button onClick={this.changeMain.bind(this,options.CreateItem)}>Create New</button>
+            <button onClick={this.changeMain.bind(this,options.CreateItem)}>Create Item</button>
             <button>Delete Selected Item From Charcter</button>
           </div>
           <div className="list-box">
             <this.CharItems/>
           </div>
         </div>
+      </div>
     )      
-    }else{
+  }else{
       return <Redirect to={'/Account'}/>
     }
   }

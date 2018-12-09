@@ -49,7 +49,6 @@ function PostToResource(
   data: any
 ): Promise<Response> {
   let path = `${rootPath}/${resourceName}`;
-  console.log('this is exaclty how its sent',JSON.stringify(data))
   return fetch(path, {
     method: "POST",
     mode: "cors",
