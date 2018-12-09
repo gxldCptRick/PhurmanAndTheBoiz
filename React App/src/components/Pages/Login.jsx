@@ -54,22 +54,33 @@ export class Login extends Component {
        <h1>Login</h1>
        {
          Object.keys(this.state.error).map(e => <p className="error" key={e}>{this.state.error[e]}</p>)
-       }
-         <div className='row'>
+        }
+         <div className='leftOfPage'>
+           <div className='smallTweak'>
+               <p>
+                 If you have been to our page before feel free to sign into your account here 
+               </p>
+           </div>
+           <div className='loginBox'>
+           <div className='row'>
            <div className='col-md-6'>
            <label> Username:
          <input onChange={this.handleUserNameChange.bind(this)}
            />
          </label>
            </div>
-           <div className='col-md-6'>
+           <div className='col-md-7'>
          <label>Password:
          <input type="Password" onChange={this.handlePasswordChange.bind(this)}
            />
-         </label>
+          </label>
+                 <div className ='smallButton'>
+           <input type='submit' value="Login" onClick={this.handleLoginAttempt.bind(this)} ></input>
            </div>
-         </div>
-         <input type='submit' value="Login" onClick={this.handleLoginAttempt.bind(this)}></input>
+           </div>
+           </div>
+           </div >
+           </div>
     </div>
      )}
  }

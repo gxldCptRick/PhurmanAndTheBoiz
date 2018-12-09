@@ -54,7 +54,8 @@ body {
           position: absolute;
           left: 0;
           bottom: 0;
-          top: 100%;
+          
+          
         }
 .navbar-inverse {
   background-color: #101411;
