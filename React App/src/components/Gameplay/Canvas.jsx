@@ -10,7 +10,7 @@ class Canvas extends Component {
     super(props);
     this.isDrawing = false;
     this.currentLineId = null;
-
+    this.lines = [];
     RethinkAPI.subscribeToMessageFromServer(uuid => {
       console.log(uuid);
       this.currentLineId = uuid;
@@ -65,8 +65,8 @@ class Canvas extends Component {
     ctx.fillStyle = "#fff";
     ctx.beginPath();
     ctx.moveTo(point.x, point.y);
-    this.state.lines.push(newLine);
-    this.state.setState({ currentLine: newLine });
+    this.lines.push(newLine);
+    this.currentLine =  newLine;
     RethinkAPI.sendLine({ newLine });
     console.log("Sent line:", newLine.id);
   }
@@ -91,7 +91,7 @@ class Canvas extends Component {
       ctx.lineTo(x, y);
       ctx.stroke();
       let lineId = this.currentLine.id;
-      this.state.currentLine.points.push({ x, y });
+      this.currentLine.points.push({ x, y });
       RethinkAPI.sendPointToDraw({ x, y, lineId });
     }
   }
