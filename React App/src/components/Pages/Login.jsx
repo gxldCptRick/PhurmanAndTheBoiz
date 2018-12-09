@@ -7,6 +7,7 @@ export class Login extends Component {
   super(props);
   this.state={
     Password:'',
+    error: {},
     Username:'',
     toNavigate: false,
   }
@@ -18,13 +19,29 @@ export class Login extends Component {
  handleUserNameChange(event){
     this.setState({Username: event.target.value})
  }
+
+ handleResponse(){
+  return (response) => {
+    console.log(response);
+    if(response.status === 400){
+      response.json().then(json => {
+        this.setState({error: json, toNavigate: false});
+      })
+    }else {
+      this.setState({toNavigate: true})
+      return response.json();
+    }
+  }
+ }
+
  handleLoginAttempt(){
    var creds={
      Username: this.state.Username,
      Password: this.state.Password,
    }
   LoginUser(creds)
-  .then(response => this.setState({toNavigate: true}))
+  .then(this.handleResponse())
+  .catch(err => console.log(err));
  }
 
  render() {
@@ -32,8 +49,11 @@ export class Login extends Component {
     return <Redirect to={'/Profile'}/>
    }else{
      return(
-     <div className='form-horizontal'>
-    <h2>Login</h2>
+       <div className='form-horizontal'>
+       <h1>Login</h1>
+       {
+         Object.keys(this.state.error).map(e => <p className="error" key={e}>{this.state.error[e]}</p>)
+       }
          <div className='row'>
            <div className='col-md-6'>
            <label> Username:

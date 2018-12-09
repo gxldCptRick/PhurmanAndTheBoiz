@@ -128,7 +128,7 @@ class Canvas extends Component {
     var maxDoorCount = 0;
 
     if (!(newRoom.top - 50 <= 25)) {
-      if (roomWidth == (6 * 25)) {
+      if (roomWidth === (6 * 25)) {
         maxDoorCount += 2;
       } else {
         maxDoorCount += 1;
@@ -136,7 +136,7 @@ class Canvas extends Component {
     }
 
     if (!(newRoom.right + 50 >= 875)) {
-      if (roomHeight == (6 * 25)) {
+      if (roomHeight === (6 * 25)) {
         maxDoorCount += 2;
       } else {
         maxDoorCount += 1;
@@ -144,7 +144,7 @@ class Canvas extends Component {
     }
 
     if (!(newRoom.bottom + 50 >= 475)) {
-      if (roomWidth == (6 * 25)) {
+      if (roomWidth === (6 * 25)) {
         maxDoorCount += 2;
       } else {
         maxDoorCount += 1;
@@ -152,40 +152,37 @@ class Canvas extends Component {
     }
 
     if (!(newRoom.left - 50 <= 25)) {
-      if (roomHeight == (6 * 25)) {
+      if (roomHeight === (6 * 25)) {
         maxDoorCount += 2;
       } else {
         maxDoorCount += 1;
       }
     }
 
-    if (doorCount == 0) {
+    if (doorCount === 0) {
       doorCount = 1;
     }
 
-    if (currentRoom == roomCount - 1) {
-      let isEven = (currentDoorCount + doorCount % 2 == 0);
-
-      while(!isEven) {
+    if (currentRoom === roomCount - 1) {
+      let isEven = (currentDoorCount + doorCount % 2 === 0);
+      do {
         doorCount = Math.floor(Math.random() * (roomCount - 1)) + 1;
-
         if (doorCount > maxDoorCount) {
           doorCount = maxDoorCount;
         }
-
-        isEven = (currentDoorCount + doorCount % 2 == 0);
-      }
+        isEven = (currentDoorCount + doorCount % 2 === 0);
+      }while(!isEven)
     }
 
     if (doorCount > maxDoorCount) {
       doorCount = maxDoorCount;
     }
 
-    var takenDoors = [];
+    let takenDoors = [];
 
-    for (var i = 0; i < doorCount; i++) {
-      var doorSide = Math.floor(Math.random() * 4); //0 = top, 1 = right, 2 = bottom, 3 = left
-      var validSide = true;
+    for (let i = 0; i < doorCount; i++) {
+      let doorSide = Math.floor(Math.random() * 4); //0 = top, 1 = right, 2 = bottom, 3 = left
+      let validSide = true;
 
       do {
         switch (doorSide) {
@@ -197,7 +194,7 @@ class Canvas extends Component {
             } else {
               validSide = true;
 
-              if (roomWidth == 6 * 25){
+              if (roomWidth === 6 * 25){
                 if (takenDoors.includes("00") && takenDoors.includes("01")) {
                   validSide = false;
                   doorSide = Math.floor(Math.random() * 4);
@@ -206,9 +203,8 @@ class Canvas extends Component {
                 } else if (takenDoors.includes("01")) {
                   takenDoors.push("00");
                 } else {
-                  var door = Math.floor(Math.random() * 2);
-
-                  if (door == 0){
+                  let door = Math.floor(Math.random() * 2);
+                  if (door === 0){
                     takenDoors.push("00");
                   } else {
                     takenDoors.push("01");
@@ -223,18 +219,14 @@ class Canvas extends Component {
                 }
               }
             }
-
             break;
-
           case 1:
-
             if (newRoom.right + 50 >= 875) {
               validSide = false;
               doorSide = Math.floor(Math.random() * 4);
             } else {
               validSide = true;
-
-              if (roomHeight == 6 * 25){
+              if (roomHeight === 6 * 25){
                 if (takenDoors.includes("10") && takenDoors.includes("11")) {
                   validSide = false;
                   doorSide = Math.floor(Math.random() * 4);
@@ -243,9 +235,8 @@ class Canvas extends Component {
                 } else if (takenDoors.includes("11")) {
                   takenDoors.push("10");
                 } else {
-                  var door = Math.floor(Math.random() * 2);
-
-                  if (door == 0){
+                  let door = Math.floor(Math.random() * 2);
+                  if (door === 0){
                     takenDoors.push("10");
                   } else {
                     takenDoors.push("11");
@@ -260,18 +251,15 @@ class Canvas extends Component {
                 }
               }
             }
-
             break;
-
           case 2:
-
             if (newRoom.bottom + 50 >= 475) {
               validSide = false;
               doorSide = Math.floor(Math.random() * 4);
             } else {
               validSide = true;
 
-              if (roomWidth == 6 * 25){
+              if (roomWidth === 6 * 25){
                 if (takenDoors.includes("20") && takenDoors.includes("21")) {
                   validSide = false;
                   doorSide = Math.floor(Math.random() * 4);
@@ -280,9 +268,8 @@ class Canvas extends Component {
                 } else if (takenDoors.includes("21")) {
                   takenDoors.push("20");
                 } else {
-                  var door = Math.floor(Math.random() * 2);
-
-                  if (door == 0){
+                  let door = Math.floor(Math.random() * 2);
+                  if (door === 0){
                     takenDoors.push("20");
                   } else {
                     takenDoors.push("21");
@@ -297,18 +284,14 @@ class Canvas extends Component {
                 }
               }
             }
-
             break;
-
           case 3:
-
             if (newRoom.left - 50 <= 25) {
               validSide = false;
               doorSide = Math.floor(Math.random() * 4);
             } else {
               validSide = true;
-
-              if (roomHeight == 6 * 25){
+              if (roomHeight === 6 * 25){
                 if (takenDoors.includes("30") && takenDoors.includes("31")) {
                   validSide = false;
                   doorSide = Math.floor(Math.random() * 4);
@@ -317,9 +300,8 @@ class Canvas extends Component {
                 } else if (takenDoors.includes("31")) {
                   takenDoors.push("30");
                 } else {
-                  var door = Math.floor(Math.random() * 2);
-
-                  if (door == 0){
+                  let door = Math.floor(Math.random() * 2);
+                  if (door === 0){
                     takenDoors.push("30");
                   } else {
                     takenDoors.push("31");
@@ -334,12 +316,9 @@ class Canvas extends Component {
                 }
               }
             }
-
             break;
-
           default:
-
-            throw "Unreachable Code: Door is generated on a non-existant side!";
+            throw new Error("Unreachable Code: Door is generated on a non-existant side!");
         }
       } while(!validSide);
     }
@@ -357,18 +336,14 @@ class Canvas extends Component {
     if (takenDoors.includes("00")) {
       switch (roomWidth / 25) {
 
-        case 3, 6:
-
+        case 3:
+        case 6:
           doorPoints.push({"door" : "00", "doorStart" : roomXPoint + 25, "doorEnd" : roomXPoint + 50, "doorAxis" : "X", "connected" : false});
-
           ctx.lineTo(roomXPoint + 25, roomYPoint);
           ctx.moveTo(roomXPoint + 50, roomYPoint);
-
           break;
-
         case 4:
-
-          if (Math.floor(Math.random() * 2) == 0) {
+          if (Math.floor(Math.random() * 2) === 0) {
             doorPoints.push({"door" : "00", "doorStart" : roomXPoint + 25, "doorEnd" : roomXPoint + 50, "doorAxis" : "X", "connected" : false});
 
             ctx.lineTo(roomXPoint + 25, roomYPoint);
@@ -390,6 +365,8 @@ class Canvas extends Component {
           ctx.moveTo(roomXPoint + 75, roomYPoint);
 
           break;
+        default:
+          throw new Error("Unexpected");
       }
     }
 
@@ -405,39 +382,34 @@ class Canvas extends Component {
     if (takenDoors.includes("10")) {
       switch (roomHeight / 25) {
 
-        case 3, 6:
-
+        case 3:
+        case 6:
           doorPoints.push({"door" : "10", "doorStart" : roomYPoint + 25, "doorEnd" : roomYPoint + 50, "doorAxis" : "Y", "connected" : false});
-
           ctx.lineTo(roomXPoint + roomWidth, roomYPoint + 25);
           ctx.moveTo(roomXPoint + roomWidth, roomYPoint + 50);
-
           break;
 
         case 4:
 
-          if (Math.floor(Math.random() * 2) == 0) {
+          if (Math.floor(Math.random() * 2) === 0) {
             doorPoints.push({"door" : "10", "doorStart" : roomYPoint + 25, "doorEnd" : roomYPoint + 50, "doorAxis" : "Y", "connected" : false});
 
             ctx.lineTo(roomXPoint + roomWidth, roomYPoint + 25);
             ctx.moveTo(roomXPoint + roomWidth, roomYPoint + 50);
           } else {
             doorPoints.push({"door" : "10", "doorStart" : roomYPoint + 50, "doorEnd" : roomYPoint + 75, "doorAxis" : "Y", "connected" : false});
-
             ctx.lineTo(roomXPoint + roomWidth, roomYPoint + 50);
             ctx.moveTo(roomXPoint + roomWidth, roomYPoint + 75);
           }
-
           break;
 
         case 5:
-
           doorPoints.push({"door" : "10", "doorStart" : roomYPoint + 50, "doorEnd" : roomYPoint + 75, "doorAxis" : "Y", "connected" : false});
-
           ctx.lineTo(roomXPoint + roomWidth, roomYPoint + 50);
           ctx.moveTo(roomXPoint + roomWidth, roomYPoint + 75);
-
           break;
+        default: 
+          throw new Error("Unexpected");
       }
     }
 
@@ -452,8 +424,8 @@ class Canvas extends Component {
 
     if (takenDoors.includes("20")) {
       switch (roomWidth / 25) {
-
-        case 3, 6:
+        case 3:
+        case 6:
 
          doorPoints.push({"door" : "20", "doorStart" : roomXPoint + roomWidth - 25, "doorEnd" : roomXPoint + roomWidth - 50, "doorAxis" : "X", "connected" : false});
 
@@ -464,7 +436,7 @@ class Canvas extends Component {
 
         case 4:
 
-          if (Math.floor(Math.random() * 2) == 0) {
+          if (Math.floor(Math.random() * 2) === 0) {
             doorPoints.push({"door" : "20", "doorStart" : roomXPoint + roomWidth - 25, "doorEnd" : roomXPoint + roomWidth - 50, "doorAxis" : "X", "connected" : false});
 
             ctx.lineTo(roomXPoint + roomWidth - 25, roomYPoint + roomHeight);
@@ -486,6 +458,8 @@ class Canvas extends Component {
           ctx.moveTo(roomXPoint + roomWidth - 75, roomYPoint + roomHeight);
 
           break;
+        default: 
+          throw new Error("Unexpected");
       }
     }
 
@@ -501,8 +475,8 @@ class Canvas extends Component {
     if (takenDoors.includes("30")) {
       switch (roomWidth / 25) {
 
-        case 3, 6:
-
+        case 3:
+        case 6:
           doorPoints.push({"door" : "30", "doorStart" : roomYPoint + roomHeight - 25, "doorEnd" : roomYPoint + roomHeight - 50, "doorAxis" : "Y", "connected" : false});
 
           ctx.lineTo(roomXPoint, roomYPoint + roomHeight - 25);
@@ -512,7 +486,7 @@ class Canvas extends Component {
 
         case 4:
 
-          if (Math.floor(Math.random() * 2) == 0) {
+          if (Math.floor(Math.random() * 2) === 0) {
             doorPoints.push({"door" : "30", "doorStart" : roomYPoint + roomHeight - 25, "doorEnd" : roomYPoint + roomHeight - 50, "doorAxis" : "Y", "connected" : false});
 
             ctx.lineTo(roomXPoint, roomYPoint + roomHeight - 25);
@@ -534,6 +508,8 @@ class Canvas extends Component {
           ctx.moveTo(roomXPoint, roomYPoint + roomHeight - 75);
 
           break;
+          default: 
+          throw new Error("Unexpected");
       }
     }
 

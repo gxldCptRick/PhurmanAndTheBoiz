@@ -71,10 +71,7 @@ function PostToResource(
   }).then(function(response){
     if(response.status === 401) throw new Error("Must Login Before Attempting To Post.");
     return response;
-  }).then(function(response){
-    if(response.status === 201) return response;
-    else throw new Error("Response was not created.")
-  });
+  })
 }
 
 function GetResource(
@@ -103,7 +100,6 @@ const SpecialPaths = {
 };
 export function LoginUser(user:any): Promise<any> {
   return PostToResource(SpecialPaths.Login, user)
-    .then(response => response.json())
     .then(json => {
       localStorage.setItem("user", JSON.stringify(json));
       return json
@@ -112,7 +108,6 @@ export function LoginUser(user:any): Promise<any> {
 
 function RegisterUser(user: any): Promise<any> {
   return PostToResource(SpecialPaths.Register, user)
-  .then(response => response.json())
 }
 
 const Resource = {

@@ -20,11 +20,10 @@ export function RenderItemList(items){
 export function RenderCharacterList(characterList)
 {
   characterList = Array.from(characterList);
-  var counter = 0;
-  var renderedCharacters = characterList.map((i) =>
-    <div>
+  let renderedCharacters = characterList.map((i) =>
+    (<div key={i.id}>
       <p>{i.class}</p>
-    </div>
+    </div>)
   );
   return renderedCharacters;
 }

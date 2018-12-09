@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Stats } from './CharacterStats';
-import { Resource, PutToResource, PostToResource, GetResource } from '../../helpers/ApiService';
+import { Resource, PutToResource, PostToResource} from '../../helpers/ApiService';
 
 export default class CharacterSheet extends Component {
   constructor(props) {

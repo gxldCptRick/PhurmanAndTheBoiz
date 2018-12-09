@@ -1,6 +1,22 @@
 import React, {Component} from 'react'
 import {RegisterPage} from './RegisterPage'
 import {Login} from './Login'
+import { Route, Link } from 'react-router-dom'
+
+function LoginDisplay(){
+  return (<div>
+    <Login/>
+    <Link to="/Login/SignUp">Register</Link>
+    </div>);
+}
+
+function RegisterDisplay(){
+  return (<div>
+    <RegisterPage/>
+    <Link to="/Login/SignIn">Sign In</Link>
+  </div>
+  );
+}
 
 export class Account extends Component{
   constructor(props){
@@ -21,26 +37,25 @@ export class Account extends Component{
     }
   }
 
+  logout(){
+    localStorage.removeItem("user");
+    this.setState({loggedIn: false});
+  }
+
   showPrompts(){
     if(this.state.loggedIn){
       return(
         <div>
-          <RegisterPage/>
-          <button onClick={()=> {localStorage.removeItem("user"); this.setState({loggedIn: false})}}>Log Out</button>
+          <h1>Logout</h1>
+          <button onClick={this.logout.bind(this)}>Log Out</button>
         </div>
       )
     }else{
       return(
         <div>
-        <div className='row'>
-          <div className='col-md-6'>
-            <RegisterPage/>
-          </div>
-          <div className='col-md-6'>
-            <Login/>
-          </div>
+          <Route exact path="/Login/SignIn" component={LoginDisplay}/>
+          <Route exact path="/Login/SignUp" component={RegisterDisplay}/>
         </div>
-      </div>
       )
     }
   }
