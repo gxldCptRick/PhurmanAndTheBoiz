@@ -172,8 +172,7 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
             itemToAdd.UserId = "2";
 
             //act
-            service.SaveItem(itemToAdd);
-            var item = service.GetAllItems().FirstOrDefault(i => i.UserId == "2");
+            var item = service.SaveItem(itemToAdd);
             service.DeleteItem(item.ItemId);
             var deletedItem = service.GetAllItems().FirstOrDefault(i => i.UserId == "2");
 
@@ -201,6 +200,8 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
         public void UpdatingItemUpdatesInDatabase()
         {
             var service = CreateDnDService();
+            var initialName = "Sword Of A Thousand Truths";
+            var afterName = "Iron Sword";
             if (!service.GetAllItems().Any(i => i.UserId == "3"))
             {
                 var item = GenerateItem();
@@ -208,8 +209,6 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
                 service.SaveItem(item);
             }
             var itemUpdates = service.GetAllItems().FirstOrDefault(i => i.UserId == "3");
-            var initialName = "Sword Of A Thousand Truths";
-            var afterName = "Iron Sword";
             itemUpdates.ItemName = initialName;
             service.UpdateItem(itemUpdates);
 
@@ -231,7 +230,7 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
         {
             return new DnDMap
             {
-                MapName = "Dali Schllama",
+                MapName = Guid.NewGuid().ToString(),
                 CreatedBy = "The Batman",
                 UserId = null,
                 Lines = new List<Line>
@@ -267,7 +266,7 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
         {
             return new CharacterSheet
             {
-                CharacterName = "The Cooler Man",
+                CharacterName = Guid.NewGuid().ToString(),
                 UserId = "",
                 Alignment = "Chaotic Neutral",
                 Class = "Dragon Slayer",
@@ -288,7 +287,7 @@ namespace PhurmanAndTheBoiz.DAL.Tests.Services
             return new Item
             {
                 UserId = null,
-                ItemName = "The Iron Sword",
+                ItemName = Guid.NewGuid().ToString(),
                 ItemType = "Equip",
                 Stats = new ItemStats
                 {
