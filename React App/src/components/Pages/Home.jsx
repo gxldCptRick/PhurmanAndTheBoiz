@@ -6,7 +6,7 @@ export class Home extends Component {
     return (
       <div className="bod">
         <h1>Dungeon Rollers</h1>
-        <div>
+        <div className='home'>
           <p className="Ptag">
             Welcome to Dungeon Rollers!! We are a custom game site to play the newest version on Dungeon and Dragons fifth edition.
             We have built in many different features we thought would benefit the people playing the game, such as a dice roller. 

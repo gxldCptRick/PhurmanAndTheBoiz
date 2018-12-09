@@ -11,17 +11,22 @@
     bottom:0;     
 }
 
+.home{
+    text-align: center;
+    height:500px;
+    border: 5px groove #50535b;
+    background-color:#cc2c1e;
+    box-shadow: 5px 8px;
+}
 
 .Ptag
 {
-    padding-left: 200px;
-    padding-right: 200px;
-    font-size: 45px;
-    font-size: 18px;
+    color:black;
+    font-size: 15px;
     font-family: fantasy;
     padding: 15px;
-    border: 5px groove #50535b;
-    background-color:#cc2c1e;
+    border: 5px groove black ;
+    background-color: #50535b;
     box-shadow: 5px 8px;
 }
 .messages-container{
@@ -52,13 +57,19 @@
 }
 
 .rightOfPage{
+    text-align: center;
+    height:500px;
+    width:68%;
+    margin-left: 10px;
+    float: right;
     border: 5px groove #50535b;
     background-color:#cc2c1e;
     box-shadow: 5px 8px;
 }
 .leftOfPage{
+    text-align: center;
     height:500px;
-    width: 400px;
+    width: 30%;
     float: left;
     position: fixed 10px;
     border: 5px groove #50535b;
@@ -75,11 +86,20 @@
     background-color: #50535b;
     box-shadow: 5px 8px;
 }
+.RegisterBox{
+    height:400px;
+    width: 300px;
+    float: left;
+    position: fixed 10px;
+    border: 5px groove black ;
+    background-color: #50535b;
+    box-shadow: 5px 8px;
+}
 
 .smallButton{
     height: 100px;
 }
 
 .smallTweak{
-   width: inherit;
+   width: 80%;
 }

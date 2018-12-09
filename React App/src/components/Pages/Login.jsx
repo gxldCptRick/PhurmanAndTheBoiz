@@ -59,7 +59,7 @@ export class Login extends Component {
           ))}
           <div className="leftOfPage">
             <div className="smallTweak">
-              <p>
+              <p className='Ptag'>
                 If you have been to our page before feel free to sign into your
                 account here
               </p>
@@ -68,7 +68,6 @@ export class Login extends Component {
               <div className="row">
                 <div className="col-md-6">
                   <label>
-                    {" "}
                     Username:
                     <input onChange={this.handleUserNameChange.bind(this)} />
                   </label>
