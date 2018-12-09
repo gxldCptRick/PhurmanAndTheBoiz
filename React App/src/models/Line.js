@@ -1,4 +1,3 @@
-// @flow
 export default class Line {
   constructor(lineId) {
     this.points = [];
