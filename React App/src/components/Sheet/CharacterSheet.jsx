@@ -24,7 +24,7 @@ export default class CharacterSheet extends Component {
         wisdom: '1',
         charisma: '1'
       },
-      inspiration: '1',
+      //inspiration: '1',
       savingThrows: {
         strength: '1',
         dexterity: '1',

@@ -170,12 +170,10 @@ UserItems(){
           <button onClick={this.changeMain.bind(this,options.CreateCharacter)}>Create Character</button>
         </div>
         <div className="col-md-6">
-            <div>
+            <div className='row'>
               <label>Firstname</label>
             </div>
-            <div>
               <label>LastName</label>
-            </div>
             <div>
               <input value="UserName" type="text" />
             </div>
@@ -213,7 +211,7 @@ UserItems(){
       </div>
     )      
   }else{
-      return <Redirect to={'/Account'}/>
+      return <Redirect to={'/Login/SignIn'}/>
     }
   }
 }

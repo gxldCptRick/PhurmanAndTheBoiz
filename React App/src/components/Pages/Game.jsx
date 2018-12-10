@@ -24,7 +24,8 @@ function RenderCharacterSheets() {
 }
 
 export function Game(props) {
-  if (localStorage.getItem("user") !== null) {
+  var user = localStorage.getItem('user');
+  if (user === null) {
     return (
       <div>
         <div className='bod'>
@@ -70,6 +71,6 @@ export function Game(props) {
       </div>
     );
   } else {
-    return <Redirect to={"/Account"} />;
+    return <Redirect to={"/Login/SignIn"} />;
   }
 }

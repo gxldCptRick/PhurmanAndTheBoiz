@@ -5,7 +5,6 @@ import AuthHeader from "./AuthHeader";
 import fetch from "node-fetch";
 const rootPath = "https://gxldcptrick-demo-app.herokuapp.com/api/dnd";
 
-
 function DeleteResource(resourceName: string, id: string = "") {
   let path = `${rootPath}/${resourceName}/${id}`;
   return fetch(path, {
@@ -89,10 +88,8 @@ const SpecialPaths = {
 };
 
 function LoginUser(user): Promise<any> {
-
   return PostToResource(SpecialPaths.Login, user)
     .then(json => {
-      console.log(JSON.stringify(json));
       localStorage.setItem("user", JSON.stringify(json));
       return json
     })
