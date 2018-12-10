@@ -1,9 +1,10 @@
 import React from "react";
 import CharacterSheet from "../Sheet/CharacterSheet";
-import {RenderCharacterList, RenderItemList,options, compare, RenderComboForChars, RenderComboForItems} from '../../helpers/ProfileHelper'
+import {RenderCharacterList, RenderItemList,options, RenderComboForChars, RenderComboForItems} from '../../helpers/ProfileHelper'
 import { GetResource,Resource } from "../../helpers/ApiService";
 import { ItemForm } from "../Sheet/NewItemForm";
 import { Redirect } from "react-router";
+import ManageInventory from "../Sheet/AddInventory";
 
 export default class ProfilePage extends React.Component {
 
@@ -45,6 +46,7 @@ export default class ProfilePage extends React.Component {
   }
 
   UpdateCharList(changeEvent){
+    this.setState({option: null})
     GetResource(Resource.UserCharacter,this.state.uID)
     .then(response => response.json())
     .then(json =>{
@@ -68,6 +70,7 @@ export default class ProfilePage extends React.Component {
   }
 
   UpdateItemList(changeEvent){
+    this.setState({option: null})
     GetResource(Resource.UserItem,this.state.uID)
     .then(response => response.json())
     .then(json =>{
@@ -82,6 +85,9 @@ export default class ProfilePage extends React.Component {
           break;
         case 'remove':
           this.changeMain(options.CreateCharacter)
+          break;
+          case 'item':
+          this.changeMain(options.AddItemToChar)
           break;
         default:
           this.changeMain()
@@ -112,6 +118,7 @@ UserItems(){
   }
 
   renderMain(){
+    console.log('rendering in rendermain',this.state)
     switch(this.state.option){
       case 'createI':
         return <ItemForm       key='1' rID='' data='' uID={this.state.uID} callback={this.UpdateItemList}/>
@@ -121,25 +128,25 @@ UserItems(){
         return <CharacterSheet key={this.state.characterData[this.state.resourceIndex].characterId} rID='' data={this.state.characterData[this.state.resourceIndex]} uID={this.state.uID} callback={this.UpdateCharList}/>
       case 'editI':
         return <ItemForm       key={this.state.itemData[this.state.resourceIndex].itemId}      rID='' data={this.state.itemData[this.state.resourceIndex]} uID={this.state.uID} callback={this.UpdateItemList}/>
+      case 'addTo':
+      return <ManageInventory key={this.state.characterData[this.state.resourceIndex]} cData={this.state.characterData[this.state.resourceIndex]} idata={this.state.itemData} callback={this.UpdateCharList}/>
       default:
         return(<p>Edit Characters and weapoons Here</p>)
     }
   }
 
   cSelect(event){
-    this.setState({resourceIndex: event.target.value})
-    this.setState({option: options.EditCharacter})
+    this.setState({resourceIndex: event.target.value, option: options.EditCharacter})
     this.setState({characterItemData: this.state.characterData[this.state.resourceIndex].inventory})
   }
 
   iSelect(event){
-    this.setState({resourceIndex: event.target.value})
-    this.setState({option: options.EditItem})
+    this.setState({resourceIndex: event.target.value,option: options.EditItem})
   }
 
   render() {
     if(this.state.isValid){
-      console.log('Profile State:',this.state)
+      console.log('Profile State in Render:',this.state)
       return (
       <div className='row'>
         <div className="col-md-3">
@@ -184,7 +191,7 @@ UserItems(){
           <h3>Character Item List</h3>
           <div className='row'>
             <button onClick={this.changeMain.bind(this,options.CreateItem)}>Create Item</button>
-            <button>Delete Selected Item From Charcter</button>
+            <button onClick={this.changeMain.bind(this,options.AddItemToChar)}>Manage Character inventory</button>
           </div>
           <div className="list-box">
             <this.CharItems/>

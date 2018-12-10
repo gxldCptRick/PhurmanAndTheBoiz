@@ -4,7 +4,7 @@ export function RenderItemList(items){
   items = Array.from(items);
   var renderedItems = [];
   for(var i = 0; i < renderedItems.length; i++){
-    RenderItemList.push(<option selected value={i}> {items[i].itemName}: {items[i].itemType} ({items[i].AttackBonus})</option>)
+    RenderItemList.push(<option value={i}> {items[i].itemName}: {items[i].itemType} ({items[i].AttackBonus})</option>)
   }
   return renderedItems;
 }
@@ -13,7 +13,7 @@ export function RenderComboForChars(characterList){
   var cList = Array.from(characterList);
   var renderedCharacters = [];
   for(var i = 0; i < characterList.length; i++){
-    renderedCharacters.push(<option selected value={i}> {cList[i].characterName} ({cList[i].level})</option>)
+    renderedCharacters.push(<option value={i}> {cList[i].characterName} ({cList[i].level})</option>)
   }
   return renderedCharacters;
 }
@@ -22,7 +22,7 @@ export function RenderComboForItems(itemlist){
   itemlist = Array.from(itemlist);
   var renderedItems = [];
   for(var i = 0; i < itemlist.length; i++){
-    renderedItems.push(<option selected value={i}> {itemlist[i].itemName}: {itemlist[i].itemType} ({itemlist[i].stats.AttackBonus})</option>)
+    renderedItems.push(<option value={i}> {itemlist[i].itemName}: {itemlist[i].itemType} ({itemlist[i].stats.AttackBonus})</option>)
   }
   return renderedItems;
 }
@@ -49,5 +49,6 @@ export const options={
   EditCharacter: 'editC',
   CreateItem: 'createI',
   EditItem: 'editI',
+  AddItemToChar: 'addTo'
 };
 

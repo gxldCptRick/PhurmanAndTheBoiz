@@ -92,7 +92,6 @@ export class ItemForm extends Component{
   }
 
   render(){
-    console.log(this.state.itemData)
     return(
       <div>
         <div className='row'>
