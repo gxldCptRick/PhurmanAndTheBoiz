@@ -26,18 +26,20 @@ export default class Map{
     }
 
     draw(ctx){
-        console.log(this.rooms);
         this.rooms.forEach(room => {
             ctx.beginPath();
-            ctx.rect(room.x, room.y, room.width, room.height);
+            ctx.strokeStyle = "#ffffff";
+            console.log(room);
+            ctx.moveTo(room.topLeft.x, room.topLeft.y);
+            ctx.lineTo(room.bottomRight.x, room.bottomRight.y);
             ctx.stroke();
-            room.doorPoints.forEach(door => {
-                if(door.axis === 'x'){
-                    ctx.clearRect(door.startPoint - 5, room.y, 15, door.endPoint - door.startPoint);
-                }else {
-                    ctx.clearRect(room.x, door.startPoint - 5,  door.endPoint - door.startPoint, 15);
-                }
-            })
+            // room.doorPoints.forEach(door => {
+            //     if(door.axis === 'x'){
+            //         ctx.clearRect(door.startPoint - 5, room.y, 50, 50);
+            //     }else {
+            //         ctx.clearRect(room.x, door.startPoint - 5,  50, 50);
+            //     }
+            // })
         })
     }
 }
