@@ -28,7 +28,9 @@ export class RegisterPage extends Component {
       password: this.state.Password
     };
     RegisterUser(user).then(response => {
-      return <Redirect to={"/Profile"} />;
+      if(response.status === 200){
+        return <Redirect to={"/Profile"} />;
+      }
     });
   }
 

@@ -1,18 +1,21 @@
 
 import React, {Component} from 'react';
-import { Resource, PutToResource, PostToResource, GetResource } from '../../helpers/ApiService';
+import { Resource, PutToResource, PostToResource, GetResource, DeleteResource } from '../../helpers/ApiService';
+import { changes } from '../../helpers/ProfileHelper';
 export class ItemForm extends Component{
   constructor(props){
     super(props);
     this.state = {
-      isNew: true,
-      iID: 0,
-      uID: 0,
-      itemData: {},
-      name: '',
-      type:'',
-      damageRoll: '',
-      attackBonus: ''
+      itemData: {
+        itemId: '',
+        userId: '',
+        itemType: '',
+        itemName: '',
+        stats: {
+          damageRoll: '',
+          AttackBonus: 0,
+        }
+      }
     }
 
     this.renderButton = this.renderButton.bind(this);
@@ -20,60 +23,72 @@ export class ItemForm extends Component{
     this.handleNameChange = this.handleNameChange.bind(this);    
     this.handleItemType = this.handleItemType.bind(this);    
     this.handleDamageRoll = this.handleDamageRoll.bind(this);    
-    this.hadnleAttackBonus = this.hadnleAttackBonus.bind(this);
+    this.handleAttackBonus = this.handleAttackBonus.bind(this);
   }
 
   componentWillMount(){
-    this.setState({uID: this.props.uID})
-  }
+    let itemData = Object.assign({},this.state.itemData)
+    itemData.userId = this.props.uID;
+    this.setState({itemData: itemData})    }
 
   componentDidMount(){
     if(this.props.rID !== ''){
       GetResource(Resource.Items, this.props.rID)
       .then(response => response.json())
-      .then(json => this.setState({item: json}))
+      .then(json => this.setState({itemData: json}))
+    }else if(this.props.data !== ''){
+      this.setState({itemData: this.props.data})
     }
   }
 
+  handleRemoval(){
+    DeleteResource(Resource.Items,this.state.itemData.itemId)
+    .then( () => this.props.callback(changes.remove))
+  }
   handleAddItem(){
-    var item={
-      userId: this.state.uID,
-      itemType: this.state.type,
-      itemName: this.state.name,
-      stats: {
-        DamageRoll: this.state.damageRoll,
-        AttackBonus: this.state.attackBonus
-      }
-    }
-    if(this.state.iID === ''){
-      PostToResource(Resource.Items,item)
+    if(this.state.itemData.itemId === ''){
+      PostToResource(Resource.Items, this.state.itemData)
+      .then(()=> this.props.callback(changes.add))
     }else{
-      PutToResource(Resource.Items,this.state.uID,item)
+      PutToResource(Resource.Items,this.state.itemData.userId,this.state.itemData)
+      .then(()=> this.props.callback(changes.edit))
     }
-    this.props.callback();
   }
 
   renderButton(){
-    if(this.state.iID === ''){
+    if(this.state.itemData.itemId  === ''){
         return <button onClick={this.handleAddItem}>Add</button>
     }else{
-        return <button onClick={this.handleAddItem}>Update</button>
+        return(
+          <div className='row'>
+            <button onClick={this.handleAddItem}>Update</button>
+            <button onClick={this.handleRemoval.bind(this)}>Delete Item</button>
+          </div>
+        )
     }
   }
 
   handleNameChange(e){
-    this.setState({name: e.target.value})
+    let itemData = Object.assign({},this.state.itemData)
+    itemData.itemName = e.target.value;
+    this.setState({itemData: itemData})  
   }
 
   handleItemType(e){
-    this.setState({itemType: e.target.value})
+    let itemData = Object.assign({},this.state.itemData)
+    itemData.itemType = e.target.value;
+    this.setState({itemData: itemData})
   }
 
   handleDamageRoll(e){
-    this.setState({damageRoll: e.target.value})
+    let stats = Object.assign({},this.state.itemData.stats)
+    stats.damageRoll = e.target.value;
+    this.setState({itemData:{...this.state.itemData, stats: stats}})
   }
-  hadnleAttackBonus(e){
-    this.setState({attackBonus: e.target.value})
+  handleAttackBonus(e){
+    let stats = Object.assign({},this.state.itemData.stats)
+    stats.AttackBonus = e.target.value;
+    this.setState({itemData:{...this.state.itemData, stats: stats}})
   }
 
   render(){
@@ -82,19 +97,19 @@ export class ItemForm extends Component{
         <div className='row'>
           <div className='col-md-3'>
             <label className='col-md-3'>Item Name</label>
-            <input type='text' className='col-md-9' onChange={this.handleNameChange} value={this.state.itemName} />
+            <input type='text' className='col-md-9' onChange={this.handleNameChange} value={this.state.itemData.itemName} />
           </div>
           <div className='col-md-3'>
             <label className='col-md-3'>Type</label>
-            <input type='text' className='col-md-9' onChange={this.handleItemType} value={this.state.itemType} />
+            <input type='text' className='col-md-9' onChange={this.handleItemType} value={this.state.itemData.itemType} />
           </div>
           <div className='col-md-3'>
             <label className='col-md-3'>Damage Roll</label>
-            <input type='text' className='col-md-9' onChange={this.handleDamageRoll} value={this.state.damageRoll} />
+            <input type='text' className='col-md-9' onChange={this.handleDamageRoll} value={this.state.itemData.stats.damageRoll} />
           </div>
           <div className='col-md-3'>
             <label className='col-md-3'>Attack Bonus</label>
-            <input type='text' className='col-md-9' onChange={this.hadnleAttackBonus} value={this.state.attackBonus}/>
+            <input type='number' className='col-md-9' onChange={this.handleAttackBonus} value={this.state.itemData.stats.AttackBonus}/>
           </div>
         </div>
         <this.renderButton/>

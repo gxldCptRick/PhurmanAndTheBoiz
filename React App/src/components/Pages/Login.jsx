@@ -9,40 +9,41 @@ export class Login extends Component {
       Password: "",
       error: {},
       Username: "",
-      toNavigate: false
+      toNavigate: false,
+      loginFailed: false
     };
   }
 
-  handlePasswordChange(event) {
-    this.setState({ Password: event.target.value });
-  }
-  handleUserNameChange(event) {
-    this.setState({ Username: event.target.value });
-  }
-
-  handleResponse() {
-    return response => {
-      console.log(response);
-      if (response.status === 400) {
-        response.json().then(json => {
-          this.setState({ error: json, toNavigate: false });
-        });
-      } else {
-        return response.json();
-      }
-    };
-  }
-
+ handlePasswordChange(event){
+   this.setState({Password: event.target.value})
+ }
+ handleUserNameChange(event){
+    this.setState({Username: event.target.value})
+ }
   handleLoginAttempt() {
     var creds = {
-      Username: this.state.Username,
-      Password: this.state.Password
+      username: this.state.Username,
+      password: this.state.Password
     };
     LoginUser(creds)
-      .then(this.handleResponse())
+    .then(response => {
+      if(response.status === 200){
+        return response.json();
+      }else{
+        throw new Error("Login Failed")
+      }
+    })
       .then(json => localStorage.setItem("user", JSON.stringify(json)))
-      .then(_ => this.setState({ toNavigate: true }))
-      .catch(err => console.log(err));
+      .then(_ => this.setState({toNavigate: true, loginFailed: false }))
+      .catch(err => this.setState({error: err, loginFailed: true}));
+  }
+
+  renderFail(){
+    if(this.state.loginFailed){
+      return (<ul>
+        {Object.keys(this.state.error).map(e => <li key={e}>{this.state.error[e]}</li>)}
+      </ul>)
+    }
   }
 
   render() {
@@ -52,11 +53,7 @@ export class Login extends Component {
       return (
         <div className="bod">
           <h1>Login</h1>
-          {Object.keys(this.state.error).map(e => (
-            <p className="error" key={e}>
-              {this.state.error[e]}
-            </p>
-          ))}
+
           <div className="leftOfPage">
             <div className="smallTweak">
               <p className='Ptag'>
@@ -67,6 +64,7 @@ export class Login extends Component {
             <div className="loginBox">
               <div className="row">
                 <div className="col-md-6">
+                {this.renderFail()}
                   <label>
                     Username:
                     <input onChange={this.handleUserNameChange.bind(this)} />

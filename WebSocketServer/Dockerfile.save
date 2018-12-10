@@ -2,8 +2,10 @@ FROM node:latest
 
 MAINTAINER PhurmanAndDaBoiz
 
-CMD mkdir /usr/app
+RUN mkdir /usr/src/app
 
-WORKDIR /usr/app
+C
+
 EXPOSE 5585
 
+CMD ["npm", "start"]

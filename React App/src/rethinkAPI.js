@@ -1,27 +1,15 @@
 /* eslint-disable no-console */
 import openSocket from "socket.io-client";
-//import Rx from "rxjs/Rx";
 const port = 5585;
 const socket = openSocket(`http://73.20.98.246:${port}`);
 //const socket = openSocket(`http://localhost:${port}`);
 function subscribeToChatMessages(callback) {
-  // const messagesStream = Rx.Observable.fromEventPattern(
-  //     h => socket.on('messageSent', h),
-  //     h => socket.off('messageSent', h)
-  // );
-
-  // const bufferedTimeStream = messagesStream
-  //     .bufferTime(200)
-  //     .map(messages => ( {messages}));
-
-  // bufferedTimeStream.subscribe(messagesEvent => callback(messagesEvent));
   socket.on("chatMessageRecieved", message => callback(message));
   socket.emit("subscribeToChatMessages");
 }
 
 function subscribeToPointDraw(callback) {
-  //console.log(callback);
-  socket.on("drawingPointRecieved", point => {callback(point); /*console.log(point)*/});
+  socket.on("drawingPointRecieved", point => {callback(point);});
   socket.emit("subscribeToPointDraw");
 }
 
@@ -62,6 +50,7 @@ function sendLine({ newLine }){
 }
 
 function nukeMap(){
+  console.log("Emmited nukMap event");
   socket.emit("nukeMap");
 }
 
@@ -76,6 +65,16 @@ function unsubscribeToChatMessages(){
 function unsubscribeToUserDoneTyping(){
   socket.off("subscribeToUserDoneTyping");
 }
+
+function sendGeneratedMapCommands({ commands }){
+  socket.emit("sendGeneratedMap", { commands });
+}
+
+function subscribeToGeneratedMapCommands(callback){
+  socket.on("generatedMapRecieved", generatedMap  => callback(generatedMap));
+  socket.emit("subscribeToGeneratedMapCommands");
+}
+
 export {
   subscribeToChatMessages,
   sendMessage,
@@ -91,5 +90,7 @@ export {
   nukeMap,
   unsubscribeToUserTyping,
   unsubscribeToChatMessages,
-  unsubscribeToUserDoneTyping
+  unsubscribeToUserDoneTyping,
+  sendGeneratedMapCommands,
+  subscribeToGeneratedMapCommands
 };

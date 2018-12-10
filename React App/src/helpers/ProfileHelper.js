@@ -2,27 +2,30 @@ import React from 'react';
 
 export function RenderItemList(items){
   items = Array.from(items);
-  var renderedItems = items.map((i) =>
-    (
-    <div key={i.itemId}>
-      <div className='col-md-6'>
-        <p>{i.itemName}</p>
-      </div>
-      <div className='col-md-6'>
-        <p>{i.itemType}</p>
-      </div>
-    </div>
-    )
+  let renderedCharacters = items.map((i) =>
+    (<div key={i.itemId}>
+      <p>{i.itemName} ({i.itemType})</p>
+    </div>)
   );
-  return renderedItems;
+  return renderedCharacters;
 }
 
 export function RenderComboForChars(characterList){
-  characterList = Array.from(characterList);
-  var renderedCharacters = characterList.map((i) =>
-      <option selected value={i.characterId}> {i.characterName} ({i.level})</option>
-  );
+  var cList = Array.from(characterList);
+  var renderedCharacters = [];
+  for(var i = 0; i < characterList.length; i++){
+    renderedCharacters.push(<option value={i}> {cList[i].characterName} ({cList[i].level})</option>)
+  }
   return renderedCharacters;
+}
+
+export function RenderComboForItems(itemlist){
+  itemlist = Array.from(itemlist);
+  var renderedItems = [];
+  for(var i = 0; i < itemlist.length; i++){
+    renderedItems.push(<option value={i}> {itemlist[i].itemName}: {itemlist[i].itemType} ({itemlist[i].stats.AttackBonus})</option>)
+  }
+  return renderedItems;
 }
 
 export function RenderCharacterList(characterList)
@@ -36,10 +39,17 @@ export function RenderCharacterList(characterList)
   return renderedCharacters;
 }
 
+export const changes={
+  edit: 'edit',
+  remove: 'remove',
+  add: 'add',
+}
+
 export const options={
   CreateCharacter: 'createC',
   EditCharacter: 'editC',
   CreateItem: 'createI',
   EditItem: 'editI',
+  AddItemToChar: 'addTo'
 };
 

@@ -7,8 +7,12 @@ import {
   RenderComboForChars
 } from "../../helpers/ProfileHelper";
 import { GetResource, Resource } from "../../helpers/ApiService";
+import {RenderCharacterList, RenderItemList,options, RenderComboForChars, RenderComboForItems} from '../../helpers/ProfileHelper'
+import { GetResource,Resource } from "../../helpers/ApiService";
 import { ItemForm } from "../Sheet/NewItemForm";
 import { Redirect } from "react-router";
+import ManageInventory from "../Sheet/AddInventory";
+import { runInThisContext } from "vm";
 
 export default class ProfilePage extends React.Component {
   constructor(props) {
@@ -19,9 +23,10 @@ export default class ProfilePage extends React.Component {
       characterData: [],
       characterItemData: [],
       itemData: [],
-      resourceId: "",
-      option: ""
-    };
+      characteIndex: 0,
+      itemIndex: 0,
+      option: ''
+    }
     this.changeMain = this.changeMain.bind(this);
     this.renderMain = this.renderMain.bind(this);
     this.CharsList = this.CharsList.bind(this);
@@ -30,6 +35,8 @@ export default class ProfilePage extends React.Component {
     this.UpdateCharList = this.UpdateCharList.bind(this);
     this.UpdateItemList = this.UpdateItemList.bind(this);
     this.ComboChar = this.ComboChar.bind(this);
+    this.ComboItem = this.ComboItem.bind(this);
+    this.Ability = this.Ability.bind(this);
   }
   componentWillMount() {
     var user = JSON.parse(localStorage.getItem("user"));
@@ -38,35 +45,69 @@ export default class ProfilePage extends React.Component {
     } else {
       this.setState({ isValid: false });
     }
-  }
+}
 
-  componentDidMount() {
-    GetResource(Resource.Characters);
-    if (this.state.isValid) {
+  componentDidMount(){
+    if(this.state.isValid){
       this.UpdateCharList();
       this.UpdateItemList();
     }
   }
 
-  UpdateCharList() {
-    GetResource(Resource.UserCharacter, this.state.uID)
-      .then(response => response.json())
-      .then(json => {
-        this.setState({ characterData: json });
-      });
+  UpdateCharList(changeEvent){
+    this.setState({option: null})
+    GetResource(Resource.UserCharacter,this.state.uID)
+    .then(response => response.json())
+    .then(json =>{
+      this.setState({characterData: json})
+    }).then(()=>{
+      switch(changeEvent){
+        case 'edit':
+          this.changeMain(options.EditCharacter)
+          break;
+        case 'add':
+          this.changeMain(options.EditCharacter)
+          break;
+        case 'remove':
+          this.changeMain(options.CreateCharacter)
+          break;
+        default:
+          this.changeMain()
+          break; 
+      }
+    })
   }
 
-  UpdateItemList() {
-    GetResource(Resource.UserItem, this.state.uID)
-      .then(response => response.json())
-      .then(json => {
-        this.setState({ itemData: json });
-      });
-  }
-  UserItems() {
-    return RenderItemList(this.state.itemData);
-  }
-  CharItems() {
+  UpdateItemList(changeEvent){
+    this.setState({option: null})
+    GetResource(Resource.UserItem,this.state.uID)
+    .then(response => response.json())
+    .then(json =>{
+      this.setState({itemData: json})
+    }).then(()=>{
+      switch(changeEvent){
+        case 'edit':
+          this.changeMain(options.EditCharacter)
+          break;
+        case 'add':
+          this.changeMain(options.EditCharacter)
+          break;
+        case 'remove':
+          this.changeMain(options.CreateCharacter)
+          break;
+          case 'item':
+          this.changeMain(options.AddItemToChar)
+          break;
+        default:
+          this.changeMain()
+          break; 
+      }
+    })
+}
+UserItems(){
+  return RenderItemList(this.state.itemData);
+}
+  CharItems(){
     return RenderItemList(this.state.characterItemData);
   }
 
@@ -81,111 +122,66 @@ export default class ProfilePage extends React.Component {
   ComboChar() {
     return RenderComboForChars(this.state.characterData);
   }
+  ComboItem(){
+    return RenderComboForItems(this.state.itemData)
+  }
 
-  renderMain() {
-    switch (this.state.option) {
-      case "createI":
-        return (
-          <ItemForm
-            key={this.state.resourceId}
-            rID=""
-            uID={this.state.uID}
-            callback={this.UpdateItemList}
-          />
-        );
-      case "createC":
-        return (
-          <CharacterSheet
-            key={this.state.resourceId}
-            rID=""
-            uID={this.state.uID}
-            callback={this.UpdateCharList}
-          />
-        );
-      case "editC":
-        return (
-          <CharacterSheet
-            key={this.state.resourceId}
-            rID={this.state.resourceId}
-            uID={this.state.uID}
-            callback={this.UpdateCharList}
-          />
-        );
-      case "editI":
-        return (
-          <ItemForm
-            key={this.state.resourceId}
-            rID={this.state.resourceId}
-            uID={this.state.uID}
-            callback={this.UpdateItemList}
-          />
-        );
+  Ability(){
+    if(this.state.characterData[this.state.characteIndex] !== undefined){
+      return <ManageInventory key={this.state.characterData[this.state.characteIndex]} cData={this.state.characterData[this.state.characteIndex]} idata={this.state.itemData} callback={this.UpdateCharList}/>
+    }else{
+      return null
+    }
+  }
+
+
+  renderMain(){
+    console.log('RenderMain',this.state)
+    switch(this.state.option){
+      case 'createI':
+        return <ItemForm       key='1' rID='' data='' uID={this.state.uID} callback={this.UpdateItemList}/>
+      case 'createC':
+        return <CharacterSheet key='0' rID='' data='' uID={this.state.uID} callback={this.UpdateCharList}/>
+      case 'editC':
+        return <CharacterSheet key={this.state.characterData[this.state.characteIndex].characterId} rID='' data={this.state.characterData[this.state.characteIndex]} uID={this.state.uID} callback={this.UpdateCharList}/>
+      case 'editI':
+        return <ItemForm       key={this.state.itemData[this.state.itemIndex].itemId}      rID='' data={this.state.itemData[this.state.itemIndex]} uID={this.state.uID} callback={this.UpdateItemList}/>
+      case 'addTo':
+        return <this.Ability/>
       default:
         return <p>Edit Characters and weapoons Here</p>;
     }
   }
 
-  cSelect(event) {
-    this.setState({ resourceId: event.target.value });
-    this.setState({ option: options.EditCharacter });
+  cSelect(event){
+      this.setState({characteIndex: event.target.value, option: options.EditCharacter})
+        this.setState({characterItemData: this.state.characterData[this.state.characteIndex].inventory})
+  
+  }
+
+  iSelect(event){
+    this.setState({characterItemData: [],itemIndex: event.target.value,option: options.EditItem})
   }
 
   render() {
-    if (this.state.isValid) {
-      console.log("Profile State:", this.state);
+    if(this.state.isValid){
+      console.log('Profile State in Render:',this.state)
       return (
-        <div className='bod'>
-          <div className="row">
-            <div className="col-md-3">
-              <img
-                src="https://via.placeholder.com/300x250.png?text=Milo+Screws+everybody+over"
-                alt="Img"
-              />
+      <div className='row'>
+        <div className="col-md-3">
+          <img src="https://via.placeholder.com/300x250.png?text=Milo+Screws+everybody+over" alt='Img'/>
+          <select size='10' value={this.state.itemIndex} onClick={this.cSelect.bind(this)}>
+            <this.ComboChar />
+          </select>
+          <button onClick={this.changeMain.bind(this,options.CreateCharacter)}>Create Character</button>
+        </div>
+        <div className="col-md-6">
+            <div className='row'>
+              <label>Firstname</label>
             </div>
-            <div className="col-md-6">
-              <div>
-                <label>Firstname</label>
-              </div>
-              <div>
-                <label>LastName</label>
-              </div>
-              <div>
-                <input value="UserName" type="text" />
-              </div>
-              <div>
-                <input value="Change User Name" type="button" />
-              </div>
-              <div>
-                <input value="Password" type="text" />
-              </div>
-              <div>
-                <input value="Change Password" type="button" />
-              </div>
-
-              <this.renderMain />
-            </div>
-            <select
-              size="10"
-              value={this.state.resourceId}
-              onClick={this.cSelect.bind(this)}
-            >
-              <this.ComboChar />
-            </select>
-
-            <div className="col-md-3 ">
-              <h3>Maps</h3>
-              <button
-                onClick={this.changeMain.bind(this, options.CreateCharacter)}
-              >
-                Create Character
-              </button>
-              <div className="list-box" />
-
-              <h3>All Items</h3>
-              <div className="list-box">
-                <this.UserItems />
-                <this.CharsList />
-              </div>
+              <label>LastName</label>
+            <div>
+              <input value="UserName" type="text" />
             </div>
 
             <h3>Character Item List</h3>
@@ -198,11 +194,32 @@ export default class ProfilePage extends React.Component {
             <div className="list-box">
               <this.CharItems />
             </div>
+
+            <this.renderMain/>
+        </div>
+        <div className="col-md-3 ">
+          <h3>Maps</h3>
+          <div className="list-box">
+          </div>
+          <h3>All Items</h3>
+          <div className='list-box'>
+            <select size='10' value={this.state.itemIndex} onClick={this.iSelect.bind(this)}>
+              <this.ComboItem />
+            </select>
+          </div>
+          <h3>Character Item List</h3>
+          <div className='row'>
+            <button onClick={this.changeMain.bind(this,options.CreateItem)}>Create Item</button>
+            <button onClick={this.changeMain.bind(this,options.AddItemToChar)}>Manage Character inventory</button>
+          </div>
+          <div className="list-box">
+            <this.CharItems/>
           </div>
         </div>
-      );
-    } else {
-      return <Redirect to={"/Account"} />;
+      </div>
+    )      
+  }else{
+      return <Redirect to={'/Login/SignIn'}/>
     }
   }
 }
