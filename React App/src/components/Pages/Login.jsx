@@ -19,24 +19,6 @@ export class Login extends Component {
  handleUserNameChange(event){
     this.setState({Username: event.target.value})
  }
- handleLoginAttempt(){
-  LoginUser(this.state)
-  .then(promise => console.log(promise));
- }
-
-  handleResponse() {
-    return response => {
-      console.log(response);
-      if (response.status === 400) {
-        response.json().then(json => {
-          this.setState({ error: json, toNavigate: false });
-        });
-      } else {
-        return response.json();
-      }
-    };
-  }
-
   handleLoginAttempt() {
     var creds = {
       Username: this.state.Username,
@@ -45,7 +27,11 @@ export class Login extends Component {
     LoginUser(creds)
       .then(this.handleResponse())
       .then(json => localStorage.setItem("user", JSON.stringify(json)))
-      .then(_ => this.setState({ toNavigate: true }))
+      .then( ()=>{
+        if(localStorage.getItem("user") !== null){
+          this.setState({toNavigate: true})
+        }
+      })
       .catch(err => console.log(err));
   }
 
@@ -56,11 +42,7 @@ export class Login extends Component {
       return (
         <div className="bod">
           <h1>Login</h1>
-          {Object.keys(this.state.error).map(e => (
-            <p className="error" key={e}>
-              {this.state.error[e]}
-            </p>
-          ))}
+
           <div className="leftOfPage">
             <div className="smallTweak">
               <p className='Ptag'>

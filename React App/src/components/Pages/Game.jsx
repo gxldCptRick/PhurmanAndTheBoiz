@@ -70,6 +70,6 @@ export function Game(props) {
       </div>
     );
   } else {
-    return <Redirect to={"/Account"} />;
+    return <Redirect to={"/Login/SignIn"} />;
   }
 }
