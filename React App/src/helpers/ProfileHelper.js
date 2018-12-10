@@ -2,11 +2,12 @@ import React from 'react';
 
 export function RenderItemList(items){
   items = Array.from(items);
-  var renderedItems = [];
-  for(var i = 0; i < renderedItems.length; i++){
-    RenderItemList.push(<option value={i}> {items[i].itemName}: {items[i].itemType} ({items[i].AttackBonus})</option>)
-  }
-  return renderedItems;
+  let renderedCharacters = items.map((i) =>
+    (<div key={i.itemId}>
+      <p>{i.itemName} ({i.itemType})</p>
+    </div>)
+  );
+  return renderedCharacters;
 }
 
 export function RenderComboForChars(characterList){
