@@ -25,13 +25,14 @@ export class Login extends Component {
       Password: this.state.Password
     };
     LoginUser(creds)
-      .then(this.handleResponse())
+    .then(response => {
+      if(response.stats === 200){
+        response.json();
+      }else{
+        return null;
+      }
+    })
       .then(json => localStorage.setItem("user", JSON.stringify(json)))
-      .then( ()=>{
-        if(localStorage.getItem("user") !== null){
-          this.setState({toNavigate: true})
-        }
-      })
       .catch(err => console.log(err));
   }
 

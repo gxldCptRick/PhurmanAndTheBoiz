@@ -24,7 +24,8 @@ function RenderCharacterSheets() {
 }
 
 export function Game(props) {
-  if (localStorage.getItem("user") !== null) {
+  var user = localStorage.getItem('user');
+  if (user === null) {
     return (
       <div>
         <div className='bod'>

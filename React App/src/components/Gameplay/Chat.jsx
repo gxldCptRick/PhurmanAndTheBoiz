@@ -11,7 +11,7 @@ var typingTimer;
 var doneTypingInterval = 500;
 var emmitedCurrentlyTypingEvent = false;
 var dateFormatOptions = {month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true };
-var currentUser = JSON.parse(localStorage.getItem("user"));;
+var currentUser = JSON.parse(localStorage.getItem("user"));
 export default class Chat extends React.Component{
     state = {
         user: currentUser.user.username,
