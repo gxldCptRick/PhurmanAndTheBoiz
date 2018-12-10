@@ -721,10 +721,9 @@ class Canvas extends Component {
   render() {
     return (
       <div>
-        <input type="text" ref={name => (this.nameOfMap = name)}/>
-      <div>
-      </div>
+        <div className='CanvasEdit'>
         <canvas
+        
           ref={c => (this.drawingCanvas = c)}
           onMouseMove={event => this.drawingOnTheCanvas(event)}
           onMouseDown={event => this.startDrawing(event)}
@@ -743,6 +742,7 @@ class Canvas extends Component {
         <button type="button" onClick={_ => this.saveToMongo()}>
           Save Map
         </button>
+        </div>
       </div>
     );
   }

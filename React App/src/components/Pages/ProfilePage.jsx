@@ -5,6 +5,7 @@ import { GetResource,Resource } from "../../helpers/ApiService";
 import { ItemForm } from "../Sheet/NewItemForm";
 import { Redirect } from "react-router";
 import ManageInventory from "../Sheet/AddInventory";
+import { runInThisContext } from "vm";
 
 export default class ProfilePage extends React.Component {
 
@@ -16,7 +17,8 @@ export default class ProfilePage extends React.Component {
       characterData: [],
       characterItemData:[],
       itemData: [],
-      resourceIndex: 0,
+      characteIndex: 0,
+      itemIndex: 0,
       option: ''
     }
     this.changeMain = this.changeMain.bind(this);
@@ -28,6 +30,7 @@ export default class ProfilePage extends React.Component {
     this.UpdateItemList = this.UpdateItemList.bind(this);
     this.ComboChar = this.ComboChar.bind(this);
     this.ComboItem = this.ComboItem.bind(this);
+    this.Ability = this.Ability.bind(this);
   }
   componentWillMount(){
     var user = JSON.parse(localStorage.getItem('user'));
@@ -117,31 +120,41 @@ UserItems(){
     return RenderComboForItems(this.state.itemData)
   }
 
+  Ability(){
+    if(this.state.characterData[this.state.characteIndex] !== undefined){
+      return <ManageInventory key={this.state.characterData[this.state.characteIndex]} cData={this.state.characterData[this.state.characteIndex]} idata={this.state.itemData} callback={this.UpdateCharList}/>
+    }else{
+      return null
+    }
+  }
+
+
   renderMain(){
-    console.log('rendering in rendermain',this.state)
+    console.log('RenderMain',this.state)
     switch(this.state.option){
       case 'createI':
         return <ItemForm       key='1' rID='' data='' uID={this.state.uID} callback={this.UpdateItemList}/>
       case 'createC':
         return <CharacterSheet key='0' rID='' data='' uID={this.state.uID} callback={this.UpdateCharList}/>
       case 'editC':
-        return <CharacterSheet key={this.state.characterData[this.state.resourceIndex].characterId} rID='' data={this.state.characterData[this.state.resourceIndex]} uID={this.state.uID} callback={this.UpdateCharList}/>
+        return <CharacterSheet key={this.state.characterData[this.state.characteIndex].characterId} rID='' data={this.state.characterData[this.state.characteIndex]} uID={this.state.uID} callback={this.UpdateCharList}/>
       case 'editI':
-        return <ItemForm       key={this.state.itemData[this.state.resourceIndex].itemId}      rID='' data={this.state.itemData[this.state.resourceIndex]} uID={this.state.uID} callback={this.UpdateItemList}/>
+        return <ItemForm       key={this.state.itemData[this.state.itemIndex].itemId}      rID='' data={this.state.itemData[this.state.itemIndex]} uID={this.state.uID} callback={this.UpdateItemList}/>
       case 'addTo':
-      return <ManageInventory key={this.state.characterData[this.state.resourceIndex]} cData={this.state.characterData[this.state.resourceIndex]} idata={this.state.itemData} callback={this.UpdateCharList}/>
+        return <this.Ability/>
       default:
         return(<p>Edit Characters and weapoons Here</p>)
     }
   }
 
   cSelect(event){
-    this.setState({resourceIndex: event.target.value, option: options.EditCharacter})
-    this.setState({characterItemData: this.state.characterData[this.state.resourceIndex].inventory})
+      this.setState({characteIndex: event.target.value, option: options.EditCharacter})
+        this.setState({characterItemData: this.state.characterData[this.state.characteIndex].inventory})
+  
   }
 
   iSelect(event){
-    this.setState({resourceIndex: event.target.value,option: options.EditItem})
+    this.setState({characterItemData: [],itemIndex: event.target.value,option: options.EditItem})
   }
 
   render() {
@@ -151,7 +164,7 @@ UserItems(){
       <div className='row'>
         <div className="col-md-3">
           <img src="https://via.placeholder.com/300x250.png?text=Milo+Screws+everybody+over" alt='Img'/>
-          <select size='10' value={this.state.resourceIndex} onClick={this.cSelect.bind(this)}>
+          <select size='10' value={this.state.itemIndex} onClick={this.cSelect.bind(this)}>
             <this.ComboChar />
           </select>
           <button onClick={this.changeMain.bind(this,options.CreateCharacter)}>Create Character</button>
@@ -184,7 +197,7 @@ UserItems(){
           </div>
           <h3>All Items</h3>
           <div className='list-box'>
-            <select size='10' value={this.state.resourceIndex} onClick={this.iSelect.bind(this)}>
+            <select size='10' value={this.state.itemIndex} onClick={this.iSelect.bind(this)}>
               <this.ComboItem />
             </select>
           </div>
