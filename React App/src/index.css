@@ -77,6 +77,64 @@
     box-shadow: 5px 8px;
 }
 
+.CharList{
+    height:225px;
+    width: 200px;
+    float: left;
+    margin-top:5px;
+    margin-left:25px; 
+    position: fixed 10px;
+    border: 5px groove black ;
+    background-color: #50535b;
+    box-shadow: 5px 8px;
+}
+.CharChange{
+    height:450px;
+    width: 350px;
+    margin-top:-5px;
+    margin-left:455px;
+    color:black;
+    position: fixed 10px;
+    border: 5px groove black ;
+    background-color: #50535b;
+    box-shadow: 5px 8px;
+}
+.CharItem{
+    height:450px;
+    width: 300px;
+    margin-top:-308px;
+    margin-left:580px;
+    color:black;
+    position: fixed 10px;
+    border: 5px groove black ;
+    background-color: #50535b;
+    box-shadow: 5px 8px;
+}
+.user{
+    height:250px;
+    width: 200px;
+    margin-top:5px;
+    float:left;
+    margin-left: -35px;
+    color:black;
+    position: fixed 10px;
+    border: 5px groove black ;
+    background-color: #50535b;
+    box-shadow: 5px 8px;
+}
+.mapThings{
+    height:450px;
+    width: 200px;
+    float:left;
+    margin-top:5px;
+    margin-left:40px;
+    color:black;
+    position: fixed 10px;
+    border: 5px groove black ;
+    background-color: #50535b;
+    box-shadow: 5px 8px;
+}
+
 .loginBox{
     height:200px;
     width: 200px;
