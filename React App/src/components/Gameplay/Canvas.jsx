@@ -719,7 +719,9 @@ class Canvas extends Component {
   }
 
   renderCanvas(){
-    if(localStorage.getItem("user") !== "undefined" || localStorage.getItem("user") !== undefined){
+    let userJson = localStorage.getItem("user");
+    let user = JSON.parse(userJson.includes("{") ? userJson : null);
+    if(user  && user.user && user.user.roles && user.user.roles && (user.user.roles.includes("Admin") || user.user.roles.includes("DM")) ){
       return (<canvas
         
       ref={c => (this.drawingCanvas = c)}

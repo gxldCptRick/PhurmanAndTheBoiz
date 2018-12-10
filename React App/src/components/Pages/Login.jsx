@@ -9,7 +9,8 @@ export class Login extends Component {
       Password: "",
       error: {},
       Username: "",
-      toNavigate: false
+      toNavigate: false,
+      loginFailed: false
     };
   }
 
@@ -33,7 +34,16 @@ export class Login extends Component {
       }
     })
       .then(json => localStorage.setItem("user", JSON.stringify(json)))
-      .catch(err => console.log(err));
+      .then(_ => this.setState({toNavigate: true, loginFailed: false }))
+      .catch(err => this.setState({error: err, loginFailed: true}));
+  }
+
+  renderFail(){
+    if(this.state.loginFailed){
+      return (<ul>
+        {Object.keys(this.state.error).map(e => <li key={e}>{this.state.error[e]}</li>)}
+      </ul>)
+    }
   }
 
   render() {
@@ -54,6 +64,7 @@ export class Login extends Component {
             <div className="loginBox">
               <div className="row">
                 <div className="col-md-6">
+                {this.renderFail()}
                   <label>
                     Username:
                     <input onChange={this.handleUserNameChange.bind(this)} />
