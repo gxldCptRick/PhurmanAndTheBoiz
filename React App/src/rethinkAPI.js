@@ -62,6 +62,7 @@ function sendLine({ newLine }){
 }
 
 function nukeMap(){
+  console.log("Emmited nukMap event");
   socket.emit("nukeMap");
 }
 
@@ -76,6 +77,17 @@ function unsubscribeToChatMessages(){
 function unsubscribeToUserDoneTyping(){
   socket.off("subscribeToUserDoneTyping");
 }
+
+function sendGeneratedMapCommands({ commands }){
+  console.log(commands)
+  socket.emit("sendGeneratedMap", { commands });
+}
+
+function subscribeToGeneratedMapCommands(callback){
+  socket.on("generatedMapRecieved", generatedMap  => callback(generatedMap));
+  socket.emit("subscribeToGeneratedMapCommands");
+}
+
 export {
   subscribeToChatMessages,
   sendMessage,
@@ -91,5 +103,7 @@ export {
   nukeMap,
   unsubscribeToUserTyping,
   unsubscribeToChatMessages,
-  unsubscribeToUserDoneTyping
+  unsubscribeToUserDoneTyping,
+  sendGeneratedMapCommands,
+  subscribeToGeneratedMapCommands
 };

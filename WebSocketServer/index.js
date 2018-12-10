@@ -1,6 +1,6 @@
 const r = require("rethinkdb");
 const io = require("socket.io")();
-
+io.origins('*:*');
 function subscribeToChatMessages({ dbConnection, client }) {
   console.log("subscribeToChatMessages");
   return r
@@ -49,7 +49,6 @@ function subscribeToDrawingPoint(dbConnection, client) {
     .run(dbConnection)
     .then(cursor => {
       cursor.each((err, pointRow) => {
-        console.log(pointRow);
         client.emit("drawingPointRecieved", pointRow.new_val);
         console.log("object read from database");
       });
@@ -61,7 +60,7 @@ function sendPoint({ lineId, x, y, dbConnection }) {
   console.log(`Line id: ${lineId}`);
   return r
     .table("lines")
-    .get(`${lineId}`)
+    .getAll(`${lineId}`, { index: "lineId" })
     .update({
       points: r.row("points").append({x, y})
     })
@@ -84,25 +83,52 @@ function generateUUID(dbConnection, client){
 
 function sendLine({dbConnection, newLine, client}){
   var date = new Date().toLocaleTimeString();
+  console.log(newLine);
   return r
     .table("lines")
     .insert({
+      lineId: newLine.id,
       points: newLine.points,
       timestamp: date
     })
     .run(dbConnection, (err, res) =>{
-      client.send(res.generated_keys[0]);
+      //client.send(res.generated_keys[0]);
       console.log(res.generated_keys[0]);
     })
     .then(() => console.log("Sent line to DB"));
 }
 
-function nukeMap({ dbConnection }){
-  console.log("NUKED RETHINK DB LINES")
-  return r
-    .table("lines")
-    .delete()
-    .run(dbConnection);
+function nukeMap({ dbConnection, client }){
+  console.log("NUKED RETHINK DB LINES");
+  console.log("NUKED RETHINK GENERATED MAP");
+  
+  return r.do(
+    r.table("lines").delete(),
+    r.table("generated_maps").delete() 
+  ).run(dbConnection);
+}
+
+function sendGeneratedMap({dbConnection, client, commands}) {
+  var date = new Date();
+  return r.table("generated_maps")
+  .insert({
+    generatedMap: commands,
+    timestamp: date    
+  })
+  .run(dbConnection);  
+}
+
+
+function subscribeToGeneratedMapsCommands({ dbConnection, client }) {  
+  return r.table("generated_maps")
+  .changes({ include_initial: true })
+  .run(dbConnection)
+  .then(cursor => {
+    cursor.each((err, generatedMap) => {
+      console.log("Emitting generated map");
+      client.emit("generatedMapRecieved", generatedMap.new_val);
+    })
+  })
 }
 
 r.connect({
@@ -114,6 +140,7 @@ r.connect({
   //  r.table('chat_messages').delete().run(dbConnection);
   //r.table('drawing').delete().run(dbConnection);
   io.on("connection", client => {
+    console.log("Client connected");
     client.on("subscribeToChatMessages", () => {
       subscribeToChatMessages({ client, dbConnection });
     });
@@ -140,10 +167,16 @@ r.connect({
     });
 
     client.on("nukeMap", () => {
-      nukeMap({ dbConnection });
-    })
+      nukeMap({ dbConnection, client });
+    });
 
+    client.on("sendGeneratedMap", ({ commands }) => {
+      sendGeneratedMap({dbConnection, client, commands})
+    });
 
+    client.on("subscribeToGeneratedMapCommands", () => {
+      subscribeToGeneratedMapsCommands({ dbConnection, client });
+    });
   });
 });
 

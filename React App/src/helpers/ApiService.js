@@ -49,7 +49,6 @@ function PostToResource(
   data: any
 ): Promise<Response> {
   let path = `${rootPath}/${resourceName}`;
-  console.log('this is exaclty how its sent',JSON.stringify(data))
   return fetch(path, {
     method: "POST",
     mode: "cors",
@@ -88,9 +87,12 @@ const SpecialPaths = {
   Register: "User/Register",
   Login: "User/Authenticate",
 };
-export function LoginUser(user:any): Promise<any> {
+
+function LoginUser(user): Promise<any> {
+
   return PostToResource(SpecialPaths.Login, user)
     .then(json => {
+      console.log(JSON.stringify(json));
       localStorage.setItem("user", JSON.stringify(json));
       return json
     })
@@ -115,5 +117,6 @@ export {
   GetResource,
   PostToResource,
   PutToResource,
-  DeleteResource
+  DeleteResource,
+  LoginUser
 }

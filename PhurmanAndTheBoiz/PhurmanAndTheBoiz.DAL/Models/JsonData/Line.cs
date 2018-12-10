@@ -10,5 +10,8 @@ namespace PhurmanAndTheBoiz.DAL.Models.JsonData
 
         [JsonProperty("points", NullValueHandling = NullValueHandling.Ignore)]
         public List<Point> Points { get; set; }
+
+        [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+        public string id { get; set; }
     }
 }
