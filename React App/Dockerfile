@@ -1,5 +1,5 @@
 # base image
-FROM node:latest
+FROM arm32v7/node:latest
 EXPOSE 3000
 # set working directory
 RUN mkdir /usr/src/app
