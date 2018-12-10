@@ -95,7 +95,7 @@ class Canvas extends Component {
   }
 
   drawLine(line) {
-    if (line === null) { this.learDrawing(); return this.clearDrawing(); }
+    if (line === null) { this.clearDrawing(); return this.clearDrawing(); }
     else if (line.points.length < 1) return;
     else if (!this.isDrawing) {
 
@@ -146,7 +146,6 @@ class Canvas extends Component {
     let map = MapGeneration.generateMap();
     map.draw(recordContext);
 
-    this.connectRooms();
     var commands = recordContext.commands;
 
     RethinkAPI.sendGeneratedMapCommands({ commands });

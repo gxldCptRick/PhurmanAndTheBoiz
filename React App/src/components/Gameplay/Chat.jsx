@@ -93,6 +93,16 @@ export default class Chat extends React.Component{
             this.setState(prevState => ({
                 chatMessages: prevState.chatMessages.concat([chatMessage])
             }));
+            console.log(this.state.chatMessages);
+            
+            this.setState(prevState => ({
+                chatMessages: prevState.chatMessages.sort(function(a, b){
+                    console.log(a);
+                    console.log(b);
+                    return new Date(a.timestamp) - new Date(b.timestamp);
+                })
+            }));
+            console.log(this.state.chatMessages);
         })      
 
         subscribeToUserDoneTyping(({ user }) => {
