@@ -218,6 +218,7 @@ class Canvas extends Component {
                   takenDoors.push("00");
                 }
               }
+              //forcing a merge conflict
             }
             break;
           case 1:
