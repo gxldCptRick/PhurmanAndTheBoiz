@@ -23,7 +23,7 @@ class Canvas extends Component {
     this.saveLineIndex = 0;
     
     RethinkAPI.subscribeToMessageFromServer(uuid => {
-      console.log(uuid);
+      // console.log(uuid);
       this.currentLineId = uuid;
     });
 
@@ -95,7 +95,7 @@ class Canvas extends Component {
   }
 
   drawLine(line) {
-    if (line === null) { this.learDrawing(); return this.clearDrawing(); }
+    if (line === null) { this.clearDrawing(); return this.clearDrawing(); }
     else if (line.points.length < 1) return;
     else if (!this.isDrawing) {
 
@@ -138,22 +138,17 @@ class Canvas extends Component {
     RethinkAPI.nukeMap();
 
     recordContext = new CanvasRecorder.WatchedContext(this.drawingCanvas.getContext("2d"));
-
     recordContext.beginPath();
     recordContext.rect(25, 25, 850, 450);
     recordContext.stroke();
-
-    let map = MapGeneration.generateMap();
+    let map = MapGeneration.generateMap(recordContext);
     map.draw(recordContext);
-
-    this.connectRooms();
     var commands = recordContext.commands;
 
     RethinkAPI.sendGeneratedMapCommands({ commands });
   }
 
   clearDrawing() {
-    console.log("Clear Called");
       let ctx = this.drawingCanvas.getContext("2d");
       ctx.clearRect(0, 0, this.drawingCanvas.width, this.drawingCanvas.height);
   }
@@ -176,6 +171,7 @@ class Canvas extends Component {
     if (this.isDrawing){
       this.isDrawing = false;
       RethinkAPI.generateUUID();
+      console.log(this.currentLine)
     }
   }
 
@@ -196,6 +192,8 @@ class Canvas extends Component {
       ctx.stroke();
       let lineId = this.currentLine.id;
       this.currentLine.points.push({ x, y });
+      console.log(x);
+      console.log(y);
       RethinkAPI.sendPointToDraw({ x, y, lineId });
     }
   }

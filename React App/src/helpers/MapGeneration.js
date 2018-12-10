@@ -2,7 +2,7 @@ import Map from "../models/Map";
 const offset = 50;
 const sides = { top: 0, bottom: 2, right: 1, left: 3 };
 const minDistanceFromSide = 25;
-function isRectangleInsideOtherRectangle(rect1, rect2) {
+export function isRectangleInsideOtherRectangle(rect1, rect2) {
   return (
     rect2.left >= rect1.left &&
     rect2.right <= rect1.right &&
@@ -11,21 +11,21 @@ function isRectangleInsideOtherRectangle(rect1, rect2) {
   );
 }
 
-function isRectangleIntersectingWithRoom(r1, r2) {
-  return (
-    r1.left <= r2.right &&
-    r1.right >= r2.left &&
-    r1.top <= r2.bottom &&
-    r1.bottom >= r2.top
-  );
+export function isRectangleIntersectingWithRoom(r1, r2) {
+  return  (r1.topLeft.x >= r2.bottomRight.x) ||  
+  (r1.bottomRight.x <= r2.topLeft.x)  ||
+  (r1.topLeft.y  >=  r2.bottomRight.y)  ||
+    (r1.bottomRight.y <= r2.topLeft.y);
 }
 
-function isOverlapping(room, rooms) {
+export function isOverlapping(room, rooms) {
   let r2 = room;
   let isOverlapping = false;
   rooms.some(function(r1) {
     console.log(r1);
-    let isContained = isRectangleInsideOtherRectangle(r1, r2) || isRectangleInsideOtherRectangle(r2, r1);
+    let isContained =
+      isRectangleInsideOtherRectangle(r1, r2) ||
+      isRectangleInsideOtherRectangle(r2, r1);
     if (isRectangleIntersectingWithRoom(r1, r2) || isContained) {
       isOverlapping = true;
     }
@@ -34,32 +34,35 @@ function isOverlapping(room, rooms) {
   return isOverlapping;
 }
 
-function generateRoomSize() {
+export function generateRoomSize() {
   return (Math.floor(Math.random() * 4) + 3) * 25;
 }
 
-function generateRoomPosition(positionOffset) {
+export function generateRoomPosition(positionOffset) {
   return (Math.floor(Math.random() * positionOffset) + 3) * 25;
 }
 
-function generateSize(roomYPoint, upperBound) {
-  let roomHeight = generateRoomSize();
-  let tooTall = roomYPoint + roomHeight >= upperBound;
-  while (tooTall) {
+export function generateSize(pointOfReference, upperBound) {
+  let roomHeight;
+  let tooTall;
+   do {
     roomHeight = generateRoomSize();
-    tooTall = roomYPoint + roomHeight >= upperBound;
-  }
+    tooTall = pointOfReference + roomHeight >= upperBound;
+  }while (tooTall)
+
   return roomHeight;
 }
 
-function generateNewRoom() {
+export function generateNewRoom() {
   let roomYPoint = generateRoomPosition(12);
   let roomXPoint = generateRoomPosition(28);
-  let roomHeight = generateSize(roomXPoint, 850);
-  let roomWidth = generateSize(roomYPoint, 450);
+  let roomHeight = generateSize(roomYPoint, 450);
+  let roomWidth = generateSize(roomXPoint, 850);
+  let point = { x: roomXPoint, y: roomYPoint};
   return {
-    x: roomXPoint,
-    y: roomYPoint,
+    ...point,
+    topLeft: { x: roomXPoint,  y: roomYPoint },
+    bottomRight: { x: roomXPoint + roomWidth, y: roomYPoint + roomHeight },
     width: roomWidth,
     height: roomHeight,
     left: roomXPoint,
@@ -69,7 +72,7 @@ function generateNewRoom() {
   };
 }
 
-function countPossibleDoorsForGivenPair(newRoom, sideOne, sideTwo, prop) {
+export function countPossibleDoorsForGivenPair(newRoom, sideOne, sideTwo, prop) {
   let maxDoorCount = 1;
   if (newRoom[sideOne] - offset > minDistanceFromSide) {
     if (newRoom[prop] === 150) {
@@ -85,7 +88,7 @@ function countPossibleDoorsForGivenPair(newRoom, sideOne, sideTwo, prop) {
   return maxDoorCount;
 }
 
-function calculateMaxDoorCount(newRoom) {
+export function calculateMaxDoorCount(newRoom) {
   let maxDoorCount = 0;
   maxDoorCount += countPossibleDoorsForGivenPair(
     newRoom,
@@ -103,7 +106,7 @@ function calculateMaxDoorCount(newRoom) {
   return maxDoorCount;
 }
 
-function generateDoorCount(maxDoorCount, roomCount, currentRoom) {
+export function generateDoorCount(maxDoorCount, roomCount, currentRoom) {
   let currentDoorCount = 0;
   let doorCount = Math.floor(Math.random() * (roomCount - 1)) + 1;
   if (currentRoom === roomCount - 1) {
@@ -122,7 +125,7 @@ function generateDoorCount(maxDoorCount, roomCount, currentRoom) {
   return doorCount;
 }
 
-function sideIsCorrectlyOffset(side, room) {
+export function sideIsCorrectlyOffset(side, room) {
   if (side < sides.top || side > sides.left)
     throw new Error("Side must be between [0,3] inclusive.");
   let isOffsetCorrectly = false,
@@ -142,7 +145,7 @@ function sideIsCorrectlyOffset(side, room) {
   return isOffsetCorrectly;
 }
 
-function generateDoor(name, room, { startOffset, endOffset, axis, mod }) {
+export function generateDoor(name, room, { startOffset, endOffset, axis, mod }) {
   mod = mod || 25;
   startOffset = startOffset || 25;
   endOffset = endOffset || startOffset + mod;
@@ -156,7 +159,7 @@ function generateDoor(name, room, { startOffset, endOffset, axis, mod }) {
   };
 }
 
-function generateDoorBasedOnSize({
+export function generateDoorBasedOnSize({
   size,
   name,
   room,
@@ -183,11 +186,11 @@ function generateDoorBasedOnSize({
   return door;
 }
 
-function drawNewestRoom(rooms, roomCount, currentRoom) {
+export function drawNewestRoom(rooms, roomCount, currentRoom) {
   let newRoom = generateNewRoom();
-  while (isOverlapping(newRoom, rooms)) {
+  do {
     newRoom = generateNewRoom();
-  }
+  } while (isOverlapping(newRoom, rooms));
   let maxDoorCount = calculateMaxDoorCount(newRoom);
   let getTotalPossibleDoors = generateDoorCount(
     maxDoorCount,
@@ -290,7 +293,7 @@ function drawNewestRoom(rooms, roomCount, currentRoom) {
   return returnRoom;
 }
 
-function connectRooms(rooms) {}
+export function connectRooms(rooms) {}
 
 export function generateMap() {
   let roomCount = Math.floor(Math.random() * 5) + 3;
