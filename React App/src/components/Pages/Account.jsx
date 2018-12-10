@@ -13,7 +13,7 @@ function LoginDisplay() {
           account for our page. By doing this you will be able to save all you
           progress from this point forward.
         </p>
-        <form action="/Login/SignUp">
+        <form action="/Login/SignUp" method="get">
           <input type="submit" value="Register" />
         </form>
       </div>

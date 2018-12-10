@@ -21,15 +21,15 @@ export class Login extends Component {
  }
   handleLoginAttempt() {
     var creds = {
-      Username: this.state.Username,
-      Password: this.state.Password
+      username: this.state.Username,
+      password: this.state.Password
     };
     LoginUser(creds)
     .then(response => {
-      if(response.stats === 200){
-        response.json();
+      if(response.status === 200){
+        return response.json();
       }else{
-        return null;
+        throw new Error("Login Failed")
       }
     })
       .then(json => localStorage.setItem("user", JSON.stringify(json)))

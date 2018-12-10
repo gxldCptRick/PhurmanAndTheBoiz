@@ -79,7 +79,7 @@ function GetResource(
     headers: {
       ...AuthHeader()
     }
-  }).then(response => {return response})
+  }).then(response =>  response)
 }
 
 const SpecialPaths = {
@@ -89,10 +89,6 @@ const SpecialPaths = {
 
 function LoginUser(user): Promise<any> {
   return PostToResource(SpecialPaths.Login, user)
-    .then(json => {
-      localStorage.setItem("user", JSON.stringify(json));
-      return json
-    })
 }
 
 function RegisterUser(user: any): Promise<any> {

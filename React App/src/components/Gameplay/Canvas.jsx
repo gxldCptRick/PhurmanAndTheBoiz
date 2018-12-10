@@ -718,6 +718,22 @@ class Canvas extends Component {
   saveToMongo(){
   }
 
+  renderCanvas(){
+    if(localStorage.getItem("user") !== "undefined" || localStorage.getItem("user") !== undefined){
+      return (<canvas
+        
+      ref={c => (this.drawingCanvas = c)}
+      onMouseMove={event => this.drawingOnTheCanvas(event)}
+      onMouseDown={event => this.startDrawing(event)}
+      onMouseUp={event => this.finishDrawing(event)}
+      onMouseLeave={event => this.finishDrawing(event)}
+      style={this.props.style}
+      width="900px"
+      height="500px"
+    />);
+    }else return (<canvas ref ={ c => (this.drawingCanvas = c)} style={this.props.style} width="900px" height="500px" />)
+  }
+
   render() {
     return (
       <div>
