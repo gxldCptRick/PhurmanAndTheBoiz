@@ -11,10 +11,10 @@ var typingTimer;
 var doneTypingInterval = 500;
 var emmitedCurrentlyTypingEvent = false;
 var dateFormatOptions = {month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true };
-var currentUser = JSON.parse(localStorage.getItem("user"));;
+var currentUser = null;
 export default class Chat extends React.Component{
     state = {
-        user: currentUser.user.username,
+        user: null,
         chatMessages: [],
         message: '',
         usersThatAreTyping: []
@@ -80,6 +80,10 @@ export default class Chat extends React.Component{
     }
 
     componentDidMount(){
+        currentUser = JSON.parse(localStorage.getItem("user"));;
+        this.setState(prevState => ({
+            user: currentUser.user.username
+        }))
         subscribeToUserTyping(({ user }) => {
             this.setState(prevState => ({
                 usersThatAreTyping: prevState.usersThatAreTyping.concat([user])
