@@ -10,8 +10,8 @@ import * as ReactDOM from 'react-dom';
 var typingTimer;
 var doneTypingInterval = 500;
 var emmitedCurrentlyTypingEvent = false;
-var dateFormatOptions = { hour: 'numeric', minute: 'numeric', hour12: true };
-var currentUser = JSON.parse(localStorage.getItem("user"));
+var dateFormatOptions = {month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true };
+var currentUser = JSON.parse(localStorage.getItem("user"));;
 export default class Chat extends React.Component{
     state = {
         user: currentUser.user.username,
@@ -81,28 +81,21 @@ export default class Chat extends React.Component{
 
     componentDidMount(){
         subscribeToUserTyping(({ user }) => {
-            console.log(this.state.usersThatAreTyping);
-            console.log(`user that is typing: ${user}`);
             this.setState(prevState => ({
                 usersThatAreTyping: prevState.usersThatAreTyping.concat([user])
             }))
         })
         
         subscribeToChatMessages((chatMessage) => {
-            console.log(`${chatMessage} recieved`);
             this.setState(prevState => ({
                 chatMessages: prevState.chatMessages.concat([chatMessage])
             }));
-            console.log(this.state.chatMessages);
             
             this.setState(prevState => ({
-                chatMessages: prevState.chatMessages.sort(function(a, b){
-                    console.log(a);
-                    console.log(b);
+                chatMessages: prevState.chatMessages.sort(function(a, b){                    
                     return new Date(a.timestamp) - new Date(b.timestamp);
                 })
             }));
-            console.log(this.state.chatMessages);
         })      
 
         subscribeToUserDoneTyping(({ user }) => {
