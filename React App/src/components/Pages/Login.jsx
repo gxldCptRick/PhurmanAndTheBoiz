@@ -19,10 +19,6 @@ export class Login extends Component {
  handleUserNameChange(event){
     this.setState({Username: event.target.value})
  }
- handleLoginAttempt(){
-  LoginUser(this.state)
-  .then(promise => console.log(promise));
- }
 
   handleResponse() {
     return response => {
@@ -44,7 +40,7 @@ export class Login extends Component {
     };
     LoginUser(creds)
       .then(this.handleResponse())
-      .then(json => localStorage.setItem("user", JSON.stringify(json)))
+      .then(json => { localStorage.setItem("user", JSON.stringify(json));})
       .then(_ => this.setState({ toNavigate: true }))
       .catch(err => console.log(err));
   }

@@ -89,10 +89,8 @@ const SpecialPaths = {
 };
 
 function LoginUser(user): Promise<any> {
-
   return PostToResource(SpecialPaths.Login, user)
     .then(json => {
-      console.log(JSON.stringify(json));
       localStorage.setItem("user", JSON.stringify(json));
       return json
     })
