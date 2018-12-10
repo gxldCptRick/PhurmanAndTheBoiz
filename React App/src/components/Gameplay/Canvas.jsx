@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Line from "../../models/Line";
 import * as RethinkAPI from '../../rethinkAPI';
+import * as ContextRecorder from './CanvasContextRecorder';
 
 class Canvas extends Component {
   state = {
@@ -324,7 +325,7 @@ class Canvas extends Component {
       } while(!validSide);
     }
 
-    let ctx = this.drawingCanvas.getContext("2d");
+    let ctx = new ContextRecorder.WatchedContext(this.drawingCanvas.getContext("2d"));
     ctx.beginPath();
     ctx.moveTo(roomXPoint, roomYPoint);
 
@@ -599,29 +600,44 @@ class Canvas extends Component {
     }
   }
 
+  getUser(){
+    let user = JSON.parse(localStorage.getItem("user"));
+    return user.user;
+  }
+
+  validateUser(){
+    let user = this.getUser();  
+    return user.roles.includes("DM") || user.roles.includes("Admin");
+  }
+
+  renderCanvas(){
+    if(this.validateUser()){
+      return (<canvas
+          
+            ref={c => (this.drawingCanvas = c)}
+            onMouseMove={event => this.drawingOnTheCanvas(event)}
+            onMouseDown={event => this.startDrawing(event)}
+            onMouseUp={event => this.finishDrawing(event)}
+            onMouseLeave={event => this.finishDrawing(event)}
+            style={this.props.style}
+            width="900px"
+            height="500px"
+          />);
+    }else{
+      return (<canvas style={this.props.style} ref={c => this.drawingCanvas = c} width="900px" height="500px"/>);
+    }
+  }
+
   render() {
     return (
       <div>
         <div className='CanvasEdit'>
-        <canvas
-        
-          ref={c => (this.drawingCanvas = c)}
-          onMouseMove={event => this.drawingOnTheCanvas(event)}
-          onMouseDown={event => this.startDrawing(event)}
-          onMouseUp={event => this.finishDrawing(event)}
-          onMouseLeave={event => this.finishDrawing(event)}
-          style={this.props.style}
-          width="900px"
-          height="500px"
-        />
+        { this.renderCanvas() }
         <button type="button" onClick={_ => this.generateMap()}>
           Generate Map
         </button>
         <button type="button" onClick={_ => RethinkAPI.nukeMap()}>
           Clear
-        </button>
-        <button type="button" onClick={_ => this.reDrawLines()}>
-          ReDraw
         </button>
         </div>
       </div>
